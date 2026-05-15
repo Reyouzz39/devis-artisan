@@ -317,20 +317,67 @@ footer { background: #fff; border-top: 1px solid #f0f0f0; padding: 40px; }
 </div>
 
 <div class="pricing-section" id="tarifs">
-  <h2>Tarifs simples</h2>
-  <div class="pricing-banner">
-    <div class="pricing-left">
-      <div class="pricing-label">Abonnement mensuel</div>
-      <div class="pricing-price">79 € <span>/mois</span></div>
-      <ul class="pricing-features">
-        <li>Devis illimités</li>
-        <li>Transfert devis → facture</li>
-        <li>Multi-prestations</li>
-        <li>Téléchargement PDF</li>
-        <li>Annulable à tout moment</li>
+  <h2>Choisissez votre plan</h2>
+  <p style="text-align:center;color:#888;font-size:15px;margin-bottom:40px;">Commencez gratuitement, évoluez selon vos besoins</p>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:1000px;margin:0 auto;">
+
+    <div style="background:#fff;border:1px solid #ece9ff;border-radius:16px;padding:28px 24px;">
+      <div style="font-size:13px;font-weight:700;color:#888;margin-bottom:8px;">GRATUIT</div>
+      <div style="font-size:36px;font-weight:800;color:#111;">0€</div>
+      <div style="font-size:13px;color:#999;margin-bottom:20px;">/mois</div>
+      <ul style="list-style:none;margin-bottom:24px;">
+        <li style="font-size:13px;padding:6px 0;border-bottom:1px solid #f5f5f5;">✓ 5 devis/mois</li>
+        <li style="font-size:13px;padding:6px 0;border-bottom:1px solid #f5f5f5;">✓ PDF standard</li>
+        <li style="font-size:13px;padding:6px 0;border-bottom:1px solid #f5f5f5;color:#ccc;">✗ Conversion facture</li>
+        <li style="font-size:13px;padding:6px 0;border-bottom:1px solid #f5f5f5;color:#ccc;">✗ Support</li>
+        <li style="font-size:13px;padding:6px 0;color:#ccc;">✗ Multi-utilisateurs</li>
       </ul>
+      <button onclick="document.getElementById('generateur').scrollIntoView({behavior:'smooth'})" style="width:100%;background:#f5f5f5;color:#111;border:none;padding:12px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;">Commencer →</button>
     </div>
-    <button class="pricing-btn">S'abonner maintenant</button>
+
+    <div style="background:#fff;border:1px solid #ece9ff;border-radius:16px;padding:28px 24px;">
+      <div style="font-size:13px;font-weight:700;color:#888;margin-bottom:8px;">STARTER</div>
+      <div style="font-size:36px;font-weight:800;color:#111;">29€</div>
+      <div style="font-size:13px;color:#999;margin-bottom:20px;">/mois</div>
+      <ul style="list-style:none;margin-bottom:24px;">
+        <li style="font-size:13px;padding:6px 0;border-bottom:1px solid #f5f5f5;">✓ 30 devis/mois</li>
+        <li style="font-size:13px;padding:6px 0;border-bottom:1px solid #f5f5f5;">✓ PDF standard</li>
+        <li style="font-size:13px;padding:6px 0;border-bottom:1px solid #f5f5f5;">✓ Conversion facture</li>
+        <li style="font-size:13px;padding:6px 0;border-bottom:1px solid #f5f5f5;color:#ccc;">✗ Support prioritaire</li>
+        <li style="font-size:13px;padding:6px 0;color:#ccc;">✗ Multi-utilisateurs</li>
+      </ul>
+      <button style="width:100%;background:#6C47FF;color:#fff;border:none;padding:12px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;">S'abonner →</button>
+    </div>
+
+    <div style="background:#6C47FF;border:2px solid #6C47FF;border-radius:16px;padding:28px 24px;position:relative;">
+      <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:#f59e0b;color:#fff;font-size:11px;font-weight:800;padding:4px 14px;border-radius:20px;white-space:nowrap;">⭐ POPULAIRE</div>
+      <div style="font-size:13px;font-weight:700;color:rgba(255,255,255,0.7);margin-bottom:8px;">PRO</div>
+      <div style="font-size:36px;font-weight:800;color:#fff;">79€</div>
+      <div style="font-size:13px;color:rgba(255,255,255,0.6);margin-bottom:20px;">/mois</div>
+      <ul style="list-style:none;margin-bottom:24px;">
+        <li style="font-size:13px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.15);color:#fff;">✓ Devis illimités</li>
+        <li style="font-size:13px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.15);color:#fff;">✓ PDF personnalisé</li>
+        <li style="font-size:13px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.15);color:#fff;">✓ Conversion facture</li>
+        <li style="font-size:13px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.15);color:#fff;">✓ Support email</li>
+        <li style="font-size:13px;padding:6px 0;color:rgba(255,255,255,0.5);">✗ Multi-utilisateurs</li>
+      </ul>
+      <button style="width:100%;background:#fff;color:#6C47FF;border:none;padding:12px;border-radius:8px;font-size:14px;font-weight:800;cursor:pointer;">S'abonner →</button>
+    </div>
+
+    <div style="background:#fff;border:1px solid #ece9ff;border-radius:16px;padding:28px 24px;">
+      <div style="font-size:13px;font-weight:700;color:#888;margin-bottom:8px;">AGENCE</div>
+      <div style="font-size:36px;font-weight:800;color:#111;">149€</div>
+      <div style="font-size:13px;color:#999;margin-bottom:20px;">/mois</div>
+      <ul style="list-style:none;margin-bottom:24px;">
+        <li style="font-size:13px;padding:6px 0;border-bottom:1px solid #f5f5f5;">✓ Devis illimités</li>
+        <li style="font-size:13px;padding:6px 0;border-bottom:1px solid #f5f5f5;">✓ PDF personnalisé</li>
+        <li style="font-size:13px;padding:6px 0;border-bottom:1px solid #f5f5f5;">✓ Conversion facture</li>
+        <li style="font-size:13px;padding:6px 0;border-bottom:1px solid #f5f5f5;">✓ Support prioritaire</li>
+        <li style="font-size:13px;padding:6px 0;">✓ Multi-utilisateurs</li>
+      </ul>
+      <button style="width:100%;background:#111;color:#fff;border:none;padding:12px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;">S'abonner →</button>
+    </div>
+
   </div>
 </div>
 
