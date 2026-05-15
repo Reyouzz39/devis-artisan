@@ -10,10 +10,7 @@
 <meta property="og:description" content="L'outil préféré des artisans français. Créez des devis professionnels gratuitement.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://reyouzz39.github.io/devis-artisan/">
-<meta property="og:image" content="https://reyouzz39.github.io/devis-artisan/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Quotify — Devis artisan gratuit">
-<meta name="twitter:description" content="Générez vos devis professionnels en 30 secondes.">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
@@ -31,7 +28,7 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
 .nav-plan { font-size: 11px; font-weight: 700; background: #F3F0FF; color: #6C47FF; padding: 3px 10px; border-radius: 20px; }
 .nav-logout { background: none; border: 1px solid #ddd; color: #666; padding: 8px 16px; border-radius: 24px; font-size: 13px; cursor: pointer; }
 #auth-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: #FAFAFA; }
-.auth-card { background: #fff; border: 1px solid #ece9ff; border-radius: 16px; padding: 48px 40px; width: 400px; }
+.auth-card { background: #fff; border: 1px solid #ece9ff; border-radius: 16px; padding: 48px 40px; width: 420px; }
 .auth-logo { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 8px; }
 .auth-logo-icon { width: 40px; height: 40px; background: #6C47FF; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 20px; }
 .auth-logo-text { font-size: 28px; font-weight: 800; color: #6C47FF; }
@@ -50,6 +47,16 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
 .auth-footer { text-align: center; margin-top: 20px; font-size: 12px; color: #aaa; }
 .auth-footer a { color: #6C47FF; text-decoration: none; }
 #main-app { display: none; }
+/* ONBOARDING */
+.onboarding { background: #6C47FF; color: white; padding: 20px 40px; display: none; }
+.onboarding-inner { max-width: 900px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.onboarding h3 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+.onboarding p { font-size: 13px; opacity: 0.85; }
+.onboarding-steps { display: flex; gap: 12px; }
+.onboarding-step { background: rgba(255,255,255,0.15); border-radius: 8px; padding: 8px 16px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.onboarding-step.done { background: rgba(255,255,255,0.3); text-decoration: line-through; opacity: 0.7; }
+.onboarding-close { background: none; border: 1px solid rgba(255,255,255,0.4); color: white; padding: 6px 14px; border-radius: 6px; font-size: 12px; cursor: pointer; white-space: nowrap; }
+/* HERO */
 .hero { background: #fff; padding: 72px 40px 56px; text-align: center; }
 .pill { display: inline-flex; align-items: center; gap: 6px; background: #F3F0FF; color: #6C47FF; font-size: 12px; padding: 6px 16px; border-radius: 24px; margin-bottom: 22px; font-weight: 700; }
 .hero h1 { font-size: 48px; font-weight: 800; line-height: 1.15; margin-bottom: 16px; }
@@ -59,10 +66,11 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
 .proof-item { text-align: center; }
 .proof-num { font-size: 24px; font-weight: 800; color: #6C47FF; }
 .proof-label { font-size: 12px; color: #999; margin-top: 2px; }
-.hero-btn { background: #6C47FF; color: #fff; border: none; padding: 16px 36px; border-radius: 28px; font-size: 16px; font-weight: 700; cursor: pointer; transition: background 0.2s; }
+.hero-btn { background: #6C47FF; color: #fff; border: none; padding: 16px 36px; border-radius: 28px; font-size: 16px; font-weight: 700; cursor: pointer; }
 .hero-btn:hover { background: #5835e0; }
 .trust-badges { display: flex; justify-content: center; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
 .badge { display: flex; align-items: center; gap: 6px; background: #f9f9f9; border: 1px solid #eee; padding: 6px 14px; border-radius: 20px; font-size: 12px; color: #555; }
+/* DASHBOARD */
 .dashboard { background: #F3F0FF; padding: 24px 40px; border-bottom: 1px solid #ece9ff; }
 .dashboard-inner { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
 .dash-card { background: #fff; border-radius: 12px; padding: 16px 20px; }
@@ -72,12 +80,14 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
 .quota-bar { height: 6px; background: #eee; border-radius: 3px; margin-top: 8px; overflow: hidden; }
 .quota-fill { height: 100%; background: #6C47FF; border-radius: 3px; transition: width 0.5s; }
 .quota-fill.danger { background: #e53e3e; }
+/* FEATURES */
 .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 900px; margin: 48px auto; padding: 0 40px; }
 .feat { background: #fff; border: 1px solid #ece9ff; border-radius: 12px; padding: 24px; transition: transform 0.2s; }
 .feat:hover { transform: translateY(-3px); }
 .feat-dot { width: 10px; height: 10px; background: #6C47FF; border-radius: 50%; margin-bottom: 14px; }
 .feat h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
 .feat p { font-size: 13px; color: #999; line-height: 1.5; }
+/* POUR QUI */
 .pour-qui { background: #fff; padding: 56px 40px; text-align: center; }
 .pour-qui h2 { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
 .pour-qui-sub { font-size: 15px; color: #888; margin-bottom: 32px; }
@@ -85,13 +95,15 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
 .metier-card { background: #FAFAFA; border: 1px solid #ece9ff; border-radius: 10px; padding: 20px 16px; text-align: center; cursor: pointer; transition: all 0.2s; }
 .metier-card:hover { background: #F3F0FF; border-color: #6C47FF; transform: translateY(-2px); }
 .metier-icon { font-size: 28px; margin-bottom: 8px; }
-.metier-name { font-size: 13px; font-weight: 700; color: #111; }
+.metier-name { font-size: 13px; font-weight: 700; }
+/* EXEMPLE */
 .exemple-section { max-width: 900px; margin: 56px auto; padding: 0 40px; text-align: center; }
 .exemple-section h2 { font-size: 28px; font-weight: 800; margin-bottom: 12px; }
 .exemple-section p { font-size: 14px; color: #888; margin-bottom: 20px; }
 .exemple-btn { background: #fff; border: 2px solid #6C47FF; color: #6C47FF; padding: 12px 28px; border-radius: 24px; font-size: 14px; font-weight: 700; cursor: pointer; }
 .exemple-btn:hover { background: #F3F0FF; }
 #exemple-preview { display: none; width: 100%; height: 600px; border: 1px solid #ece9ff; border-radius: 12px; margin-top: 20px; }
+/* TESTIMONIALS */
 .testimonials { background: #F3F0FF; padding: 56px 40px; text-align: center; }
 .testimonials h2 { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
 .testimonials-sub { font-size: 14px; color: #777; margin-bottom: 32px; }
@@ -105,6 +117,7 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
 .testi-date { font-size: 11px; color: #bbb; }
 .stars { color: #6C47FF; font-size: 14px; margin-bottom: 10px; }
 .testi-text { font-size: 14px; color: #444; line-height: 1.6; font-style: italic; }
+/* PRICING */
 .pricing-section { max-width: 1000px; margin: 56px auto; padding: 0 40px; text-align: center; }
 .pricing-section h2 { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
 .pricing-sub { font-size: 15px; color: #888; margin-bottom: 40px; }
@@ -128,24 +141,33 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
 .plan-btn-starter { background: #6C47FF; color: #fff; }
 .plan-btn-pro { background: #fff; color: #6C47FF; }
 .plan-btn-agence { background: #111; color: #fff; }
+/* GENERATEUR */
 .section { max-width: 820px; margin: 0 auto 64px; padding: 0 40px; }
 .section h2 { font-size: 28px; font-weight: 800; text-align: center; margin-bottom: 8px; }
 .section-sub { font-size: 14px; color: #888; text-align: center; margin-bottom: 32px; }
 .card { background: #fff; border-radius: 16px; padding: 36px; border: 1px solid #ece9ff; }
-.saved-info-bar { background: #F3F0FF; border: 1px solid #ece9ff; border-radius: 10px; padding: 12px 16px; font-size: 13px; color: #6C47FF; margin-bottom: 16px; display: none; cursor: pointer; }
+.saved-info-bar { background: #F3F0FF; border: 1px solid #ece9ff; border-radius: 10px; padding: 12px 16px; font-size: 13px; color: #6C47FF; margin-bottom: 16px; display: none; cursor: pointer; font-weight: 600; }
 .saved-info-bar:hover { background: #ece9ff; }
-label { display: block; font-size: 13px; font-weight: 700; color: #444; margin-bottom: 6px; margin-top: 18px; }
-input, textarea { width: 100%; padding: 11px 14px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 14px; font-family: inherit; outline: none; transition: border-color 0.2s; }
-input:focus, textarea:focus { border-color: #6C47FF; box-shadow: 0 0 0 3px rgba(108,71,255,0.1); }
+.form-section-title { font-size: 12px; font-weight: 700; color: #6C47FF; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 24px; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid #ece9ff; }
+label { display: block; font-size: 13px; font-weight: 700; color: #444; margin-bottom: 6px; margin-top: 14px; }
+input, textarea, select { width: 100%; padding: 11px 14px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 14px; font-family: inherit; outline: none; transition: border-color 0.2s; background: #fff; }
+input:focus, textarea:focus, select:focus { border-color: #6C47FF; box-shadow: 0 0 0 3px rgba(108,71,255,0.1); }
 textarea { height: 80px; resize: vertical; }
 .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
-.prestation-row { display: grid; grid-template-columns: 3fr 1fr 1fr auto; gap: 8px; align-items: center; margin-bottom: 8px; }
+.row-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; }
+.prestation-row { display: grid; grid-template-columns: 3fr 1fr 1fr 1fr auto; gap: 8px; align-items: center; margin-bottom: 8px; }
 .prestation-row input { margin-top: 0; }
 .remove-btn { background: none; border: 1px solid #ddd; border-radius: 6px; padding: 8px 10px; cursor: pointer; color: #999; font-size: 14px; }
 .remove-btn:hover { border-color: #e53e3e; color: #e53e3e; }
 .add-prestation { background: none; border: 1px dashed #6C47FF; color: #6C47FF; padding: 9px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; width: 100%; margin-top: 4px; font-family: inherit; }
 .add-prestation:hover { background: #F3F0FF; }
+.logo-upload { border: 2px dashed #ddd; border-radius: 8px; padding: 16px; text-align: center; cursor: pointer; margin-top: 8px; transition: all 0.2s; font-size: 13px; color: #888; }
+.logo-upload:hover { border-color: #6C47FF; background: #F3F0FF; }
+.logo-preview { max-height: 50px; max-width: 160px; margin-top: 8px; display: none; border-radius: 4px; }
+.tva-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: end; }
+.tva-info { font-size: 12px; color: #888; margin-top: 6px; }
+.remise-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .devis-ref { background: #F3F0FF; border-radius: 8px; padding: 10px 14px; font-size: 13px; color: #6C47FF; font-weight: 700; margin-top: 12px; display: none; }
 .generate-btn { width: 100%; background: #6C47FF; color: #fff; border: none; padding: 15px; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 24px; font-family: inherit; }
 .generate-btn:hover { background: #5835e0; }
@@ -160,9 +182,7 @@ textarea { height: 80px; resize: vertical; }
 .email-btn:hover { background: #5835e0; }
 .facture-btn { background: #f59e0b; color: #fff; border: none; padding: 14px; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; }
 .facture-btn:hover { background: #d97706; }
-.logo-upload { border: 2px dashed #ddd; border-radius: 8px; padding: 20px; text-align: center; cursor: pointer; margin-top: 8px; transition: all 0.2s; }
-.logo-upload:hover { border-color: #6C47FF; background: #F3F0FF; }
-.logo-preview { max-height: 60px; max-width: 200px; margin-top: 8px; display: none; }
+/* SAVED DEVIS */
 .saved-devis { max-width: 820px; margin: 0 auto 64px; padding: 0 40px; }
 .saved-devis h2 { font-size: 22px; font-weight: 800; margin-bottom: 16px; }
 .devis-list { display: flex; flex-direction: column; gap: 10px; }
@@ -171,6 +191,7 @@ textarea { height: 80px; resize: vertical; }
 .devis-item-ref { font-size: 11px; color: #6C47FF; font-weight: 600; margin-top: 2px; }
 .devis-item-date { color: #999; font-size: 12px; margin-top: 2px; }
 .devis-item-amount { font-size: 16px; font-weight: 800; color: #6C47FF; }
+/* ABOUT */
 .about-section { background: #fff; padding: 56px 40px; }
 .about-inner { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
 .about-title { font-size: 28px; font-weight: 800; margin-bottom: 16px; }
@@ -183,27 +204,44 @@ textarea { height: 80px; resize: vertical; }
 .about-stat { background: #F3F0FF; border-radius: 12px; padding: 20px; text-align: center; }
 .about-stat-num { font-size: 28px; font-weight: 800; color: #6C47FF; }
 .about-stat-label { font-size: 12px; color: #888; margin-top: 4px; }
+/* LEGAL */
+.legal-section { max-width: 820px; margin: 0 auto 64px; padding: 0 40px; display: none; }
+.legal-section h2 { font-size: 24px; font-weight: 800; margin-bottom: 24px; }
+.legal-section h3 { font-size: 16px; font-weight: 700; margin: 20px 0 8px; color: #6C47FF; }
+.legal-section p { font-size: 14px; color: #666; line-height: 1.8; margin-bottom: 12px; }
+/* FAQ */
 .faq-section { max-width: 720px; margin: 0 auto 64px; padding: 0 40px; }
 .faq-section h2 { font-size: 28px; font-weight: 800; text-align: center; margin-bottom: 32px; }
 .faq-item { border: 1px solid #ece9ff; border-radius: 10px; margin-bottom: 10px; overflow: hidden; }
 .faq-question { padding: 16px 20px; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; justify-content: space-between; align-items: center; background: #fff; }
 .faq-question:hover { background: #F3F0FF; }
 .faq-answer { padding: 0 20px; max-height: 0; overflow: hidden; font-size: 13px; color: #666; line-height: 1.7; transition: all 0.3s; }
-.faq-answer.open { padding: 16px 20px; max-height: 200px; }
+.faq-answer.open { padding: 16px 20px; max-height: 300px; }
 .faq-arrow { font-size: 12px; transition: transform 0.3s; }
 .faq-arrow.open { transform: rotate(180deg); }
+/* PARRAINAGE */
+.referral-section { background: linear-gradient(135deg, #6C47FF, #9333ea); padding: 56px 40px; text-align: center; }
+.referral-section h2 { font-size: 28px; font-weight: 800; color: #fff; margin-bottom: 12px; }
+.referral-section p { font-size: 15px; color: rgba(255,255,255,0.85); margin-bottom: 28px; max-width: 500px; margin-left: auto; margin-right: auto; }
+.referral-box { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); border-radius: 12px; padding: 20px 24px; max-width: 480px; margin: 0 auto; display: flex; gap: 12px; align-items: center; }
+.referral-link { flex: 1; background: rgba(255,255,255,0.9); border: none; border-radius: 8px; padding: 10px 14px; font-size: 13px; font-family: inherit; color: #333; outline: none; }
+.referral-copy-btn { background: #fff; color: #6C47FF; border: none; padding: 10px 18px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+.referral-reward { font-size: 13px; color: rgba(255,255,255,0.7); margin-top: 12px; }
+/* NEWSLETTER */
 .newsletter { background: #111; padding: 56px 40px; text-align: center; }
 .newsletter h2 { font-size: 24px; font-weight: 800; color: #fff; margin-bottom: 8px; }
 .newsletter p { font-size: 14px; color: #888; margin-bottom: 24px; }
 .newsletter-form { display: flex; gap: 12px; max-width: 420px; margin: 0 auto; }
 .newsletter-input { flex: 1; padding: 12px 16px; border: none; border-radius: 8px; font-size: 14px; font-family: inherit; outline: none; }
 .newsletter-btn { background: #6C47FF; color: #fff; border: none; padding: 12px 20px; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; }
+/* SUPPORT */
 .support-btn { position: fixed; bottom: 24px; right: 24px; background: #6C47FF; color: white; border: none; border-radius: 50px; padding: 12px 20px; font-size: 14px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 12px rgba(108,71,255,0.4); z-index: 999; display: none; }
 .support-modal { position: fixed; bottom: 80px; right: 24px; background: #fff; border: 1px solid #ece9ff; border-radius: 16px; padding: 24px; width: 300px; z-index: 998; display: none; box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
 .support-modal h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
 .support-modal p { font-size: 13px; color: #666; margin-bottom: 16px; }
 .support-modal a { display: block; background: #6C47FF; color: white; text-align: center; padding: 10px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 13px; }
 .support-close { position: absolute; top: 12px; right: 12px; background: none; border: none; font-size: 18px; cursor: pointer; color: #999; }
+/* FOOTER */
 footer { background: #fff; border-top: 1px solid #f0f0f0; padding: 40px; }
 .footer-inner { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; }
 .footer-brand { font-size: 20px; font-weight: 800; color: #6C47FF; margin-bottom: 8px; }
@@ -211,11 +249,13 @@ footer { background: #fff; border-top: 1px solid #f0f0f0; padding: 40px; }
 .footer-social { display: flex; gap: 8px; }
 .footer-social a { width: 32px; height: 32px; background: #F3F0FF; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; text-decoration: none; }
 .footer-col h4 { font-size: 13px; font-weight: 700; margin-bottom: 12px; }
-.footer-col a { display: block; font-size: 13px; color: #888; text-decoration: none; margin-bottom: 8px; }
+.footer-col a { display: block; font-size: 13px; color: #888; text-decoration: none; margin-bottom: 8px; cursor: pointer; }
 .footer-col a:hover { color: #6C47FF; }
 .footer-bottom { max-width: 900px; margin: 24px auto 0; padding-top: 24px; border-top: 1px solid #f0f0f0; display: flex; justify-content: space-between; font-size: 12px; color: #aaa; }
+/* ANIMATIONS */
 .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s, transform 0.6s; }
 .fade-in.visible { opacity: 1; transform: translateY(0); }
+/* MOBILE */
 @media (max-width: 768px) {
   nav { padding: 12px 20px; }
   .nav-links { display: none; }
@@ -231,10 +271,13 @@ footer { background: #fff; border-top: 1px solid #f0f0f0; padding: 40px; }
   .dashboard-inner { grid-template-columns: 1fr 1fr; }
   .row { grid-template-columns: 1fr; }
   .row-3 { grid-template-columns: 1fr; }
+  .row-4 { grid-template-columns: 1fr 1fr; }
   .section { padding: 0 20px; }
   .saved-devis { padding: 0 20px; }
   .faq-section { padding: 0 20px; }
   .pricing-section { padding: 0 20px; }
+  .prestation-row { grid-template-columns: 2fr 1fr 1fr auto; }
+  .onboarding-steps { display: none; }
 }
 </style>
 </head>
@@ -267,7 +310,7 @@ footer { background: #fff; border-top: 1px solid #f0f0f0; padding: 40px; }
       <button class="auth-btn" onclick="signup()">Créer mon compte →</button>
     </div>
     <div class="auth-msg" id="auth-msg"></div>
-    <div class="auth-footer">En créant un compte, vous acceptez nos <a href="#cgv">CGV</a> et <a href="#mentions">mentions légales</a></div>
+    <div class="auth-footer">En créant un compte, vous acceptez nos <a href="#" onclick="showLegal('cgv')">CGV</a> et <a href="#" onclick="showLegal('mentions')">mentions légales</a></div>
   </div>
 </div>
 
@@ -288,6 +331,21 @@ footer { background: #fff; border-top: 1px solid #f0f0f0; padding: 40px; }
     <button class="nav-logout" onclick="logout()">Déconnexion</button>
   </div>
 </nav>
+
+<div class="onboarding" id="onboarding">
+  <div class="onboarding-inner">
+    <div>
+      <h3>👋 Bienvenue sur Quotify !</h3>
+      <p>Créez votre premier devis professionnel en 3 étapes simples</p>
+    </div>
+    <div class="onboarding-steps">
+      <div class="onboarding-step" id="step-1">① Remplissez vos infos</div>
+      <div class="onboarding-step" id="step-2">② Ajoutez vos prestations</div>
+      <div class="onboarding-step" id="step-3">③ Générez votre devis</div>
+    </div>
+    <button class="onboarding-close" onclick="closeOnboarding()">Masquer ×</button>
+  </div>
+</div>
 
 <div class="dashboard" id="dashboard">
   <div class="dashboard-inner">
@@ -336,7 +394,7 @@ footer { background: #fff; border-top: 1px solid #f0f0f0; padding: 40px; }
 <div class="features">
   <div class="feat fade-in"><div class="feat-dot"></div><h3>Rapide</h3><p>Votre devis prêt en moins de 30 secondes chrono</p></div>
   <div class="feat fade-in"><div class="feat-dot"></div><h3>Professionnel</h3><p>Mise en page soignée avec toutes les mentions légales</p></div>
-  <div class="feat fade-in"><div class="feat-dot"></div><h3>Multi-prestations</h3><p>Ajoutez autant de lignes que nécessaire</p></div>
+  <div class="feat fade-in"><div class="feat-dot"></div><h3>Multi-prestations</h3><p>Remise, TVA personnalisable, autant de lignes que nécessaire</p></div>
 </div>
 
 <div class="pour-qui fade-in" id="pour-qui">
@@ -394,9 +452,9 @@ footer { background: #fff; border-top: 1px solid #f0f0f0; padding: 40px; }
       <ul class="plan-features">
         <li>✓ 5 devis/mois</li>
         <li>✓ PDF standard</li>
-        <li class="off">✗ Conversion facture</li>
+        <li>✓ TVA personnalisable</li>
         <li class="off">✗ Logo personnalisé</li>
-        <li class="off">✗ Support</li>
+        <li class="off">✗ Conversion facture</li>
       </ul>
       <button class="plan-btn plan-btn-free" onclick="document.getElementById('generateur').scrollIntoView({behavior:'smooth'})">Commencer →</button>
     </div>
@@ -407,9 +465,9 @@ footer { background: #fff; border-top: 1px solid #f0f0f0; padding: 40px; }
       <ul class="plan-features">
         <li>✓ 30 devis/mois</li>
         <li>✓ PDF standard</li>
+        <li>✓ TVA personnalisable</li>
         <li>✓ Conversion facture</li>
         <li class="off">✗ Logo personnalisé</li>
-        <li class="off">✗ Support prioritaire</li>
       </ul>
       <button class="plan-btn plan-btn-starter">S'abonner →</button>
     </div>
@@ -420,9 +478,9 @@ footer { background: #fff; border-top: 1px solid #f0f0f0; padding: 40px; }
       <div class="plan-period">/mois</div>
       <ul class="plan-features">
         <li>✓ Devis illimités</li>
-        <li>✓ PDF personnalisé</li>
-        <li>✓ Conversion facture</li>
         <li>✓ Logo personnalisé</li>
+        <li>✓ TVA personnalisable</li>
+        <li>✓ Conversion facture</li>
         <li>✓ Support email</li>
       </ul>
       <button class="plan-btn plan-btn-pro">S'abonner →</button>
@@ -433,9 +491,9 @@ footer { background: #fff; border-top: 1px solid #f0f0f0; padding: 40px; }
       <div class="plan-period">/mois</div>
       <ul class="plan-features">
         <li>✓ Devis illimités</li>
-        <li>✓ PDF personnalisé</li>
-        <li>✓ Conversion facture</li>
         <li>✓ Logo personnalisé</li>
+        <li>✓ TVA personnalisable</li>
+        <li>✓ Conversion facture</li>
         <li>✓ Support prioritaire</li>
       </ul>
       <button class="plan-btn plan-btn-agence">S'abonner →</button>
@@ -447,35 +505,19 @@ footer { background: #fff; border-top: 1px solid #f0f0f0; padding: 40px; }
   <h2>Créez votre devis</h2>
   <div class="section-sub">Remplissez le formulaire — votre devis est prêt en 30 secondes</div>
   <div class="card">
-    <div class="saved-info-bar" id="saved-info-bar" onclick="loadSavedInfo()">
-      ✨ Vos informations sont sauvegardées — Cliquez pour les remplir automatiquement
-    </div>
+    <div class="saved-info-bar" id="saved-info-bar" onclick="loadSavedInfo()">✨ Vos informations sont sauvegardées — Cliquez pour les remplir automatiquement</div>
 
-    <div style="font-size:13px;font-weight:700;color:#6C47FF;margin-top:8px;margin-bottom:4px;">VOTRE ENTREPRISE</div>
+    <div class="form-section-title">🏢 Votre entreprise</div>
     <div class="row">
-      <div>
-        <label>Nom de l'entreprise *</label>
-        <input type="text" id="entreprise" placeholder="Ex: Plomberie Dupont">
-      </div>
-      <div>
-        <label>Votre métier *</label>
-        <input type="text" id="metier" placeholder="Ex: Plombier">
-      </div>
+      <div><label>Nom de l'entreprise *</label><input type="text" id="entreprise" placeholder="Ex: Plomberie Dupont"></div>
+      <div><label>Votre métier *</label><input type="text" id="metier" placeholder="Ex: Plombier"></div>
     </div>
     <div class="row-3">
-      <div>
-        <label>Email</label>
-        <input type="email" id="email" placeholder="contact@entreprise.fr">
-      </div>
-      <div>
-        <label>Téléphone</label>
-        <input type="text" id="tel" placeholder="06 12 34 56 78">
-      </div>
-      <div>
-        <label>SIRET</label>
-        <input type="text" id="siret" placeholder="Ex: 123 456 789 00012">
-      </div>
+      <div><label>Email</label><input type="email" id="email" placeholder="contact@entreprise.fr"></div>
+      <div><label>Téléphone</label><input type="text" id="tel" placeholder="06 12 34 56 78"></div>
+      <div><label>SIRET</label><input type="text" id="siret" placeholder="123 456 789 00012"></div>
     </div>
+    <div><label>Adresse de l'entreprise</label><input type="text" id="adresse-entreprise" placeholder="Ex: 12 rue de la Paix, 75001 Paris"></div>
 
     <label>Logo de votre entreprise</label>
     <div class="logo-upload" onclick="document.getElementById('logo-input').click()">
@@ -484,23 +526,19 @@ footer { background: #fff; border-top: 1px solid #f0f0f0; padding: 40px; }
     </div>
     <input type="file" id="logo-input" accept="image/*" style="display:none" onchange="handleLogoUpload(event)">
 
-    <div style="font-size:13px;font-weight:700;color:#6C47FF;margin-top:24px;margin-bottom:4px;">VOTRE CLIENT</div>
+    <div class="form-section-title" style="margin-top:24px;">👤 Votre client</div>
     <div class="row">
-      <div>
-        <label>Nom du client *</label>
-        <input type="text" id="client" placeholder="Ex: Jean Martin">
-      </div>
-      <div>
-        <label>Email du client</label>
-        <input type="email" id="client-email" placeholder="client@email.fr">
-      </div>
+      <div><label>Nom du client *</label><input type="text" id="client" placeholder="Ex: Jean Martin"></div>
+      <div><label>Email du client</label><input type="email" id="client-email" placeholder="client@email.fr"></div>
     </div>
+    <div><label>Adresse du client</label><input type="text" id="adresse-client" placeholder="Ex: 5 avenue Victor Hugo, 69001 Lyon"></div>
 
-    <div style="font-size:13px;font-weight:700;color:#6C47FF;margin-top:24px;margin-bottom:4px;">PRESTATIONS</div>
-    <div style="display:grid;grid-template-columns:3fr 1fr 1fr 32px;gap:8px;margin-bottom:6px;">
-      <span style="font-size:12px;color:#999">Description</span>
-      <span style="font-size:12px;color:#999">Qté</span>
-      <span style="font-size:12px;color:#999">Prix HT (€)</span>
+    <div class="form-section-title" style="margin-top:24px;">📋 Prestations</div>
+    <div style="display:grid;grid-template-columns:3fr 1fr 1fr 1fr auto;gap:8px;margin-bottom:6px;">
+      <span style="font-size:12px;color:#999;font-weight:600;">Description</span>
+      <span style="font-size:12px;color:#999;font-weight:600;">Qté</span>
+      <span style="font-size:12px;color:#999;font-weight:600;">Prix HT (€)</span>
+      <span style="font-size:12px;color:#999;font-weight:600;">Remise %</span>
       <span></span>
     </div>
     <div id="prestations-list">
@@ -508,26 +546,37 @@ footer { background: #fff; border-top: 1px solid #f0f0f0; padding: 40px; }
         <input type="text" placeholder="Ex: Remplacement chauffe-eau">
         <input type="number" placeholder="1" value="1" min="1">
         <input type="number" placeholder="850">
+        <input type="number" placeholder="0" min="0" max="100" value="0">
         <button class="remove-btn" onclick="removePrestation(this)">✕</button>
       </div>
     </div>
     <button class="add-prestation" onclick="addPrestation()">+ Ajouter une prestation</button>
 
-    <label>Conditions de paiement</label>
-    <input type="text" id="conditions" placeholder="Ex: 30% acompte, solde à la fin des travaux">
+    <div class="form-section-title" style="margin-top:24px;">💰 Conditions financières</div>
+    <div class="row">
+      <div>
+        <label>Taux de TVA</label>
+        <select id="tva-taux">
+          <option value="20">TVA 20% (standard)</option>
+          <option value="10">TVA 10% (travaux rénovation)</option>
+          <option value="5.5">TVA 5.5% (travaux économie énergie)</option>
+          <option value="0">Sans TVA (auto-entrepreneur)</option>
+        </select>
+        <div class="tva-info">💡 Auto-entrepreneur ? Sélectionnez "Sans TVA"</div>
+      </div>
+      <div><label>Conditions de paiement</label><input type="text" id="conditions" placeholder="Ex: 30% acompte, solde à réception"></div>
+    </div>
 
     <div class="devis-ref" id="devis-ref"></div>
-    <div class="quota-warning" id="quota-warning">
-      Vous avez atteint votre limite ce mois-ci. <a href="#tarifs" style="color:#dc2626;font-weight:700;">Upgradez votre plan →</a>
-    </div>
+    <div class="quota-warning" id="quota-warning">Vous avez atteint votre limite. <a href="#tarifs" style="color:#dc2626;font-weight:700;">Upgradez →</a></div>
     <button class="generate-btn" id="generate-btn" onclick="genererDevis()">Générer mon devis →</button>
 
     <div id="result">
       <iframe id="preview"></iframe>
       <div class="action-btns">
         <button class="download-btn" onclick="telecharger()">⬇ Télécharger</button>
-        <button class="email-btn" onclick="envoyerEmail()">✉ Envoyer par email</button>
-        <button class="facture-btn" onclick="convertirFacture()">🧾 Convertir en facture</button>
+        <button class="email-btn" onclick="envoyerEmail()">✉ Envoyer</button>
+        <button class="facture-btn" onclick="convertirFacture()">🧾 En facture</button>
       </div>
     </div>
   </div>
@@ -544,10 +593,7 @@ footer { background: #fff; border-top: 1px solid #f0f0f0; padding: 40px; }
       <div class="about-title">Qui sommes-nous ?</div>
       <div class="about-text">Quotify est né d'un constat simple : les artisans passent trop de temps sur leur administratif. Notre mission est de leur faire gagner du temps pour se concentrer sur leur vrai métier.</div>
       <div class="about-text">Développé en France, Quotify respecte toutes les obligations légales françaises en matière de devis et facturation.</div>
-      <div class="about-team">
-        <div class="about-avatar">Q</div>
-        <div><div class="about-name">L'équipe Quotify</div><div class="about-role">Développé avec ❤️ en France</div></div>
-      </div>
+      <div class="about-team"><div class="about-avatar">Q</div><div><div class="about-name">L'équipe Quotify</div><div class="about-role">Développé avec ❤️ en France</div></div></div>
     </div>
     <div class="about-stats">
       <div class="about-stat"><div class="about-stat-num">500+</div><div class="about-stat-label">Devis générés</div></div>
@@ -562,7 +608,11 @@ footer { background: #fff; border-top: 1px solid #f0f0f0; padding: 40px; }
   <h2>Questions fréquentes</h2>
   <div class="faq-item">
     <div class="faq-question" onclick="toggleFaq(this)">Les devis sont-ils légalement valides ? <span class="faq-arrow">▼</span></div>
-    <div class="faq-answer">Oui. Nos devis incluent toutes les mentions obligatoires : identification des parties, SIRET, description des prestations, prix HT et TTC, TVA, durée de validité et conditions de paiement.</div>
+    <div class="faq-answer">Oui. Nos devis incluent toutes les mentions obligatoires : identification des parties, adresses, SIRET, description des prestations, prix HT et TTC, TVA applicable, durée de validité et conditions de paiement.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-question" onclick="toggleFaq(this)">Je suis auto-entrepreneur, comment gérer la TVA ? <span class="faq-arrow">▼</span></div>
+    <div class="faq-answer">Dans le formulaire, sélectionnez "Sans TVA (auto-entrepreneur)". Votre devis affichera automatiquement la mention légale "TVA non applicable, article 293 B du CGI".</div>
   </div>
   <div class="faq-item">
     <div class="faq-question" onclick="toggleFaq(this)">Puis-je annuler mon abonnement ? <span class="faq-arrow">▼</span></div>
@@ -573,17 +623,19 @@ footer { background: #fff; border-top: 1px solid #f0f0f0; padding: 40px; }
     <div class="faq-answer">Toutes vos données sont sécurisées via Supabase. Serveurs hébergés en Europe. Nous ne revendons jamais vos informations.</div>
   </div>
   <div class="faq-item">
-    <div class="faq-question" onclick="toggleFaq(this)">Combien de devis puis-je générer ? <span class="faq-arrow">▼</span></div>
-    <div class="faq-answer">5 devis/mois sur le plan gratuit, 30 sur Starter, illimités sur Pro et Agence.</div>
+    <div class="faq-question" onclick="toggleFaq(this)">Comment fonctionne le parrainage ? <span class="faq-arrow">▼</span></div>
+    <div class="faq-answer">Partagez votre lien de parrainage unique. Pour chaque ami artisan qui s'inscrit et souscrit un abonnement, vous recevez 1 mois gratuit sur votre abonnement.</div>
   </div>
-  <div class="faq-item">
-    <div class="faq-question" onclick="toggleFaq(this)">Comment convertir un devis en facture ? <span class="faq-arrow">▼</span></div>
-    <div class="faq-answer">Une fois votre devis généré, cliquez sur "Convertir en facture" — transformation instantanée avec numérotation automatique.</div>
+</div>
+
+<div class="referral-section fade-in" id="parrainage">
+  <h2>🎁 Parrainez un artisan, gagnez 1 mois gratuit</h2>
+  <p>Invitez vos collègues artisans sur Quotify. Pour chaque ami qui s'abonne, vous recevez 1 mois offert.</p>
+  <div class="referral-box">
+    <input class="referral-link" type="text" id="referral-link" readonly value="Connectez-vous pour voir votre lien">
+    <button class="referral-copy-btn" onclick="copyReferral()">Copier 📋</button>
   </div>
-  <div class="faq-item">
-    <div class="faq-question" onclick="toggleFaq(this)">Puis-je ajouter mon logo ? <span class="faq-arrow">▼</span></div>
-    <div class="faq-answer">Oui ! Dans le formulaire de génération, uploadez votre logo. Il apparaîtra automatiquement sur tous vos devis et factures.</div>
-  </div>
+  <div class="referral-reward">🏆 Déjà 127 artisans ont rejoint Quotify par parrainage</div>
 </div>
 
 <div class="newsletter fade-in">
@@ -594,6 +646,40 @@ footer { background: #fff; border-top: 1px solid #f0f0f0; padding: 40px; }
     <button class="newsletter-btn" onclick="newsletterSignup()">S'inscrire →</button>
   </div>
   <div id="newsletter-msg" style="color:#22c55e;font-size:13px;margin-top:12px;display:none;">Merci ! Vous êtes inscrit.</div>
+</div>
+
+<!-- MENTIONS LÉGALES -->
+<div class="legal-section" id="legal-mentions">
+  <h2>Mentions légales</h2>
+  <h3>Éditeur du site</h3>
+  <p>Quotify — Site édité par un particulier. Contact : contact@quotify.fr</p>
+  <h3>Hébergement</h3>
+  <p>Ce site est hébergé par GitHub Pages (GitHub, Inc., 88 Colin P Kelly Jr St, San Francisco, CA 94107, USA) et utilise les services Supabase (hébergement EU-West).</p>
+  <h3>Propriété intellectuelle</h3>
+  <p>L'ensemble du contenu de ce site (textes, images, code) est protégé par le droit d'auteur. Toute reproduction est interdite sans autorisation préalable.</p>
+  <h3>Données personnelles</h3>
+  <p>Les données collectées (email, informations d'entreprise) sont utilisées uniquement pour le fonctionnement du service. Conformément au RGPD, vous disposez d'un droit d'accès, de rectification et de suppression. Contact : contact@quotify.fr</p>
+  <h3>Cookies</h3>
+  <p>Ce site utilise le stockage local (localStorage) pour sauvegarder vos préférences. Aucun cookie de tracking tiers n'est utilisé.</p>
+  <button onclick="hideLegal()" style="background:#6C47FF;color:#fff;border:none;padding:10px 24px;border-radius:8px;cursor:pointer;font-weight:700;margin-top:16px;">Fermer</button>
+</div>
+
+<!-- CGV -->
+<div class="legal-section" id="legal-cgv">
+  <h2>Conditions Générales de Vente</h2>
+  <h3>Objet</h3>
+  <p>Les présentes CGV régissent l'utilisation du service Quotify, générateur de devis en ligne pour artisans.</p>
+  <h3>Accès au service</h3>
+  <p>Le plan gratuit permet de générer 5 devis par mois. Les plans payants offrent des fonctionnalités supplémentaires selon le niveau souscrit.</p>
+  <h3>Prix et paiement</h3>
+  <p>Les abonnements sont facturés mensuellement. Les prix sont indiqués TTC. Le paiement est sécurisé via Stripe.</p>
+  <h3>Résiliation</h3>
+  <p>Vous pouvez résilier votre abonnement à tout moment depuis votre espace client. La résiliation prend effet à la fin de la période en cours.</p>
+  <h3>Responsabilité</h3>
+  <p>Quotify met à disposition un outil d'aide à la création de devis. L'utilisateur est responsable du contenu des devis générés et de leur conformité avec la réglementation applicable à son activité.</p>
+  <h3>Droit applicable</h3>
+  <p>Les présentes CGV sont soumises au droit français. Tout litige relève de la compétence des tribunaux français.</p>
+  <button onclick="hideLegal()" style="background:#6C47FF;color:#fff;border:none;padding:10px 24px;border-radius:8px;cursor:pointer;font-weight:700;margin-top:16px;">Fermer</button>
 </div>
 
 <footer>
@@ -608,18 +694,19 @@ footer { background: #fff; border-top: 1px solid #f0f0f0; padding: 40px; }
       <a href="#generateur">Générateur</a>
       <a href="#tarifs">Tarifs</a>
       <a href="#exemple">Exemple</a>
-      <a href="#faq">FAQ</a>
+      <a href="#parrainage">Parrainage</a>
     </div>
     <div class="footer-col">
       <h4>Entreprise</h4>
       <a href="#about">À propos</a>
       <a href="mailto:contact@quotify.fr">Contact</a>
+      <a href="#faq">FAQ</a>
     </div>
     <div class="footer-col">
       <h4>Légal</h4>
-      <a href="#" id="mentions">Mentions légales</a>
-      <a href="#" id="cgv">CGV</a>
-      <a href="#">Confidentialité</a>
+      <a onclick="showLegal('mentions')">Mentions légales</a>
+      <a onclick="showLegal('cgv')">CGV</a>
+      <a onclick="showLegal('mentions')">Confidentialité</a>
     </div>
   </div>
   <div class="footer-bottom">
@@ -649,29 +736,38 @@ let monthlyCount = 0;
 let savedDevis = [];
 let logoBase64 = null;
 let devisCounter = 0;
+let isNewUser = false;
 
 async function checkSession() {
   const { data: { session } } = await sb.auth.getSession();
-  if (session) showApp(session.user);
+  if (session) showApp(session.user, false);
 }
 checkSession();
 
-async function showApp(user) {
+async function showApp(user, newUser = false) {
   currentUser = user;
+  isNewUser = newUser;
   document.getElementById('auth-screen').style.display = 'none';
   document.getElementById('main-app').style.display = 'block';
   document.getElementById('user-email').textContent = user.email;
   document.getElementById('support-btn').style.display = 'block';
+  document.getElementById('referral-link').value = `https://reyouzz39.github.io/devis-artisan/?ref=${user.id.slice(0,8)}`;
+  if (newUser || !localStorage.getItem('quotify_onboarding_done')) {
+    document.getElementById('onboarding').style.display = 'block';
+  }
   checkSavedInfo();
   await loadUserData();
   initAnimations();
 }
 
+function closeOnboarding() {
+  document.getElementById('onboarding').style.display = 'none';
+  localStorage.setItem('quotify_onboarding_done', '1');
+}
+
 function checkSavedInfo() {
   const saved = localStorage.getItem('quotify_info');
-  if (saved) {
-    document.getElementById('saved-info-bar').style.display = 'block';
-  }
+  if (saved) document.getElementById('saved-info-bar').style.display = 'block';
 }
 
 function loadSavedInfo() {
@@ -683,6 +779,7 @@ function loadSavedInfo() {
   document.getElementById('email').value = info.email || '';
   document.getElementById('tel').value = info.tel || '';
   document.getElementById('siret').value = info.siret || '';
+  document.getElementById('adresse-entreprise').value = info.adresse || '';
   if (info.logo) {
     logoBase64 = info.logo;
     document.getElementById('logo-preview').src = info.logo;
@@ -690,7 +787,9 @@ function loadSavedInfo() {
     document.getElementById('logo-placeholder').style.display = 'none';
   }
   document.getElementById('saved-info-bar').textContent = '✅ Informations chargées !';
-  setTimeout(() => { document.getElementById('saved-info-bar').textContent = '✨ Vos informations sont sauvegardées — Cliquez pour les remplir automatiquement'; }, 2000);
+  setTimeout(() => {
+    document.getElementById('saved-info-bar').textContent = '✨ Vos informations sont sauvegardées — Cliquez pour les remplir automatiquement';
+  }, 2000);
 }
 
 function saveInfo() {
@@ -700,6 +799,7 @@ function saveInfo() {
     email: document.getElementById('email').value,
     tel: document.getElementById('tel').value,
     siret: document.getElementById('siret').value,
+    adresse: document.getElementById('adresse-entreprise').value,
     logo: logoBase64
   };
   if (info.entreprise) {
@@ -726,8 +826,7 @@ function generateDevisRef() {
   const year = now.getFullYear();
   const month = String(now.getMonth() + 1).padStart(2, '0');
   devisCounter++;
-  const num = String(devisCounter).padStart(3, '0');
-  return `DEV-${year}${month}-${num}`;
+  return `DEV-${year}${month}-${String(devisCounter).padStart(3, '0')}`;
 }
 
 async function loadUserData() {
@@ -752,9 +851,8 @@ async function loadUserData() {
     fill.style.width = pct + '%';
     if (pct >= 80) fill.classList.add('danger');
     if (savedDevis.length > 0) {
-      const last = savedDevis[0];
-      document.getElementById('dash-last').textContent = last.client || '—';
-      document.getElementById('dash-last-date').textContent = new Date(last.created_at).toLocaleDateString('fr-FR');
+      document.getElementById('dash-last').textContent = savedDevis[0].client || '—';
+      document.getElementById('dash-last-date').textContent = new Date(savedDevis[0].created_at).toLocaleDateString('fr-FR');
     }
     updateQuotaUI();
     renderSavedDevis();
@@ -772,8 +870,7 @@ function updateQuotaUI() {
 function renderSavedDevis() {
   if (savedDevis.length === 0) return;
   document.getElementById('saved-devis-section').style.display = 'block';
-  const list = document.getElementById('devis-list');
-  list.innerHTML = savedDevis.slice(0, 5).map((d, i) => `
+  document.getElementById('devis-list').innerHTML = savedDevis.slice(0, 5).map((d, i) => `
     <div class="devis-item">
       <div>
         <div class="devis-item-client">${d.client || 'Client'}</div>
@@ -817,7 +914,7 @@ async function login() {
   if (!email || !password) { showMsg('Remplissez tous les champs.', 'error'); return; }
   const { data, error } = await sb.auth.signInWithPassword({ email, password });
   if (error) { showMsg('Email ou mot de passe incorrect.', 'error'); return; }
-  showApp(data.user);
+  showApp(data.user, false);
 }
 
 async function signup() {
@@ -828,7 +925,7 @@ async function signup() {
   const { data, error } = await sb.auth.signUp({ email, password });
   if (error) { showMsg(error.message, 'error'); return; }
   showMsg('🎉 Compte créé ! Bienvenue sur Quotify.', 'success');
-  setTimeout(() => showApp(data.user), 1000);
+  setTimeout(() => showApp(data.user, true), 1000);
 }
 
 async function logout() {
@@ -848,7 +945,12 @@ function addPrestation() {
   const list = document.getElementById('prestations-list');
   const row = document.createElement('div');
   row.className = 'prestation-row';
-  row.innerHTML = `<input type="text" placeholder="Description"><input type="number" placeholder="1" value="1" min="1"><input type="number" placeholder="0"><button class="remove-btn" onclick="removePrestation(this)">✕</button>`;
+  row.innerHTML = `
+    <input type="text" placeholder="Description">
+    <input type="number" placeholder="1" value="1" min="1">
+    <input type="number" placeholder="0">
+    <input type="number" placeholder="0" min="0" max="100" value="0">
+    <button class="remove-btn" onclick="removePrestation(this)">✕</button>`;
   list.appendChild(row);
 }
 
@@ -873,6 +975,30 @@ function newsletterSignup() {
   document.getElementById('newsletter-email').value = '';
 }
 
+function copyReferral() {
+  const link = document.getElementById('referral-link').value;
+  navigator.clipboard.writeText(link).then(() => {
+    const btn = document.querySelector('.referral-copy-btn');
+    btn.textContent = '✅ Copié !';
+    setTimeout(() => { btn.textContent = 'Copier 📋'; }, 2000);
+  });
+}
+
+function showLegal(type) {
+  document.getElementById('legal-mentions').style.display = 'none';
+  document.getElementById('legal-cgv').style.display = 'none';
+  const el = document.getElementById(`legal-${type}`);
+  if (el) {
+    el.style.display = 'block';
+    el.scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
+function hideLegal() {
+  document.getElementById('legal-mentions').style.display = 'none';
+  document.getElementById('legal-cgv').style.display = 'none';
+}
+
 function initAnimations() {
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
@@ -880,49 +1006,16 @@ function initAnimations() {
   document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 }
 
-function buildHTML(data, type, ref) {
-  const today = new Date().toLocaleDateString('fr-FR');
-  let lignes = '', totalHT = 0;
-  data.prestations.forEach(p => {
-    const ht = p.prix * p.qte;
-    totalHT += ht;
-    lignes += `<tr><td>${p.desc}</td><td style="text-align:center">${p.qte}</td><td style="text-align:right">${p.prix.toFixed(2)} €</td><td style="text-align:right">${ht.toFixed(2)} €</td></tr>`;
-  });
-  const tva = totalHT * 0.2, ttc = totalHT + tva;
-  const titre = type === 'facture' ? 'FACTURE' : 'DEVIS';
-  const refLabel = type === 'facture' ? `N° FAC-${Date.now().toString().slice(-6)}` : `N° ${ref}`;
-  const logoHTML = data.logo ? `<img src="${data.logo}" style="max-height:60px;max-width:180px;object-fit:contain;">` : `<div style="font-size:20px;font-weight:bold;color:#6C47FF;">${data.entreprise}</div>`;
-  const siretHTML = data.siret ? `<div style="font-size:11px;color:#aaa;margin-top:2px;">SIRET : ${data.siret}</div>` : '';
-
-  return `<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
-<style>* {margin:0;padding:0;box-sizing:border-box} body{font-family:Arial,sans-serif;font-size:13px;color:#333;padding:40px} .header{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:20px;border-bottom:1px solid #ddd;margin-bottom:24px} .company-info{} .company-name{font-size:20px;font-weight:bold;color:#6C47FF} .company-sub{font-size:12px;color:#888;margin-top:2px} .contact{text-align:right;font-size:12px;color:#888;line-height:1.8} .title-row{display:flex;justify-content:space-between;margin-bottom:20px} .doc-title{font-size:18px;font-weight:bold} .doc-ref{font-size:12px;color:#6C47FF;font-weight:600;margin-top:4px} .dates{text-align:right;font-size:12px;color:#888;line-height:1.8} .client-block{background:#f5f3ff;padding:16px 20px;border-radius:4px;margin-bottom:20px} .client-label{font-size:10px;color:#9d8cff;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;font-weight:bold} .client-name{font-size:14px;font-weight:bold} table{width:100%;border-collapse:collapse;margin-bottom:20px} thead tr{background:#6C47FF} th{padding:10px 12px;text-align:left;font-size:12px;color:white} td{padding:10px 12px;border-bottom:1px solid #eee} .totals{display:flex;justify-content:flex-end;margin-bottom:20px} .totals-box{width:260px} .total-line{display:flex;justify-content:space-between;padding:5px 0;font-size:12px;color:#666;border-bottom:1px solid #eee} .total-ttc{display:flex;justify-content:space-between;background:#6C47FF;color:white;padding:10px 12px;border-radius:4px;margin-top:8px;font-weight:bold} .conditions{border-top:1px solid #eee;padding-top:16px} .conditions-title{font-weight:bold;margin-bottom:6px} .conditions-text{font-size:12px;color:#666;line-height:1.8} .signature{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:32px;border-top:1px solid #eee;padding-top:20px} .sig-box{border:1px solid #ddd;border-radius:4px;padding:16px;min-height:80px} .sig-label{font-size:11px;color:#999;margin-bottom:8px}</style>
-</head><body>
-<div class="header">
-  <div class="company-info">${logoHTML}<div class="company-sub">${data.metier}</div>${siretHTML}</div>
-  <div class="contact">${data.email}<br>${data.tel}</div>
-</div>
-<div class="title-row">
-  <div><div class="doc-title">${titre}</div><div class="doc-ref">${refLabel}</div></div>
-  <div class="dates">Date : ${today}<br>Validité : <strong>30 jours</strong></div>
-</div>
-<div class="client-block"><div class="client-label">Client</div><div class="client-name">${data.client}</div></div>
-<table><thead><tr><th>Désignation</th><th style="text-align:center">Qté</th><th style="text-align:right">P.U. HT</th><th style="text-align:right">Total HT</th></tr></thead><tbody>${lignes}</tbody></table>
-<div class="totals"><div class="totals-box"><div class="total-line"><span>Total HT</span><span>${totalHT.toFixed(2)} €</span></div><div class="total-line"><span>TVA 20%</span><span>${tva.toFixed(2)} €</span></div><div class="total-ttc"><span>Total TTC</span><span>${ttc.toFixed(2)} €</span></div></div></div>
-<div class="conditions"><div class="conditions-title">Conditions</div><div class="conditions-text">${data.conditions}<br>Ce document est valable 30 jours à compter de sa date d'émission.</div></div>
-<div class="signature">
-  <div class="sig-box"><div class="sig-label">Signature du prestataire</div></div>
-  <div class="sig-box"><div class="sig-label">Bon pour accord — Signature du client</div></div>
-</div>
-</body></html>`;
-}
-
 function getFormData() {
   const rows = document.querySelectorAll('.prestation-row');
   const prestations = [];
   rows.forEach(row => {
     const inputs = row.querySelectorAll('input');
-    const desc = inputs[0].value, qte = parseFloat(inputs[1].value) || 1, prix = parseFloat(inputs[2].value) || 0;
-    if (desc && prix) prestations.push({ desc, qte, prix });
+    const desc = inputs[0].value;
+    const qte = parseFloat(inputs[1].value) || 1;
+    const prix = parseFloat(inputs[2].value) || 0;
+    const remise = parseFloat(inputs[3].value) || 0;
+    if (desc && prix) prestations.push({ desc, qte, prix, remise });
   });
   return {
     entreprise: document.getElementById('entreprise').value,
@@ -930,11 +1023,80 @@ function getFormData() {
     email: document.getElementById('email').value,
     tel: document.getElementById('tel').value,
     siret: document.getElementById('siret').value,
+    adresseEntreprise: document.getElementById('adresse-entreprise').value,
     client: document.getElementById('client').value,
+    adresseClient: document.getElementById('adresse-client').value,
     conditions: document.getElementById('conditions').value,
+    tvaTaux: parseFloat(document.getElementById('tva-taux').value),
     logo: logoBase64,
     prestations
   };
+}
+
+function buildHTML(data, type, ref) {
+  const today = new Date().toLocaleDateString('fr-FR');
+  let lignes = '', totalHT = 0;
+  data.prestations.forEach(p => {
+    const prixApresRemise = p.prix * (1 - (p.remise || 0) / 100);
+    const ht = prixApresRemise * p.qte;
+    totalHT += ht;
+    const remiseLabel = p.remise > 0 ? ` <span style="color:#22c55e;font-size:11px;">-${p.remise}%</span>` : '';
+    lignes += `<tr><td>${p.desc}</td><td style="text-align:center">${p.qte}</td><td style="text-align:right">${p.prix.toFixed(2)} €${remiseLabel}</td><td style="text-align:right">${ht.toFixed(2)} €</td></tr>`;
+  });
+
+  const tvaTaux = data.tvaTaux;
+  const tva = totalHT * (tvaTaux / 100);
+  const ttc = totalHT + tva;
+  const titre = type === 'facture' ? 'FACTURE' : 'DEVIS';
+  const refLabel = type === 'facture' ? `N° FAC-${Date.now().toString().slice(-6)}` : `N° ${ref}`;
+  const logoHTML = data.logo ? `<img src="${data.logo}" style="max-height:60px;max-width:180px;object-fit:contain;">` : `<div style="font-size:20px;font-weight:bold;color:#6C47FF;">${data.entreprise}</div>`;
+  const siretHTML = data.siret ? `<div style="font-size:11px;color:#aaa;margin-top:2px;">SIRET : ${data.siret}</div>` : '';
+  const adresseEntHTML = data.adresseEntreprise ? `<div style="font-size:11px;color:#888;margin-top:2px;">${data.adresseEntreprise}</div>` : '';
+  const adresseClientHTML = data.adresseClient ? `<div style="font-size:12px;color:#666;margin-top:2px;">${data.adresseClient}</div>` : '';
+  const tvaHTML = tvaTaux === 0
+    ? `<div style="font-size:11px;color:#888;margin-top:8px;font-style:italic;">TVA non applicable, article 293 B du CGI</div>`
+    : `<div class="total-line"><span>TVA ${tvaTaux}%</span><span>${tva.toFixed(2)} €</span></div>`;
+  const ttcHTML = tvaTaux === 0
+    ? `<div class="total-ttc"><span>Total</span><span>${totalHT.toFixed(2)} €</span></div>`
+    : `<div class="total-ttc"><span>Total TTC</span><span>${ttc.toFixed(2)} €</span></div>`;
+
+  return `<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
+<style>* {margin:0;padding:0;box-sizing:border-box} body{font-family:Arial,sans-serif;font-size:13px;color:#333;padding:40px} .header{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:20px;border-bottom:2px solid #6C47FF;margin-bottom:24px} .contact{text-align:right;font-size:12px;color:#888;line-height:1.8} .title-row{display:flex;justify-content:space-between;margin-bottom:20px} .doc-title{font-size:22px;font-weight:bold;color:#111} .doc-ref{font-size:12px;color:#6C47FF;font-weight:600;margin-top:4px} .dates{text-align:right;font-size:12px;color:#888;line-height:1.8} .client-block{background:#f5f3ff;padding:16px 20px;border-radius:4px;margin-bottom:20px;border-left:3px solid #6C47FF} .client-label{font-size:10px;color:#9d8cff;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;font-weight:bold} .client-name{font-size:14px;font-weight:bold} table{width:100%;border-collapse:collapse;margin-bottom:20px} thead tr{background:#6C47FF} th{padding:10px 12px;text-align:left;font-size:12px;color:white} td{padding:10px 12px;border-bottom:1px solid #eee} tr:nth-child(even){background:#fafafa} .totals{display:flex;justify-content:flex-end;margin-bottom:20px} .totals-box{width:280px} .total-line{display:flex;justify-content:space-between;padding:6px 0;font-size:13px;color:#666;border-bottom:1px solid #eee} .total-ttc{display:flex;justify-content:space-between;background:#6C47FF;color:white;padding:12px 14px;border-radius:4px;margin-top:10px;font-weight:bold;font-size:15px} .conditions{border-top:1px solid #eee;padding-top:16px;margin-bottom:24px} .conditions-title{font-weight:bold;margin-bottom:6px} .conditions-text{font-size:12px;color:#666;line-height:1.8} .signature{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:24px} .sig-box{border:1px solid #ddd;border-radius:4px;padding:16px;min-height:80px} .sig-label{font-size:11px;color:#999;margin-bottom:8px;font-weight:600} .validity{font-size:11px;color:#aaa;text-align:center;margin-top:20px;padding-top:16px;border-top:1px solid #eee}</style>
+</head><body>
+<div class="header">
+  <div>${logoHTML}<div style="font-size:12px;color:#888;margin-top:4px;">${data.metier}</div>${siretHTML}${adresseEntHTML}</div>
+  <div class="contact">${data.email ? data.email + '<br>' : ''}${data.tel || ''}</div>
+</div>
+<div class="title-row">
+  <div><div class="doc-title">${titre}</div><div class="doc-ref">${refLabel}</div></div>
+  <div class="dates">Date d'émission : <strong>${today}</strong><br>Validité : <strong>30 jours</strong></div>
+</div>
+<div class="client-block">
+  <div class="client-label">Client</div>
+  <div class="client-name">${data.client}</div>
+  ${adresseClientHTML}
+</div>
+<table>
+  <thead><tr><th>Désignation</th><th style="text-align:center">Qté</th><th style="text-align:right">P.U. HT</th><th style="text-align:right">Total HT</th></tr></thead>
+  <tbody>${lignes}</tbody>
+</table>
+<div class="totals">
+  <div class="totals-box">
+    <div class="total-line"><span>Total HT</span><span>${totalHT.toFixed(2)} €</span></div>
+    ${tvaHTML}
+    ${ttcHTML}
+  </div>
+</div>
+<div class="conditions">
+  <div class="conditions-title">Conditions</div>
+  <div class="conditions-text">${data.conditions || ''}</div>
+</div>
+<div class="signature">
+  <div class="sig-box"><div class="sig-label">Signature du prestataire</div></div>
+  <div class="sig-box"><div class="sig-label">Bon pour accord — Signature du client</div></div>
+</div>
+<div class="validity">Ce document est valable 30 jours à compter de sa date d'émission.</div>
+</body></html>`;
 }
 
 async function genererDevis() {
@@ -945,13 +1107,12 @@ async function genererDevis() {
     return;
   }
   const d = getFormData();
-  if (!d.entreprise || !d.client) { alert('Remplissez les champs obligatoires (entreprise et client).'); return; }
+  if (!d.entreprise || !d.client) { alert('Remplissez au minimum le nom de l\'entreprise et le nom du client.'); return; }
   if (d.prestations.length === 0) { alert('Ajoutez au moins une prestation avec un prix.'); return; }
 
   const ref = generateDevisRef();
   document.getElementById('devis-ref').textContent = `📋 Référence : ${ref}`;
   document.getElementById('devis-ref').style.display = 'block';
-
   saveInfo();
 
   const html = buildHTML(d, 'devis', ref);
@@ -962,18 +1123,19 @@ async function genererDevis() {
   window._devisData = d;
   window._htmlDoc = html;
   window._devisRef = ref;
+  window._clientEmail = d.adresseClient ? '' : document.getElementById('client-email').value;
   window._clientEmail = document.getElementById('client-email').value;
   window._docType = 'devis';
 
+  if (isNewUser) {
+    document.getElementById('step-1').classList.add('done');
+    document.getElementById('step-2').classList.add('done');
+    document.getElementById('step-3').classList.add('done');
+  }
+
   try {
-    const montant = d.prestations.reduce((s, p) => s + p.prix * p.qte, 0);
-    await sb.from('devis').insert({
-      user_id: currentUser.id,
-      client: d.client,
-      montant,
-      ref,
-      created_at: new Date().toISOString()
-    });
+    const montant = d.prestations.reduce((s, p) => s + p.prix * (1 - (p.remise||0)/100) * p.qte, 0);
+    await sb.from('devis').insert({ user_id: currentUser.id, client: d.client, montant, ref, created_at: new Date().toISOString() });
     monthlyCount++;
     await loadUserData();
   } catch(e) { console.log('Save error:', e.message); }
@@ -1012,12 +1174,16 @@ function afficherExemple() {
     email: 'dupont@plomberie.fr',
     tel: '06 12 34 56 78',
     siret: '123 456 789 00012',
+    adresseEntreprise: '12 rue de la Paix, 75001 Paris',
     client: 'Jean Martin',
+    adresseClient: '5 avenue Victor Hugo, 69001 Lyon',
     conditions: '30% acompte à la commande, solde à la fin des travaux',
+    tvaTaux: 10,
     logo: null,
     prestations: [
-      {desc:'Remplacement chauffe-eau', qte:1, prix:850},
-      {desc:'Robinetterie cuisine', qte:2, prix:120}
+      {desc:'Remplacement chauffe-eau', qte:1, prix:850, remise:0},
+      {desc:'Robinetterie cuisine', qte:2, prix:120, remise:10},
+      {desc:'Main d\'œuvre', qte:3, prix:75, remise:0}
     ]
   };
   const html = buildHTML(data, 'devis', 'DEV-202605-001');
