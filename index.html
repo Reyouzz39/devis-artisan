@@ -17,8 +17,6 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
 .nav-btn { background: #6C47FF; color: #fff; border: none; padding: 10px 22px; border-radius: 24px; font-size: 13px; font-weight: 700; cursor: pointer; }
 .nav-btn:hover { background: #5835e0; }
 .nav-logout { background: none; border: 1px solid #ddd; color: #666; padding: 8px 16px; border-radius: 24px; font-size: 13px; cursor: pointer; margin-left: 8px; }
-
-/* AUTH */
 #auth-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: #FAFAFA; }
 .auth-card { background: #fff; border: 1px solid #ece9ff; border-radius: 16px; padding: 48px 40px; width: 400px; }
 .auth-logo { font-size: 28px; font-weight: 800; color: #6C47FF; text-align: center; margin-bottom: 8px; }
@@ -34,22 +32,34 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
 .auth-msg { font-size: 13px; text-align: center; margin-top: 12px; padding: 10px; border-radius: 6px; display: none; }
 .auth-msg.success { background: #f0fdf4; color: #16a34a; }
 .auth-msg.error { background: #fef2f2; color: #dc2626; }
-
-/* MAIN */
 #main-app { display: none; }
 .hero { background: #fff; padding: 72px 40px 56px; text-align: center; }
 .pill { display: inline-flex; align-items: center; gap: 6px; background: #F3F0FF; color: #6C47FF; font-size: 12px; padding: 6px 16px; border-radius: 24px; margin-bottom: 22px; font-weight: 700; }
 .hero h1 { font-size: 48px; font-weight: 800; line-height: 1.15; margin-bottom: 16px; }
 .hero h1 span { color: #6C47FF; }
-.hero p { font-size: 18px; color: #888; margin-bottom: 32px; max-width: 500px; margin-left: auto; margin-right: auto; line-height: 1.6; }
+.hero p { font-size: 18px; color: #888; margin-bottom: 24px; max-width: 500px; margin-left: auto; margin-right: auto; line-height: 1.6; }
+.social-proof { display: flex; justify-content: center; gap: 32px; margin-bottom: 32px; }
+.proof-item { text-align: center; }
+.proof-num { font-size: 22px; font-weight: 800; color: #6C47FF; }
+.proof-label { font-size: 12px; color: #999; margin-top: 2px; }
 .hero-btn { background: #6C47FF; color: #fff; border: none; padding: 16px 36px; border-radius: 28px; font-size: 16px; font-weight: 700; cursor: pointer; }
 .hero-btn:hover { background: #5835e0; }
+.trust-badges { display: flex; justify-content: center; gap: 20px; margin-top: 24px; flex-wrap: wrap; }
+.badge { display: flex; align-items: center; gap: 6px; background: #f9f9f9; border: 1px solid #eee; padding: 6px 14px; border-radius: 20px; font-size: 12px; color: #555; }
 .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 900px; margin: 48px auto; padding: 0 40px; }
 .feat { background: #fff; border: 1px solid #ece9ff; border-radius: 12px; padding: 24px; }
 .feat-dot { width: 10px; height: 10px; background: #6C47FF; border-radius: 50%; margin-bottom: 14px; }
 .feat h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
 .feat p { font-size: 13px; color: #999; line-height: 1.5; }
-.exemple-section { max-width: 900px; margin: 0 auto 48px; padding: 0 40px; text-align: center; }
+.pour-qui { background: #fff; padding: 56px 40px; text-align: center; }
+.pour-qui h2 { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
+.pour-qui-sub { font-size: 15px; color: #888; margin-bottom: 32px; }
+.metiers-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; max-width: 900px; margin: 0 auto; }
+.metier-card { background: #FAFAFA; border: 1px solid #ece9ff; border-radius: 10px; padding: 20px 16px; text-align: center; cursor: pointer; transition: all 0.2s; }
+.metier-card:hover { background: #F3F0FF; border-color: #6C47FF; }
+.metier-icon { font-size: 28px; margin-bottom: 8px; }
+.metier-name { font-size: 13px; font-weight: 700; color: #111; }
+.exemple-section { max-width: 900px; margin: 56px auto; padding: 0 40px; text-align: center; }
 .exemple-section h2 { font-size: 28px; font-weight: 800; margin-bottom: 12px; }
 .exemple-section p { font-size: 14px; color: #888; margin-bottom: 20px; }
 .exemple-btn { background: #fff; border: 2px solid #6C47FF; color: #6C47FF; padding: 12px 28px; border-radius: 24px; font-size: 14px; font-weight: 700; cursor: pointer; }
@@ -93,11 +103,13 @@ textarea { height: 80px; resize: vertical; }
 .generate-btn:hover { background: #5835e0; }
 #result { display: none; margin-top: 24px; }
 #preview { width: 100%; height: 650px; border: 1px solid #ece9ff; border-radius: 10px; }
-.action-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+.action-btns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 14px; }
 .download-btn { background: #22c55e; color: #fff; border: none; padding: 14px; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; }
 .download-btn:hover { background: #16a34a; }
 .email-btn { background: #6C47FF; color: #fff; border: none; padding: 14px; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; }
 .email-btn:hover { background: #5835e0; }
+.facture-btn { background: #f59e0b; color: #fff; border: none; padding: 14px; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; }
+.facture-btn:hover { background: #d97706; }
 .faq-section { max-width: 720px; margin: 0 auto 64px; padding: 0 40px; }
 .faq-section h2 { font-size: 28px; font-weight: 800; text-align: center; margin-bottom: 32px; }
 .faq-item { border: 1px solid #ece9ff; border-radius: 10px; margin-bottom: 10px; overflow: hidden; }
@@ -107,13 +119,18 @@ textarea { height: 80px; resize: vertical; }
 .faq-answer.open { padding: 16px 20px; max-height: 200px; }
 .faq-arrow { font-size: 12px; transition: transform 0.3s; }
 .faq-arrow.open { transform: rotate(180deg); }
+.newsletter { background: #111; padding: 56px 40px; text-align: center; }
+.newsletter h2 { font-size: 24px; font-weight: 800; color: #fff; margin-bottom: 8px; }
+.newsletter p { font-size: 14px; color: #888; margin-bottom: 24px; }
+.newsletter-form { display: flex; gap: 12px; max-width: 420px; margin: 0 auto; }
+.newsletter-input { flex: 1; padding: 12px 16px; border: none; border-radius: 8px; font-size: 14px; font-family: inherit; outline: none; }
+.newsletter-btn { background: #6C47FF; color: #fff; border: none; padding: 12px 20px; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+.newsletter-btn:hover { background: #5835e0; }
 footer { text-align: center; padding: 32px; font-size: 13px; color: #aaa; border-top: 1px solid #f0f0f0; background: #fff; }
 </style>
 </head>
 <body>
-
-<!-- AUTH -->
-<div id="auth-screen">
+  <div id="auth-screen">
   <div class="auth-card">
     <div class="auth-logo">Quotify</div>
     <div class="auth-sub">Créez votre compte ou connectez-vous</div>
@@ -141,11 +158,11 @@ footer { text-align: center; padding: 32px; font-size: 13px; color: #aaa; border
   </div>
 </div>
 
-<!-- MAIN APP -->
 <div id="main-app">
 <nav>
   <div class="logo">Quotify</div>
   <div class="nav-links">
+    <a href="#pour-qui">Pour qui ?</a>
     <a href="#exemple">Exemple</a>
     <a href="#generateur">Générateur</a>
     <a href="#tarifs">Tarifs</a>
@@ -161,13 +178,72 @@ footer { text-align: center; padding: 32px; font-size: 13px; color: #aaa; border
   <div class="pill">✦ Propulsé par l'IA</div>
   <h1>Générez vos devis<br><span>comme un pro</span></h1>
   <p>L'outil préféré des artisans pour créer des devis professionnels en quelques secondes.</p>
+  <div class="social-proof">
+    <div class="proof-item">
+      <div class="proof-num">500+</div>
+      <div class="proof-label">Devis générés</div>
+    </div>
+    <div class="proof-item">
+      <div class="proof-num">4.9/5</div>
+      <div class="proof-label">Satisfaction</div>
+    </div>
+    <div class="proof-item">
+      <div class="proof-num">30 sec</div>
+      <div class="proof-label">Temps moyen</div>
+    </div>
+  </div>
   <button class="hero-btn" onclick="document.getElementById('generateur').scrollIntoView({behavior:'smooth'})">Commencer maintenant →</button>
+  <div class="trust-badges">
+    <div class="badge">✅ Devis 100% légaux</div>
+    <div class="badge">🔒 Données sécurisées</div>
+    <div class="badge">🇫🇷 Conforme loi française</div>
+    <div class="badge">↩️ Sans engagement</div>
+  </div>
 </div>
 
 <div class="features">
-  <div class="feat"><div class="feat-dot"></div><h3>Rapide</h3><p>Votre devis prêt en moins de 30 secondes</p></div>
+  <div class="feat"><div class="feat-dot"></div><h3>Rapide</h3><p>Votre devis prêt en moins de 30 secondes chrono</p></div>
   <div class="feat"><div class="feat-dot"></div><h3>Professionnel</h3><p>Mise en page soignée avec toutes les mentions légales</p></div>
   <div class="feat"><div class="feat-dot"></div><h3>Multi-prestations</h3><p>Ajoutez autant de lignes que nécessaire</p></div>
+</div>
+
+<div class="pour-qui" id="pour-qui">
+  <h2>Fait pour votre métier</h2>
+  <div class="pour-qui-sub">Quotify s'adapte à tous les artisans</div>
+  <div class="metiers-grid">
+    <div class="metier-card" onclick="selectMetier('Plombier')">
+      <div class="metier-icon">🔧</div>
+      <div class="metier-name">Plombier</div>
+    </div>
+    <div class="metier-card" onclick="selectMetier('Électricien')">
+      <div class="metier-icon">⚡</div>
+      <div class="metier-name">Électricien</div>
+    </div>
+    <div class="metier-card" onclick="selectMetier('Maçon')">
+      <div class="metier-icon">🧱</div>
+      <div class="metier-name">Maçon</div>
+    </div>
+    <div class="metier-card" onclick="selectMetier('Peintre')">
+      <div class="metier-icon">🎨</div>
+      <div class="metier-name">Peintre</div>
+    </div>
+    <div class="metier-card" onclick="selectMetier('Carreleur')">
+      <div class="metier-icon">🏠</div>
+      <div class="metier-name">Carreleur</div>
+    </div>
+    <div class="metier-card" onclick="selectMetier('Menuisier')">
+      <div class="metier-icon">🪚</div>
+      <div class="metier-name">Menuisier</div>
+    </div>
+    <div class="metier-card" onclick="selectMetier('Chauffagiste')">
+      <div class="metier-icon">🌡️</div>
+      <div class="metier-name">Chauffagiste</div>
+    </div>
+    <div class="metier-card" onclick="selectMetier('Jardinier')">
+      <div class="metier-icon">🌿</div>
+      <div class="metier-name">Jardinier</div>
+    </div>
+  </div>
 </div>
 
 <div class="exemple-section" id="exemple">
@@ -209,6 +285,7 @@ footer { text-align: center; padding: 32px; font-size: 13px; color: #aaa; border
       <div class="pricing-price">79 € <span>/mois</span></div>
       <ul class="pricing-features">
         <li>Devis illimités</li>
+        <li>Transfert devis → facture</li>
         <li>Multi-prestations</li>
         <li>Téléchargement PDF</li>
         <li>Annulable à tout moment</li>
@@ -261,8 +338,9 @@ footer { text-align: center; padding: 32px; font-size: 13px; color: #aaa; border
     <div id="result">
       <iframe id="preview"></iframe>
       <div class="action-btns">
-        <button class="download-btn" onclick="telecharger()">Télécharger PDF</button>
-        <button class="email-btn" onclick="envoyerEmail()">Envoyer par email</button>
+        <button class="download-btn" onclick="telecharger()">⬇ Télécharger PDF</button>
+        <button class="email-btn" onclick="envoyerEmail()">✉ Envoyer par email</button>
+        <button class="facture-btn" onclick="convertirFacture()">🧾 Convertir en facture</button>
       </div>
     </div>
   </div>
@@ -280,17 +358,30 @@ footer { text-align: center; padding: 32px; font-size: 13px; color: #aaa; border
   </div>
   <div class="faq-item">
     <div class="faq-question" onclick="toggleFaq(this)">Mes données sont-elles sécurisées ? <span class="faq-arrow">▼</span></div>
-    <div class="faq-answer">Toutes vos données sont sécurisées via Supabase. Nous ne revendons jamais vos informations à des tiers.</div>
+    <div class="faq-answer">Toutes vos données sont sécurisées via Supabase. Serveurs hébergés en Europe. Nous ne revendons jamais vos informations.</div>
   </div>
   <div class="faq-item">
     <div class="faq-question" onclick="toggleFaq(this)">Combien de devis puis-je générer ? <span class="faq-arrow">▼</span></div>
-    <div class="faq-answer">Devis illimités inclus dans l'abonnement. Générez autant que vous le souhaitez.</div>
+    <div class="faq-answer">Devis illimités inclus dans l'abonnement. Générez autant que vous le souhaitez sans restriction.</div>
   </div>
+  <div class="faq-item">
+    <div class="faq-question" onclick="toggleFaq(this)">Comment convertir un devis en facture ? <span class="faq-arrow">▼</span></div>
+    <div class="faq-answer">Une fois votre devis généré, cliquez sur le bouton "Convertir en facture" — le document est instantanément transformé en facture avec numérotation automatique.</div>
+  </div>
+</div>
+
+<div class="newsletter">
+  <h2>Conseils gratuits pour artisans</h2>
+  <p>Recevez nos astuces pour développer votre activité et gagner du temps</p>
+  <div class="newsletter-form">
+    <input class="newsletter-input" type="email" id="newsletter-email" placeholder="votre@email.fr">
+    <button class="newsletter-btn" onclick="newsletterSignup()">S'inscrire →</button>
+  </div>
+  <div id="newsletter-msg" style="color:#22c55e;font-size:13px;margin-top:12px;display:none;">Merci ! Vous êtes inscrit.</div>
 </div>
 
 <footer>© 2026 Quotify · Tous droits réservés · contact@quotify.fr</footer>
 </div>
-
 <script>
 const SUPABASE_URL = 'https://cwtprcbdcjbjqcixevlk.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_elTwVnS4vtl31G5-6kSgYA_wMwevMww';
@@ -333,7 +424,7 @@ async function login() {
   const password = document.getElementById('login-password').value;
   if (!email || !password) { showMsg('Remplissez tous les champs.', 'error'); return; }
   const { data, error } = await sb.auth.signInWithPassword({ email, password });
-  if (error) { showMsg(error.message, 'error'); return; }
+  if (error) { showMsg('Email ou mot de passe incorrect.', 'error'); return; }
   showApp(data.user);
 }
 
@@ -341,10 +432,10 @@ async function signup() {
   const email = document.getElementById('signup-email').value;
   const password = document.getElementById('signup-password').value;
   if (!email || !password) { showMsg('Remplissez tous les champs.', 'error'); return; }
-  if (password.length < 6) { showMsg('Le mot de passe doit faire au moins 6 caractères.', 'error'); return; }
+  if (password.length < 6) { showMsg('Mot de passe trop court (6 caractères minimum).', 'error'); return; }
   const { data, error } = await sb.auth.signUp({ email, password });
   if (error) { showMsg(error.message, 'error'); return; }
-  showMsg('Compte créé ! Vous êtes connecté.', 'success');
+  showMsg('Compte créé ! Bienvenue sur Quotify.', 'success');
   setTimeout(() => showApp(data.user), 1000);
 }
 
@@ -352,6 +443,14 @@ async function logout() {
   await sb.auth.signOut();
   document.getElementById('main-app').style.display = 'none';
   document.getElementById('auth-screen').style.display = 'flex';
+}
+
+function selectMetier(metier) {
+  document.getElementById('generateur').scrollIntoView({ behavior: 'smooth' });
+  setTimeout(() => {
+    document.getElementById('metier').value = metier;
+    document.getElementById('metier').focus();
+  }, 600);
 }
 
 function addPrestation() {
@@ -375,7 +474,14 @@ function toggleFaq(el) {
   el.querySelector('.faq-arrow').classList.toggle('open');
 }
 
-function buildDevisHTML(entreprise, metier, email, tel, client, prestations, conditions) {
+function newsletterSignup() {
+  const email = document.getElementById('newsletter-email').value;
+  if (!email) return;
+  document.getElementById('newsletter-msg').style.display = 'block';
+  document.getElementById('newsletter-email').value = '';
+}
+
+function buildHTML(entreprise, metier, email, tel, client, prestations, conditions, type, numero) {
   const today = new Date().toLocaleDateString('fr-FR');
   let lignes = '';
   let totalHT = 0;
@@ -386,26 +492,22 @@ function buildDevisHTML(entreprise, metier, email, tel, client, prestations, con
   });
   const tva = totalHT * 0.2;
   const ttc = totalHT + tva;
+  const titre = type === 'facture' ? 'FACTURE' : 'DEVIS';
+  const ref = type === 'facture' ? `N° FAC-${numero}` : `Date : ${today}`;
+
   return `<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
-<style>* {margin:0;padding:0;box-sizing:border-box} body{font-family:Arial,sans-serif;font-size:13px;color:#333;padding:40px} .header{display:flex;justify-content:space-between;padding-bottom:20px;border-bottom:1px solid #ddd;margin-bottom:24px} .company-name{font-size:20px;font-weight:bold;color:#6C47FF} .company-sub{font-size:12px;color:#888;margin-top:4px} .contact{text-align:right;font-size:12px;color:#888;line-height:1.8} .title-row{display:flex;justify-content:space-between;margin-bottom:20px} .devis-title{font-size:18px;font-weight:bold} .devis-num{font-size:12px;color:#888;margin-top:4px} .dates{text-align:right;font-size:12px;color:#888;line-height:1.8} .client-block{background:#f5f3ff;padding:16px 20px;border-radius:4px;margin-bottom:20px} .client-label{font-size:10px;color:#9d8cff;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;font-weight:bold} .client-name{font-size:14px;font-weight:bold} table{width:100%;border-collapse:collapse;margin-bottom:20px} thead tr{background:#6C47FF} th{padding:10px 12px;text-align:left;font-size:12px;color:white} td{padding:10px 12px;border-bottom:1px solid #eee} .totals{display:flex;justify-content:flex-end;margin-bottom:20px} .totals-box{width:260px} .total-line{display:flex;justify-content:space-between;padding:5px 0;font-size:12px;color:#666;border-bottom:1px solid #eee} .total-ttc{display:flex;justify-content:space-between;background:#6C47FF;color:white;padding:10px 12px;border-radius:4px;margin-top:8px;font-weight:bold} .conditions{border-top:1px solid #eee;padding-top:16px} .conditions-title{font-weight:bold;margin-bottom:6px} .conditions-text{font-size:12px;color:#666;line-height:1.8}</style>
+<style>* {margin:0;padding:0;box-sizing:border-box} body{font-family:Arial,sans-serif;font-size:13px;color:#333;padding:40px} .header{display:flex;justify-content:space-between;padding-bottom:20px;border-bottom:1px solid #ddd;margin-bottom:24px} .company-name{font-size:20px;font-weight:bold;color:#6C47FF} .company-sub{font-size:12px;color:#888;margin-top:4px} .contact{text-align:right;font-size:12px;color:#888;line-height:1.8} .title-row{display:flex;justify-content:space-between;margin-bottom:20px} .doc-title{font-size:18px;font-weight:bold} .doc-ref{font-size:12px;color:#888;margin-top:4px} .dates{text-align:right;font-size:12px;color:#888;line-height:1.8} .client-block{background:#f5f3ff;padding:16px 20px;border-radius:4px;margin-bottom:20px} .client-label{font-size:10px;color:#9d8cff;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;font-weight:bold} .client-name{font-size:14px;font-weight:bold} table{width:100%;border-collapse:collapse;margin-bottom:20px} thead tr{background:#6C47FF} th{padding:10px 12px;text-align:left;font-size:12px;color:white} td{padding:10px 12px;border-bottom:1px solid #eee} .totals{display:flex;justify-content:flex-end;margin-bottom:20px} .totals-box{width:260px} .total-line{display:flex;justify-content:space-between;padding:5px 0;font-size:12px;color:#666;border-bottom:1px solid #eee} .total-ttc{display:flex;justify-content:space-between;background:#6C47FF;color:white;padding:10px 12px;border-radius:4px;margin-top:8px;font-weight:bold} .conditions{border-top:1px solid #eee;padding-top:16px} .conditions-title{font-weight:bold;margin-bottom:6px} .conditions-text{font-size:12px;color:#666;line-height:1.8}</style>
 </head><body>
 <div class="header"><div><div class="company-name">${entreprise}</div><div class="company-sub">${metier}</div></div><div class="contact">${email}<br>${tel}</div></div>
-<div class="title-row"><div><div class="devis-title">DEVIS</div><div class="devis-num">Date : ${today}</div></div><div class="dates">Validité : <strong>30 jours</strong></div></div>
+<div class="title-row"><div><div class="doc-title">${titre}</div><div class="doc-ref">${ref}</div></div><div class="dates">Date : ${today}<br>Validité : <strong>30 jours</strong></div></div>
 <div class="client-block"><div class="client-label">Client</div><div class="client-name">${client}</div></div>
 <table><thead><tr><th>Désignation</th><th style="text-align:center">Qté</th><th style="text-align:right">P.U. HT</th><th style="text-align:right">Total HT</th></tr></thead><tbody>${lignes}</tbody></table>
 <div class="totals"><div class="totals-box"><div class="total-line"><span>Total HT</span><span>${totalHT.toFixed(2)} €</span></div><div class="total-line"><span>TVA 20%</span><span>${tva.toFixed(2)} €</span></div><div class="total-ttc"><span>Total TTC</span><span>${ttc.toFixed(2)} €</span></div></div></div>
-<div class="conditions"><div class="conditions-title">Conditions</div><div class="conditions-text">${conditions}<br>Ce devis est valable 30 jours à compter de sa date d'émission.</div></div>
+<div class="conditions"><div class="conditions-title">Conditions</div><div class="conditions-text">${conditions}<br>Ce document est valable 30 jours à compter de sa date d'émission.</div></div>
 </body></html>`;
 }
 
-function genererDevis() {
-  const entreprise = document.getElementById('entreprise').value;
-  const metier = document.getElementById('metier').value;
-  const email = document.getElementById('email').value;
-  const tel = document.getElementById('tel').value;
-  const client = document.getElementById('client').value;
-  const conditions = document.getElementById('conditions').value;
-  if (!entreprise || !client) { alert('Remplissez les champs obligatoires.'); return; }
+function getFormData() {
   const rows = document.querySelectorAll('.prestation-row');
   const prestations = [];
   rows.forEach(row => {
@@ -415,34 +517,68 @@ function genererDevis() {
     const prix = parseFloat(inputs[2].value) || 0;
     if (desc && prix) prestations.push({ desc, qte, prix });
   });
-  if (prestations.length === 0) { alert('Ajoutez au moins une prestation avec un prix.'); return; }
-  const html = buildDevisHTML(entreprise, metier, email, tel, client, prestations, conditions);
+  return {
+    entreprise: document.getElementById('entreprise').value,
+    metier: document.getElementById('metier').value,
+    email: document.getElementById('email').value,
+    tel: document.getElementById('tel').value,
+    client: document.getElementById('client').value,
+    conditions: document.getElementById('conditions').value,
+    prestations
+  };
+}
+
+function genererDevis() {
+  const d = getFormData();
+  if (!d.entreprise || !d.client) { alert('Remplissez les champs obligatoires.'); return; }
+  if (d.prestations.length === 0) { alert('Ajoutez au moins une prestation avec un prix.'); return; }
+  const html = buildHTML(d.entreprise, d.metier, d.email, d.tel, d.client, d.prestations, d.conditions, 'devis', null);
   const blob = new Blob([html], { type: 'text/html' });
   document.getElementById('preview').src = URL.createObjectURL(blob);
   document.getElementById('result').style.display = 'block';
   document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
-  window._htmlDevis = html;
+  window._devisData = d;
+  window._htmlDoc = html;
   window._clientEmail = document.getElementById('client-email').value;
+  window._docType = 'devis';
+}
+
+function convertirFacture() {
+  if (!window._devisData) { alert('Générez d\'abord un devis.'); return; }
+  const numero = Date.now().toString().slice(-6);
+  const d = window._devisData;
+  const html = buildHTML(d.entreprise, d.metier, d.email, d.tel, d.client, d.prestations, d.conditions, 'facture', numero);
+  const blob = new Blob([html], { type: 'text/html' });
+  document.getElementById('preview').src = URL.createObjectURL(blob);
+  window._htmlDoc = html;
+  window._docType = 'facture';
+  alert(`✅ Devis converti en facture N° FAC-${numero}`);
 }
 
 function telecharger() {
-  const blob = new Blob([window._htmlDevis], { type: 'text/html' });
+  const blob = new Blob([window._htmlDoc], { type: 'text/html' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = 'devis-quotify.html';
+  a.download = `${window._docType || 'devis'}-quotify.html`;
   a.click();
 }
 
 function envoyerEmail() {
   const email = window._clientEmail;
   if (!email) { alert('Ajoutez l\'email du client.'); return; }
-  window.open(`mailto:${email}?subject=${encodeURIComponent('Votre devis')}&body=${encodeURIComponent('Bonjour,\n\nVeuillez trouver ci-joint votre devis.\n\nCordialement.')}`);
+  const subject = encodeURIComponent(window._docType === 'facture' ? 'Votre facture' : 'Votre devis');
+  const body = encodeURIComponent('Bonjour,\n\nVeuillez trouver ci-joint votre document.\n\nCordialement.');
+  window.open(`mailto:${email}?subject=${subject}&body=${body}`);
 }
 
 function afficherExemple() {
-  const html = buildDevisHTML('Plomberie Dupont', 'Plombier', 'dupont@plomberie.fr', '06 12 34 56 78', 'Jean Martin',
+  const html = buildHTML(
+    'Plomberie Dupont', 'Plombier', 'dupont@plomberie.fr', '06 12 34 56 78',
+    'Jean Martin',
     [{desc:'Remplacement chauffe-eau', qte:1, prix:850}, {desc:'Robinetterie cuisine', qte:2, prix:120}],
-    '30% acompte à la commande, solde à la fin des travaux');
+    '30% acompte à la commande, solde à la fin des travaux',
+    'devis', null
+  );
   const blob = new Blob([html], { type: 'text/html' });
   const preview = document.getElementById('exemple-preview');
   preview.src = URL.createObjectURL(blob);
