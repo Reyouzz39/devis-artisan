@@ -8,13 +8,31 @@
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: 'Inter', Arial, sans-serif; background: #FAFAFA; color: #111; }
-nav { display: flex; justify-content: space-between; align-items: center; padding: 16px 40px; background: #fff; border-bottom: 1px solid #f0f0f0; }
+nav { display: flex; justify-content: space-between; align-items: center; padding: 16px 40px; background: #fff; border-bottom: 1px solid #f0f0f0; position: sticky; top: 0; z-index: 100; }
 .logo { font-size: 20px; font-weight: 800; color: #6C47FF; }
+.nav-links { display: flex; gap: 28px; font-size: 13px; color: #666; }
+.nav-links a { text-decoration: none; color: #666; }
+.nav-links a:hover { color: #6C47FF; }
 .nav-btn { background: #6C47FF; color: #fff; border: none; padding: 10px 22px; border-radius: 24px; font-size: 13px; font-weight: 700; cursor: pointer; }
 .nav-btn:hover { background: #5835e0; }
+
+/* LOGIN */
+#login-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: #FAFAFA; }
+.login-card { background: #fff; border: 1px solid #ece9ff; border-radius: 16px; padding: 48px 40px; width: 380px; text-align: center; }
+.login-logo { font-size: 28px; font-weight: 800; color: #6C47FF; margin-bottom: 8px; }
+.login-sub { font-size: 14px; color: #999; margin-bottom: 32px; }
+.login-card input { width: 100%; padding: 12px 16px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 14px; font-family: inherit; outline: none; text-align: center; letter-spacing: 4px; margin-bottom: 16px; }
+.login-card input:focus { border-color: #6C47FF; box-shadow: 0 0 0 3px rgba(108,71,255,0.1); }
+.login-btn { width: 100%; background: #6C47FF; color: #fff; border: none; padding: 13px; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; }
+.login-btn:hover { background: #5835e0; }
+.login-error { color: #e53e3e; font-size: 13px; margin-top: 8px; display: none; }
+.login-demo { font-size: 12px; color: #bbb; margin-top: 16px; }
+
+/* MAIN APP */
+#main-app { display: none; }
 .hero { background: #fff; padding: 72px 40px 56px; text-align: center; }
 .pill { display: inline-flex; align-items: center; gap: 6px; background: #F3F0FF; color: #6C47FF; font-size: 12px; padding: 6px 16px; border-radius: 24px; margin-bottom: 22px; font-weight: 700; }
-.hero h1 { font-size: 48px; font-weight: 800; line-height: 1.15; margin-bottom: 16px; color: #111; }
+.hero h1 { font-size: 48px; font-weight: 800; line-height: 1.15; margin-bottom: 16px; }
 .hero h1 span { color: #6C47FF; }
 .hero p { font-size: 18px; color: #888; margin-bottom: 32px; max-width: 500px; margin-left: auto; margin-right: auto; line-height: 1.6; }
 .hero-btn { background: #6C47FF; color: #fff; border: none; padding: 16px 36px; border-radius: 28px; font-size: 16px; font-weight: 700; cursor: pointer; }
@@ -24,35 +42,104 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
 .feat-dot { width: 10px; height: 10px; background: #6C47FF; border-radius: 50%; margin-bottom: 14px; }
 .feat h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
 .feat p { font-size: 13px; color: #999; line-height: 1.5; }
-.pricing-banner { background: #6C47FF; margin: 0 40px 48px; border-radius: 16px; padding: 28px 36px; display: flex; justify-content: space-between; align-items: center; max-width: 820px; margin-left: auto; margin-right: auto; }
+
+/* EXEMPLE */
+.exemple-section { max-width: 900px; margin: 0 auto 48px; padding: 0 40px; text-align: center; }
+.exemple-section h2 { font-size: 28px; font-weight: 800; margin-bottom: 12px; }
+.exemple-section p { font-size: 14px; color: #888; margin-bottom: 20px; }
+.exemple-btn { background: #fff; border: 2px solid #6C47FF; color: #6C47FF; padding: 12px 28px; border-radius: 24px; font-size: 14px; font-weight: 700; cursor: pointer; }
+.exemple-btn:hover { background: #F3F0FF; }
+#exemple-preview { display: none; width: 100%; height: 600px; border: 1px solid #ece9ff; border-radius: 12px; margin-top: 20px; }
+
+/* TESTIMONIALS */
+.testimonials { background: #F3F0FF; padding: 56px 40px; text-align: center; }
+.testimonials h2 { font-size: 28px; font-weight: 800; margin-bottom: 32px; }
+.testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 900px; margin: 0 auto; }
+.testi { background: #fff; border-radius: 12px; padding: 24px; text-align: left; }
+.testi-text { font-size: 14px; color: #444; line-height: 1.6; margin-bottom: 16px; font-style: italic; }
+.testi-author { font-size: 13px; font-weight: 700; color: #111; }
+.testi-role { font-size: 12px; color: #999; }
+.stars { color: #6C47FF; font-size: 14px; margin-bottom: 10px; }
+
+/* PRICING */
+.pricing-section { max-width: 900px; margin: 56px auto; padding: 0 40px; text-align: center; }
+.pricing-section h2 { font-size: 28px; font-weight: 800; margin-bottom: 32px; }
+.pricing-banner { background: #6C47FF; border-radius: 16px; padding: 36px; display: flex; justify-content: space-between; align-items: center; }
+.pricing-left { text-align: left; }
 .pricing-label { font-size: 14px; color: rgba(255,255,255,0.75); margin-bottom: 4px; }
-.pricing-price { font-size: 36px; font-weight: 800; color: #fff; }
-.pricing-price span { font-size: 16px; font-weight: 400; opacity: 0.7; }
-.pricing-sub { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 4px; }
-.pricing-btn { background: #fff; color: #6C47FF; border: none; padding: 12px 28px; border-radius: 24px; font-size: 14px; font-weight: 800; cursor: pointer; }
+.pricing-price { font-size: 42px; font-weight: 800; color: #fff; }
+.pricing-price span { font-size: 18px; font-weight: 400; opacity: 0.7; }
+.pricing-features { margin-top: 12px; }
+.pricing-features li { font-size: 13px; color: rgba(255,255,255,0.8); list-style: none; margin-bottom: 4px; }
+.pricing-features li::before { content: "✓ "; font-weight: 700; }
+.pricing-btn { background: #fff; color: #6C47FF; border: none; padding: 14px 32px; border-radius: 24px; font-size: 15px; font-weight: 800; cursor: pointer; white-space: nowrap; }
 .pricing-btn:hover { background: #f0ecff; }
+
+/* GENERATEUR */
 .section { max-width: 820px; margin: 0 auto 64px; padding: 0 40px; }
 .section h2 { font-size: 28px; font-weight: 800; text-align: center; margin-bottom: 32px; }
 .card { background: #fff; border-radius: 16px; padding: 36px; border: 1px solid #ece9ff; }
 label { display: block; font-size: 13px; font-weight: 700; color: #444; margin-bottom: 6px; margin-top: 18px; }
-input, textarea { width: 100%; padding: 11px 14px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 14px; font-family: inherit; outline: none; }
+input, textarea, select { width: 100%; padding: 11px 14px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 14px; font-family: inherit; outline: none; }
 input:focus, textarea:focus { border-color: #6C47FF; box-shadow: 0 0 0 3px rgba(108,71,255,0.1); }
 textarea { height: 80px; resize: vertical; }
 .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.prestations-list { margin-top: 8px; }
+.prestation-row { display: grid; grid-template-columns: 3fr 1fr 1fr auto; gap: 8px; align-items: center; margin-bottom: 8px; }
+.prestation-row input { margin-top: 0; }
+.remove-btn { background: none; border: 1px solid #ddd; border-radius: 6px; padding: 8px 10px; cursor: pointer; color: #999; font-size: 14px; }
+.remove-btn:hover { border-color: #e53e3e; color: #e53e3e; }
+.add-prestation { background: none; border: 1px dashed #6C47FF; color: #6C47FF; padding: 9px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; width: 100%; margin-top: 4px; font-family: inherit; }
+.add-prestation:hover { background: #F3F0FF; }
 .generate-btn { width: 100%; background: #6C47FF; color: #fff; border: none; padding: 15px; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 24px; font-family: inherit; }
 .generate-btn:hover { background: #5835e0; }
-.generate-btn:disabled { background: #ccc; cursor: not-allowed; }
 #result { display: none; margin-top: 24px; }
 #preview { width: 100%; height: 650px; border: 1px solid #ece9ff; border-radius: 10px; }
-.download-btn { width: 100%; background: #22c55e; color: #fff; border: none; padding: 14px; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 14px; font-family: inherit; }
+.action-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+.download-btn { background: #22c55e; color: #fff; border: none; padding: 14px; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; }
 .download-btn:hover { background: #16a34a; }
-footer { text-align: center; padding: 32px; font-size: 13px; color: #aaa; border-top: 1px solid #f0f0f0; }
+.email-btn { background: #6C47FF; color: #fff; border: none; padding: 14px; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; }
+.email-btn:hover { background: #5835e0; }
+
+/* FAQ */
+.faq-section { max-width: 720px; margin: 0 auto 64px; padding: 0 40px; }
+.faq-section h2 { font-size: 28px; font-weight: 800; text-align: center; margin-bottom: 32px; }
+.faq-item { border: 1px solid #ece9ff; border-radius: 10px; margin-bottom: 10px; overflow: hidden; }
+.faq-question { padding: 16px 20px; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; justify-content: space-between; align-items: center; background: #fff; }
+.faq-question:hover { background: #F3F0FF; }
+.faq-answer { padding: 0 20px; max-height: 0; overflow: hidden; font-size: 13px; color: #666; line-height: 1.7; transition: all 0.3s; background: #fff; }
+.faq-answer.open { padding: 16px 20px; max-height: 200px; }
+.faq-arrow { font-size: 12px; transition: transform 0.3s; }
+.faq-arrow.open { transform: rotate(180deg); }
+
+footer { text-align: center; padding: 32px; font-size: 13px; color: #aaa; border-top: 1px solid #f0f0f0; background: #fff; }
 </style>
 </head>
 <body>
 
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">Quotify</div>
+    <div class="login-sub">Entrez votre code d'accès pour continuer</div>
+    <input type="text" id="access-code" placeholder="XXXX-XXXX" maxlength="9">
+    <button class="login-btn" onclick="checkAccess()">Accéder →</button>
+    <div class="login-error" id="login-error">Code incorrect. Réessayez.</div>
+    <div class="login-demo">Code démo : DEMO-2026</div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="main-app">
+
 <nav>
   <div class="logo">Quotify</div>
+  <div class="nav-links">
+    <a href="#exemple">Exemple</a>
+    <a href="#generateur">Générateur</a>
+    <a href="#tarifs">Tarifs</a>
+    <a href="#faq">FAQ</a>
+  </div>
   <button class="nav-btn" onclick="document.getElementById('generateur').scrollIntoView({behavior:'smooth'})">Créer un devis</button>
 </nav>
 
@@ -76,20 +163,63 @@ footer { text-align: center; padding: 32px; font-size: 13px; color: #aaa; border
   </div>
   <div class="feat">
     <div class="feat-dot"></div>
-    <h3>PDF direct</h3>
-    <p>Téléchargez et envoyez à votre client en un clic</p>
+    <h3>Multi-prestations</h3>
+    <p>Ajoutez autant de lignes que nécessaire</p>
   </div>
 </div>
 
-<div class="pricing-banner">
-  <div>
-    <div class="pricing-label">Abonnement mensuel</div>
-    <div class="pricing-price">79 € <span>/mois</span></div>
-    <div class="pricing-sub">Devis illimités · Annulable à tout moment</div>
-  </div>
-  <button class="pricing-btn">S'abonner</button>
+<!-- EXEMPLE -->
+<div class="exemple-section" id="exemple">
+  <h2>Voir un exemple</h2>
+  <p>Découvrez à quoi ressemble un devis généré par Quotify</p>
+  <button class="exemple-btn" onclick="afficherExemple()">Voir un devis exemple →</button>
+  <iframe id="exemple-preview"></iframe>
 </div>
 
+<!-- TESTIMONIALS -->
+<div class="testimonials">
+  <h2>Ils nous font confiance</h2>
+  <div class="testimonials-grid">
+    <div class="testi">
+      <div class="stars">★★★★★</div>
+      <div class="testi-text">"Je génère mes devis en 30 secondes maintenant. Avant je passais 20 minutes sur Excel. C'est magique !"</div>
+      <div class="testi-author">Jean-Pierre M.</div>
+      <div class="testi-role">Plombier — Lyon</div>
+    </div>
+    <div class="testi">
+      <div class="stars">★★★★★</div>
+      <div class="testi-text">"Mes clients sont impressionnés par la qualité des devis. J'ai l'air plus professionnel qu'avant."</div>
+      <div class="testi-author">Sandra K.</div>
+      <div class="testi-role">Électricienne — Bordeaux</div>
+    </div>
+    <div class="testi">
+      <div class="stars">★★★★★</div>
+      <div class="testi-text">"Super simple à utiliser. J'ai commencé à m'en servir le jour même. Je recommande à tous les artisans."</div>
+      <div class="testi-author">Marc T.</div>
+      <div class="testi-role">Maçon — Toulouse</div>
+    </div>
+  </div>
+</div>
+
+<!-- PRICING -->
+<div class="pricing-section" id="tarifs">
+  <h2>Tarifs simples</h2>
+  <div class="pricing-banner">
+    <div class="pricing-left">
+      <div class="pricing-label">Abonnement mensuel</div>
+      <div class="pricing-price">79 € <span>/mois</span></div>
+      <ul class="pricing-features">
+        <li>Devis illimités</li>
+        <li>Multi-prestations</li>
+        <li>Téléchargement PDF</li>
+        <li>Annulable à tout moment</li>
+      </ul>
+    </div>
+    <button class="pricing-btn" onclick="alert('Paiement Stripe bientôt disponible !')">S'abonner maintenant</button>
+  </div>
+</div>
+
+<!-- GENERATEUR -->
 <div class="section" id="generateur">
   <h2>Créez votre devis</h2>
   <div class="card">
@@ -114,19 +244,25 @@ footer { text-align: center; padding: 32px; font-size: 13px; color: #aaa; border
     <label>Nom du client</label>
     <input type="text" id="client" placeholder="Ex: Jean Martin">
 
-    <label>Description de la prestation</label>
-    <textarea id="prestation" placeholder="Ex: Remplacement chauffe-eau, installation robinetterie..."></textarea>
+    <label>Email du client</label>
+    <input type="email" id="client-email" placeholder="client@email.fr">
 
-    <div class="row">
-      <div>
-        <label>Prix unitaire HT (€)</label>
-        <input type="number" id="prix" placeholder="850">
-      </div>
-      <div>
-        <label>Quantité</label>
-        <input type="number" id="quantite" placeholder="1" value="1">
+    <label>Prestations</label>
+    <div style="display:grid;grid-template-columns:3fr 1fr 1fr 32px;gap:8px;margin-bottom:6px;">
+      <span style="font-size:12px;color:#999">Description</span>
+      <span style="font-size:12px;color:#999">Qté</span>
+      <span style="font-size:12px;color:#999">Prix HT (€)</span>
+      <span></span>
+    </div>
+    <div id="prestations-list">
+      <div class="prestation-row">
+        <input type="text" placeholder="Ex: Remplacement chauffe-eau">
+        <input type="number" placeholder="1" value="1" min="1">
+        <input type="number" placeholder="850">
+        <button class="remove-btn" onclick="removePrestation(this)">✕</button>
       </div>
     </div>
+    <button class="add-prestation" onclick="addPrestation()">+ Ajouter une prestation</button>
 
     <label>Conditions de paiement</label>
     <input type="text" id="conditions" placeholder="Ex: 30% acompte, solde à la fin des travaux">
@@ -135,37 +271,115 @@ footer { text-align: center; padding: 32px; font-size: 13px; color: #aaa; border
 
     <div id="result">
       <iframe id="preview"></iframe>
-      <button class="download-btn" onclick="telecharger()">Télécharger en PDF</button>
+      <div class="action-btns">
+        <button class="download-btn" onclick="telecharger()">Télécharger PDF</button>
+        <button class="email-btn" onclick="envoyerEmail()">Envoyer par email</button>
+      </div>
     </div>
 
   </div>
 </div>
 
-<footer>© 2026 Quotify · Tous droits réservés</footer>
+<!-- FAQ -->
+<div class="faq-section" id="faq">
+  <h2>Questions fréquentes</h2>
+  <div class="faq-item">
+    <div class="faq-question" onclick="toggleFaq(this)">
+      Les devis générés sont-ils légalement valides ? <span class="faq-arrow">▼</span>
+    </div>
+    <div class="faq-answer">Oui. Nos devis incluent toutes les mentions obligatoires : identification des parties, description des prestations, prix HT et TTC, TVA applicable, durée de validité et conditions de paiement.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-question" onclick="toggleFaq(this)">
+      Puis-je annuler mon abonnement ? <span class="faq-arrow">▼</span>
+    </div>
+    <div class="faq-answer">Oui, vous pouvez annuler à tout moment depuis votre espace client. Aucun engagement, aucune pénalité. Votre accès reste actif jusqu'à la fin de la période payée.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-question" onclick="toggleFaq(this)">
+      Mes données sont-elles sécurisées ? <span class="faq-arrow">▼</span>
+    </div>
+    <div class="faq-answer">Toutes vos données sont traitées de manière sécurisée. Nous ne revendons jamais vos informations à des tiers. Les devis sont générés localement dans votre navigateur.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-question" onclick="toggleFaq(this)">
+      Puis-je ajouter mon logo sur les devis ? <span class="faq-arrow">▼</span>
+    </div>
+    <div class="faq-answer">Cette fonctionnalité arrive prochainement. Pour l'instant, votre nom d'entreprise et vos coordonnées apparaissent en haut de chaque devis.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-question" onclick="toggleFaq(this)">
+      Combien de devis puis-je générer ? <span class="faq-arrow">▼</span>
+    </div>
+    <div class="faq-answer">L'abonnement inclut des devis illimités. Générez autant de devis que vous le souhaitez sans restriction.</div>
+  </div>
+</div>
+
+<footer>© 2026 Quotify · Tous droits réservés · contact@quotify.fr</footer>
+
+</div>
 
 <script>
-function genererDevis() {
-  const entreprise = document.getElementById('entreprise').value;
-  const metier = document.getElementById('metier').value;
-  const email = document.getElementById('email').value;
-  const tel = document.getElementById('tel').value;
-  const client = document.getElementById('client').value;
-  const prestation = document.getElementById('prestation').value;
-  const prix = parseFloat(document.getElementById('prix').value);
-  const quantite = parseInt(document.getElementById('quantite').value);
-  const conditions = document.getElementById('conditions').value;
+const CODES = ['DEMO-2026', 'ARTI-0001', 'ARTI-0002', 'ARTI-0003'];
 
-  if (!entreprise || !client || !prestation || !prix) {
-    alert('Merci de remplir tous les champs obligatoires.');
-    return;
+function checkAccess() {
+  const code = document.getElementById('access-code').value.toUpperCase().trim();
+  if (CODES.includes(code)) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('main-app').style.display = 'block';
+    localStorage.setItem('quotify_access', code);
+  } else {
+    document.getElementById('login-error').style.display = 'block';
   }
+}
 
-  const ht = prix * quantite;
-  const tva = ht * 0.2;
-  const ttc = ht + tva;
+if (localStorage.getItem('quotify_access') && CODES.includes(localStorage.getItem('quotify_access'))) {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('main-app').style.display = 'block';
+}
+
+document.getElementById('access-code').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') checkAccess();
+});
+
+function addPrestation() {
+  const list = document.getElementById('prestations-list');
+  const row = document.createElement('div');
+  row.className = 'prestation-row';
+  row.innerHTML = `
+    <input type="text" placeholder="Description de la prestation">
+    <input type="number" placeholder="1" value="1" min="1">
+    <input type="number" placeholder="0">
+    <button class="remove-btn" onclick="removePrestation(this)">✕</button>
+  `;
+  list.appendChild(row);
+}
+
+function removePrestation(btn) {
+  const rows = document.querySelectorAll('.prestation-row');
+  if (rows.length > 1) btn.parentElement.remove();
+}
+
+function toggleFaq(el) {
+  const answer = el.nextElementSibling;
+  const arrow = el.querySelector('.faq-arrow');
+  answer.classList.toggle('open');
+  arrow.classList.toggle('open');
+}
+
+function buildDevisHTML(entreprise, metier, email, tel, client, prestations, conditions) {
   const today = new Date().toLocaleDateString('fr-FR');
+  let lignes = '';
+  let totalHT = 0;
+  prestations.forEach(p => {
+    const ht = p.prix * p.qte;
+    totalHT += ht;
+    lignes += `<tr><td>${p.desc}</td><td style="text-align:center">${p.qte}</td><td style="text-align:right">${p.prix.toFixed(2)} €</td><td style="text-align:right">${ht.toFixed(2)} €</td></tr>`;
+  });
+  const tva = totalHT * 0.2;
+  const ttc = totalHT + tva;
 
-  const html = `<!DOCTYPE html>
+  return `<!DOCTYPE html>
 <html lang="fr"><head><meta charset="UTF-8">
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
@@ -194,17 +408,11 @@ td { padding: 10px 12px; border-bottom: 1px solid #eee; }
 .conditions-text { font-size: 12px; color: #666; line-height: 1.8; }
 </style></head><body>
 <div class="header">
-  <div>
-    <div class="company-name">${entreprise}</div>
-    <div class="company-sub">${metier}</div>
-  </div>
+  <div><div class="company-name">${entreprise}</div><div class="company-sub">${metier}</div></div>
   <div class="contact">${email}<br>${tel}</div>
 </div>
 <div class="title-row">
-  <div>
-    <div class="devis-title">DEVIS</div>
-    <div class="devis-num">Date : ${today}</div>
-  </div>
+  <div><div class="devis-title">DEVIS</div><div class="devis-num">Date : ${today}</div></div>
   <div class="dates">Validité : <strong>30 jours</strong></div>
 </div>
 <div class="client-block">
@@ -212,12 +420,12 @@ td { padding: 10px 12px; border-bottom: 1px solid #eee; }
   <div class="client-name">${client}</div>
 </div>
 <table>
-  <thead><tr><th>Désignation</th><th>Qté</th><th>P.U. HT</th><th>Total HT</th></tr></thead>
-  <tbody><tr><td>${prestation}</td><td>${quantite}</td><td>${prix.toFixed(2)} €</td><td>${ht.toFixed(2)} €</td></tr></tbody>
+  <thead><tr><th>Désignation</th><th style="text-align:center">Qté</th><th style="text-align:right">P.U. HT</th><th style="text-align:right">Total HT</th></tr></thead>
+  <tbody>${lignes}</tbody>
 </table>
 <div class="totals">
   <div class="totals-box">
-    <div class="total-line"><span>Total HT</span><span>${ht.toFixed(2)} €</span></div>
+    <div class="total-line"><span>Total HT</span><span>${totalHT.toFixed(2)} €</span></div>
     <div class="total-line"><span>TVA 20%</span><span>${tva.toFixed(2)} €</span></div>
     <div class="total-ttc"><span>Total TTC</span><span>${ttc.toFixed(2)} €</span></div>
   </div>
@@ -227,13 +435,37 @@ td { padding: 10px 12px; border-bottom: 1px solid #eee; }
   <div class="conditions-text">${conditions}<br>Ce devis est valable 30 jours à compter de sa date d'émission.</div>
 </div>
 </body></html>`;
+}
 
+function genererDevis() {
+  const entreprise = document.getElementById('entreprise').value;
+  const metier = document.getElementById('metier').value;
+  const email = document.getElementById('email').value;
+  const tel = document.getElementById('tel').value;
+  const client = document.getElementById('client').value;
+  const conditions = document.getElementById('conditions').value;
+
+  if (!entreprise || !client) { alert('Merci de remplir les champs obligatoires.'); return; }
+
+  const rows = document.querySelectorAll('.prestation-row');
+  const prestations = [];
+  rows.forEach(row => {
+    const inputs = row.querySelectorAll('input');
+    const desc = inputs[0].value;
+    const qte = parseFloat(inputs[1].value) || 1;
+    const prix = parseFloat(inputs[2].value) || 0;
+    if (desc && prix) prestations.push({ desc, qte, prix });
+  });
+
+  if (prestations.length === 0) { alert('Ajoutez au moins une prestation avec un prix.'); return; }
+
+  const html = buildDevisHTML(entreprise, metier, email, tel, client, prestations, conditions);
   const blob = new Blob([html], { type: 'text/html' });
-  const url = URL.createObjectURL(blob);
-  document.getElementById('preview').src = url;
+  document.getElementById('preview').src = URL.createObjectURL(blob);
   document.getElementById('result').style.display = 'block';
   document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
   window._htmlDevis = html;
+  window._clientEmail = document.getElementById('client-email').value;
 }
 
 function telecharger() {
@@ -242,6 +474,28 @@ function telecharger() {
   a.href = URL.createObjectURL(blob);
   a.download = 'devis-quotify.html';
   a.click();
+}
+
+function envoyerEmail() {
+  const email = window._clientEmail;
+  if (!email) { alert('Ajoutez l\'email du client pour envoyer le devis.'); return; }
+  const subject = encodeURIComponent('Votre devis');
+  const body = encodeURIComponent('Bonjour,\n\nVeuillez trouver ci-joint votre devis.\n\nCordialement.');
+  window.open(`mailto:${email}?subject=${subject}&body=${body}`);
+}
+
+function afficherExemple() {
+  const html = buildDevisHTML(
+    'Plomberie Dupont', 'Plombier', 'dupont@plomberie.fr', '06 12 34 56 78',
+    'Jean Martin',
+    [{desc: 'Remplacement chauffe-eau', qte: 1, prix: 850}, {desc: 'Robinetterie cuisine', qte: 2, prix: 120}],
+    '30% acompte à la commande, solde à la fin des travaux'
+  );
+  const blob = new Blob([html], { type: 'text/html' });
+  const preview = document.getElementById('exemple-preview');
+  preview.src = URL.createObjectURL(blob);
+  preview.style.display = 'block';
+  preview.scrollIntoView({ behavior: 'smooth' });
 }
 </script>
 
