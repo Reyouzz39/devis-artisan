@@ -14,9 +14,12 @@
 <link rel="sitemap" type="application/xml" href="/devis-artisan/sitemap.xml">
 <script defer data-domain="reyouzz39.github.io" src="https://plausible.io/js/script.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; background: #FAFAFA; color: #111; }
+
+/* NAV */
 nav { display: flex; justify-content: space-between; align-items: center; padding: 16px 40px; background: #fff; border-bottom: 1px solid #f0f0f0; position: sticky; top: 0; z-index: 100; }
 .logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
 .logo-icon { width: 32px; height: 32px; background: #6C47FF; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 16px; }
@@ -28,6 +31,8 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
 .nav-user { font-size: 13px; color: #888; }
 .nav-plan { font-size: 11px; font-weight: 700; background: #F3F0FF; color: #6C47FF; padding: 3px 10px; border-radius: 20px; }
 .nav-logout { background: none; border: 1px solid #ddd; color: #666; padding: 8px 16px; border-radius: 24px; font-size: 13px; cursor: pointer; }
+
+/* AUTH */
 #auth-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: #FAFAFA; }
 .auth-card { background: #fff; border: 1px solid #ece9ff; border-radius: 16px; padding: 48px 40px; width: 420px; }
 .auth-logo { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 8px; }
@@ -47,57 +52,102 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
 .auth-msg.error { background: #fef2f2; color: #dc2626; }
 .auth-footer { text-align: center; margin-top: 20px; font-size: 12px; color: #aaa; }
 .auth-footer a { color: #6C47FF; text-decoration: none; }
+
+/* DEMO BANNER */
+.demo-banner { background: #F3F0FF; border-bottom: 1px solid #ece9ff; padding: 10px 40px; text-align: center; font-size: 13px; color: #6C47FF; }
+.demo-banner a { color: #6C47FF; font-weight: 700; text-decoration: underline; cursor: pointer; }
+
 #main-app { display: none; }
-.onboarding { background: #6C47FF; color: white; padding: 20px 40px; display: none; }
+
+/* ONBOARDING */
+.onboarding { background: #6C47FF; color: white; padding: 16px 40px; display: none; }
 .onboarding-inner { max-width: 900px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
-.onboarding h3 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
-.onboarding p { font-size: 13px; opacity: 0.85; }
-.onboarding-steps { display: flex; gap: 12px; }
-.onboarding-step { background: rgba(255,255,255,0.15); border-radius: 8px; padding: 8px 16px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.onboarding h3 { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
+.onboarding p { font-size: 12px; opacity: 0.85; }
+.onboarding-steps { display: flex; gap: 10px; }
+.onboarding-step { background: rgba(255,255,255,0.15); border-radius: 8px; padding: 6px 14px; font-size: 12px; font-weight: 600; white-space: nowrap; }
 .onboarding-step.done { background: rgba(255,255,255,0.3); text-decoration: line-through; opacity: 0.7; }
-.onboarding-close { background: none; border: 1px solid rgba(255,255,255,0.4); color: white; padding: 6px 14px; border-radius: 6px; font-size: 12px; cursor: pointer; }
-.hero { background: #fff; padding: 72px 40px 56px; text-align: center; }
-.pill { display: inline-flex; align-items: center; gap: 6px; background: #F3F0FF; color: #6C47FF; font-size: 12px; padding: 6px 16px; border-radius: 24px; margin-bottom: 22px; font-weight: 700; }
-.hero h1 { font-size: 48px; font-weight: 800; line-height: 1.15; margin-bottom: 16px; }
-.hero h1 span { color: #6C47FF; }
-.hero p { font-size: 18px; color: #888; margin-bottom: 24px; max-width: 500px; margin-left: auto; margin-right: auto; line-height: 1.6; }
-.social-proof { display: flex; justify-content: center; gap: 40px; margin-bottom: 32px; padding: 20px; background: #FAFAFA; border-radius: 12px; max-width: 400px; margin-left: auto; margin-right: auto; }
-.proof-item { text-align: center; }
-.proof-num { font-size: 24px; font-weight: 800; color: #6C47FF; }
-.proof-label { font-size: 12px; color: #999; margin-top: 2px; }
-.hero-btn { background: #6C47FF; color: #fff; border: none; padding: 16px 36px; border-radius: 28px; font-size: 16px; font-weight: 700; cursor: pointer; }
-.hero-btn:hover { background: #5835e0; }
-.trust-badges { display: flex; justify-content: center; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
-.badge { display: flex; align-items: center; gap: 6px; background: #f9f9f9; border: 1px solid #eee; padding: 6px 14px; border-radius: 20px; font-size: 12px; color: #555; }
-.dashboard { background: #F3F0FF; padding: 24px 40px; border-bottom: 1px solid #ece9ff; }
-.dashboard-inner { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
-.dash-card { background: #fff; border-radius: 12px; padding: 16px 20px; }
-.dash-label { font-size: 12px; color: #999; margin-bottom: 4px; }
-.dash-value { font-size: 22px; font-weight: 800; color: #111; }
+.onboarding-close { background: none; border: 1px solid rgba(255,255,255,0.4); color: white; padding: 6px 14px; border-radius: 6px; font-size: 12px; cursor: pointer; white-space: nowrap; }
+
+/* DASHBOARD */
+.dashboard { background: #F3F0FF; padding: 20px 40px; border-bottom: 1px solid #ece9ff; }
+.dashboard-inner { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.dash-card { background: #fff; border-radius: 12px; padding: 14px 18px; }
+.dash-label { font-size: 11px; color: #999; margin-bottom: 4px; }
+.dash-value { font-size: 20px; font-weight: 800; color: #111; }
 .dash-sub { font-size: 11px; color: #aaa; margin-top: 2px; }
-.quota-bar { height: 6px; background: #eee; border-radius: 3px; margin-top: 8px; overflow: hidden; }
+.quota-bar { height: 5px; background: #eee; border-radius: 3px; margin-top: 8px; overflow: hidden; }
 .quota-fill { height: 100%; background: #6C47FF; border-radius: 3px; transition: width 0.5s; }
 .quota-fill.danger { background: #e53e3e; }
+
+/* HERO — Direction B */
+.hero { background: #fff; padding: 64px 40px 56px; }
+.hero-inner { max-width: 960px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+.hero-left {}
+.hero-badge { display: inline-flex; align-items: center; gap: 6px; background: #F3F0FF; color: #6C47FF; font-size: 12px; padding: 5px 14px; border-radius: 20px; margin-bottom: 20px; font-weight: 600; }
+.hero h1 { font-size: 42px; font-weight: 800; line-height: 1.15; margin-bottom: 16px; letter-spacing: -0.5px; color: #111; }
+.hero h1 em { font-style: normal; color: #6C47FF; }
+.hero-p { font-size: 17px; color: #777; margin-bottom: 28px; line-height: 1.65; }
+.hero-ctas { display: flex; gap: 12px; align-items: center; margin-bottom: 28px; }
+.hero-cta-primary { background: #6C47FF; color: #fff; border: none; padding: 13px 24px; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; }
+.hero-cta-primary:hover { background: #5835e0; }
+.hero-cta-secondary { background: none; border: 1.5px solid #ddd; color: #555; padding: 12px 20px; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; }
+.hero-cta-secondary:hover { border-color: #6C47FF; color: #6C47FF; }
+.hero-stats { display: flex; gap: 28px; }
+.hero-stat-num { font-size: 20px; font-weight: 800; color: #6C47FF; }
+.hero-stat-label { font-size: 11px; color: #999; margin-top: 2px; }
+.trust-badges { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+.badge { display: flex; align-items: center; gap: 5px; background: #f9f9f9; border: 1px solid #eee; padding: 5px 12px; border-radius: 20px; font-size: 11px; color: #555; }
+
+/* DEVIS MOCKUP dans hero */
+.hero-mockup { background: #fff; border: 1px solid #e0e0e0; border-radius: 14px; padding: 20px; box-shadow: 0 4px 24px rgba(0,0,0,0.06); }
+.mockup-header { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 14px; border-bottom: 2px solid #6C47FF; margin-bottom: 14px; }
+.mockup-company { font-size: 13px; font-weight: 700; color: #6C47FF; }
+.mockup-meta { font-size: 10px; color: #aaa; margin-top: 3px; }
+.mockup-title { font-size: 16px; font-weight: 800; color: #111; }
+.mockup-ref { font-size: 10px; color: #6C47FF; font-weight: 600; margin-top: 3px; }
+.mockup-client { background: #F3F0FF; border-left: 3px solid #6C47FF; padding: 8px 12px; border-radius: 0 6px 6px 0; margin-bottom: 12px; }
+.mockup-client-label { font-size: 9px; color: #9d8cff; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 2px; font-weight: 700; }
+.mockup-client-name { font-size: 12px; font-weight: 700; color: #111; }
+.mockup-client-addr { font-size: 10px; color: #888; margin-top: 1px; }
+.mockup-table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
+.mockup-table th { font-size: 10px; color: #fff; background: #6C47FF; padding: 5px 8px; text-align: left; font-weight: 600; }
+.mockup-table th:last-child { text-align: right; }
+.mockup-table td { font-size: 10px; padding: 5px 8px; border-bottom: 1px solid #f0f0f0; color: #333; }
+.mockup-table td:last-child { text-align: right; font-weight: 600; }
+.mockup-table tr:nth-child(even) td { background: #fafafa; }
+.mockup-total { display: flex; justify-content: space-between; background: #6C47FF; color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; }
+
+/* FEATURES */
 .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 900px; margin: 48px auto; padding: 0 40px; }
 .feat { background: #fff; border: 1px solid #ece9ff; border-radius: 12px; padding: 24px; transition: transform 0.2s; }
 .feat:hover { transform: translateY(-3px); }
-.feat-dot { width: 10px; height: 10px; background: #6C47FF; border-radius: 50%; margin-bottom: 14px; }
+.feat-icon { width: 36px; height: 36px; background: #F3F0FF; border-radius: 9px; display: flex; align-items: center; justify-content: center; margin-bottom: 14px; }
+.feat-icon svg { width: 18px; height: 18px; stroke: #6C47FF; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .feat h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
 .feat p { font-size: 13px; color: #999; line-height: 1.5; }
+
+/* POUR QUI — icônes SVG */
 .pour-qui { background: #fff; padding: 56px 40px; text-align: center; }
 .pour-qui h2 { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
 .pour-qui-sub { font-size: 15px; color: #888; margin-bottom: 32px; }
 .metiers-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; max-width: 900px; margin: 0 auto; }
 .metier-card { background: #FAFAFA; border: 1px solid #ece9ff; border-radius: 10px; padding: 20px 16px; text-align: center; cursor: pointer; transition: all 0.2s; }
 .metier-card:hover { background: #F3F0FF; border-color: #6C47FF; transform: translateY(-2px); }
-.metier-icon { font-size: 28px; margin-bottom: 8px; }
-.metier-name { font-size: 13px; font-weight: 700; }
+.metier-svg { width: 36px; height: 36px; margin: 0 auto 10px; }
+.metier-svg svg { width: 36px; height: 36px; stroke: #6C47FF; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.metier-card:hover .metier-svg svg { stroke: #5835e0; }
+.metier-name { font-size: 13px; font-weight: 700; color: #111; }
+
+/* EXEMPLE */
 .exemple-section { max-width: 900px; margin: 56px auto; padding: 0 40px; text-align: center; }
 .exemple-section h2 { font-size: 28px; font-weight: 800; margin-bottom: 12px; }
 .exemple-section p { font-size: 14px; color: #888; margin-bottom: 20px; }
 .exemple-btn { background: #fff; border: 2px solid #6C47FF; color: #6C47FF; padding: 12px 28px; border-radius: 24px; font-size: 14px; font-weight: 700; cursor: pointer; }
 .exemple-btn:hover { background: #F3F0FF; }
 #exemple-preview { display: none; width: 100%; height: 600px; border: 1px solid #ece9ff; border-radius: 12px; margin-top: 20px; }
+
+/* TESTIMONIALS */
 .testimonials { background: #F3F0FF; padding: 56px 40px; text-align: center; }
 .testimonials h2 { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
 .testimonials-sub { font-size: 14px; color: #777; margin-bottom: 32px; }
@@ -111,6 +161,8 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
 .testi-date { font-size: 11px; color: #bbb; }
 .stars { color: #6C47FF; font-size: 14px; margin-bottom: 10px; }
 .testi-text { font-size: 14px; color: #444; line-height: 1.6; font-style: italic; }
+
+/* COMPARATIF */
 .comparatif { max-width: 900px; margin: 56px auto; padding: 0 40px; }
 .comparatif h2 { font-size: 28px; font-weight: 800; text-align: center; margin-bottom: 8px; }
 .comparatif-sub { font-size: 15px; color: #888; text-align: center; margin-bottom: 32px; }
@@ -125,12 +177,15 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
 .check { color: #22c55e; font-size: 16px; }
 .cross { color: #e53e3e; font-size: 16px; }
 .partial { color: #f59e0b; font-size: 14px; }
+
+/* ECONOMIES */
 .economies { background: linear-gradient(135deg, #6C47FF, #9333ea); padding: 56px 40px; text-align: center; }
 .economies h2 { font-size: 28px; font-weight: 800; color: #fff; margin-bottom: 8px; }
 .economies-sub { font-size: 15px; color: rgba(255,255,255,0.8); margin-bottom: 40px; }
 .economies-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 900px; margin: 0 auto 40px; }
 .economie-card { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); border-radius: 16px; padding: 28px 24px; text-align: center; }
-.economie-icon { font-size: 32px; margin-bottom: 12px; }
+.economie-icon { width: 48px; height: 48px; background: rgba(255,255,255,0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; }
+.economie-icon svg { width: 24px; height: 24px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .economie-chiffre { font-size: 36px; font-weight: 800; color: #fff; margin-bottom: 6px; }
 .economie-label { font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.5; }
 .comparaison-prix { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 16px; padding: 24px 32px; max-width: 600px; margin: 0 auto; }
@@ -138,6 +193,8 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
 .comparaison-prix-row:last-child { border-bottom: none; font-weight: 800; font-size: 16px; color: #fff; padding-top: 14px; }
 .comparaison-prix-val { font-weight: 700; }
 .comparaison-prix-val.win { color: #4ADE80; font-size: 18px; }
+
+/* COMPTEURS */
 .compteur-section { background: #fff; padding: 56px 40px; text-align: center; }
 .compteur-section h2 { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
 .compteur-sub { font-size: 15px; color: #888; margin-bottom: 40px; }
@@ -145,6 +202,8 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
 .compteur-card { background: #F3F0FF; border-radius: 16px; padding: 28px 20px; text-align: center; }
 .compteur-num { font-size: 36px; font-weight: 800; color: #6C47FF; margin-bottom: 6px; }
 .compteur-label { font-size: 13px; color: #666; line-height: 1.5; }
+
+/* PRICING */
 .pricing-section { max-width: 1000px; margin: 56px auto; padding: 0 40px; text-align: center; }
 .pricing-section h2 { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
 .pricing-sub { font-size: 15px; color: #888; margin-bottom: 40px; }
@@ -168,6 +227,8 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
 .plan-btn-starter { background: #6C47FF; color: #fff; }
 .plan-btn-pro { background: #fff; color: #6C47FF; }
 .plan-btn-agence { background: #111; color: #fff; }
+
+/* GENERATEUR */
 .section { max-width: 820px; margin: 0 auto 64px; padding: 0 40px; }
 .section h2 { font-size: 28px; font-weight: 800; text-align: center; margin-bottom: 8px; }
 .section-sub { font-size: 14px; color: #888; text-align: center; margin-bottom: 32px; }
@@ -187,7 +248,7 @@ textarea { height: 80px; resize: vertical; }
 .remove-btn:hover { border-color: #e53e3e; color: #e53e3e; }
 .add-prestation { background: none; border: 1px dashed #6C47FF; color: #6C47FF; padding: 9px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; width: 100%; margin-top: 4px; font-family: inherit; }
 .add-prestation:hover { background: #F3F0FF; }
-.logo-upload { border: 2px dashed #ddd; border-radius: 8px; padding: 16px; text-align: center; cursor: pointer; margin-top: 8px; transition: all 0.2s; font-size: 13px; color: #888; }
+.logo-upload { border: 2px dashed #ddd; border-radius: 8px; padding: 16px; text-align: center; cursor: pointer; margin-top: 8px; font-size: 13px; color: #888; transition: all 0.2s; }
 .logo-upload:hover { border-color: #6C47FF; background: #F3F0FF; }
 .logo-preview { max-height: 50px; max-width: 160px; margin-top: 8px; display: none; border-radius: 4px; }
 .tva-info { font-size: 12px; color: #888; margin-top: 6px; }
@@ -196,6 +257,18 @@ textarea { height: 80px; resize: vertical; }
 .generate-btn:hover { background: #5835e0; }
 .generate-btn:disabled { background: #ccc; cursor: not-allowed; }
 .quota-warning { background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 12px 16px; font-size: 13px; color: #dc2626; margin-top: 16px; display: none; text-align: center; }
+
+/* MODE RAPIDE */
+.mode-toggle { display: flex; gap: 8px; margin-bottom: 20px; }
+.mode-btn { flex: 1; padding: 10px; border-radius: 8px; border: 1.5px solid #e0e0e0; background: #fff; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; color: #666; transition: all 0.2s; }
+.mode-btn.active { border-color: #6C47FF; background: #F3F0FF; color: #6C47FF; }
+
+/* MODELES PRESTATIONS */
+.modeles-grid { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; margin-bottom: 8px; }
+.modele-tag { background: #F3F0FF; border: 1px solid #ece9ff; color: #6C47FF; font-size: 12px; padding: 5px 12px; border-radius: 20px; cursor: pointer; font-weight: 600; transition: all 0.2s; white-space: nowrap; }
+.modele-tag:hover { background: #6C47FF; color: #fff; }
+.save-modele-btn { background: none; border: 1px dashed #6C47FF; color: #6C47FF; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit; }
+
 #result { display: none; margin-top: 24px; }
 #preview { width: 100%; height: 650px; border: 1px solid #ece9ff; border-radius: 10px; }
 .action-btns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 14px; }
@@ -205,6 +278,8 @@ textarea { height: 80px; resize: vertical; }
 .email-btn:hover { background: #5835e0; }
 .facture-btn { background: #f59e0b; color: #fff; border: none; padding: 14px; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; }
 .facture-btn:hover { background: #d97706; }
+
+/* SAVED DEVIS */
 .saved-devis { max-width: 820px; margin: 0 auto 64px; padding: 0 40px; }
 .saved-devis h2 { font-size: 22px; font-weight: 800; margin-bottom: 16px; }
 .devis-list { display: flex; flex-direction: column; gap: 10px; }
@@ -213,6 +288,8 @@ textarea { height: 80px; resize: vertical; }
 .devis-item-ref { font-size: 11px; color: #6C47FF; font-weight: 600; margin-top: 2px; }
 .devis-item-date { color: #999; font-size: 12px; margin-top: 2px; }
 .devis-item-amount { font-size: 16px; font-weight: 800; color: #6C47FF; }
+
+/* ABOUT */
 .about-section { background: #fff; padding: 56px 40px; }
 .about-inner { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
 .about-title { font-size: 28px; font-weight: 800; margin-bottom: 16px; }
@@ -225,10 +302,14 @@ textarea { height: 80px; resize: vertical; }
 .about-stat { background: #F3F0FF; border-radius: 12px; padding: 20px; text-align: center; }
 .about-stat-num { font-size: 28px; font-weight: 800; color: #6C47FF; }
 .about-stat-label { font-size: 12px; color: #888; margin-top: 4px; }
+
+/* LEGAL */
 .legal-section { max-width: 820px; margin: 0 auto 64px; padding: 0 40px; display: none; }
 .legal-section h2 { font-size: 24px; font-weight: 800; margin-bottom: 24px; }
 .legal-section h3 { font-size: 16px; font-weight: 700; margin: 20px 0 8px; color: #6C47FF; }
 .legal-section p { font-size: 14px; color: #666; line-height: 1.8; margin-bottom: 12px; }
+
+/* FAQ */
 .faq-section { max-width: 720px; margin: 0 auto 64px; padding: 0 40px; }
 .faq-section h2 { font-size: 28px; font-weight: 800; text-align: center; margin-bottom: 32px; }
 .faq-item { border: 1px solid #ece9ff; border-radius: 10px; margin-bottom: 10px; overflow: hidden; }
@@ -238,6 +319,8 @@ textarea { height: 80px; resize: vertical; }
 .faq-answer.open { padding: 16px 20px; max-height: 300px; }
 .faq-arrow { font-size: 12px; transition: transform 0.3s; }
 .faq-arrow.open { transform: rotate(180deg); }
+
+/* PARRAINAGE */
 .referral-section { background: linear-gradient(135deg, #6C47FF, #9333ea); padding: 56px 40px; text-align: center; }
 .referral-section h2 { font-size: 28px; font-weight: 800; color: #fff; margin-bottom: 12px; }
 .referral-section p { font-size: 15px; color: rgba(255,255,255,0.85); margin-bottom: 28px; max-width: 500px; margin-left: auto; margin-right: auto; }
@@ -245,18 +328,24 @@ textarea { height: 80px; resize: vertical; }
 .referral-link { flex: 1; background: rgba(255,255,255,0.9); border: none; border-radius: 8px; padding: 10px 14px; font-size: 13px; font-family: inherit; color: #333; outline: none; }
 .referral-copy-btn { background: #fff; color: #6C47FF; border: none; padding: 10px 18px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap; }
 .referral-reward { font-size: 13px; color: rgba(255,255,255,0.7); margin-top: 12px; }
+
+/* NEWSLETTER */
 .newsletter { background: #111; padding: 56px 40px; text-align: center; }
 .newsletter h2 { font-size: 24px; font-weight: 800; color: #fff; margin-bottom: 8px; }
 .newsletter p { font-size: 14px; color: #888; margin-bottom: 24px; }
 .newsletter-form { display: flex; gap: 12px; max-width: 420px; margin: 0 auto; }
 .newsletter-input { flex: 1; padding: 12px 16px; border: none; border-radius: 8px; font-size: 14px; font-family: inherit; outline: none; }
 .newsletter-btn { background: #6C47FF; color: #fff; border: none; padding: 12px 20px; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; }
+
+/* SUPPORT */
 .support-btn { position: fixed; bottom: 24px; right: 24px; background: #6C47FF; color: white; border: none; border-radius: 50px; padding: 12px 20px; font-size: 14px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 12px rgba(108,71,255,0.4); z-index: 999; display: none; }
 .support-modal { position: fixed; bottom: 80px; right: 24px; background: #fff; border: 1px solid #ece9ff; border-radius: 16px; padding: 24px; width: 300px; z-index: 998; display: none; box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
 .support-modal h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
 .support-modal p { font-size: 13px; color: #666; margin-bottom: 16px; }
 .support-modal a { display: block; background: #6C47FF; color: white; text-align: center; padding: 10px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 13px; }
 .support-close { position: absolute; top: 12px; right: 12px; background: none; border: none; font-size: 18px; cursor: pointer; color: #999; }
+
+/* FOOTER */
 footer { background: #fff; border-top: 1px solid #f0f0f0; padding: 40px; }
 .footer-inner { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; }
 .footer-brand { font-size: 20px; font-weight: 800; color: #6C47FF; margin-bottom: 8px; }
@@ -267,13 +356,19 @@ footer { background: #fff; border-top: 1px solid #f0f0f0; padding: 40px; }
 .footer-col a { display: block; font-size: 13px; color: #888; text-decoration: none; margin-bottom: 8px; cursor: pointer; }
 .footer-col a:hover { color: #6C47FF; }
 .footer-bottom { max-width: 900px; margin: 24px auto 0; padding-top: 24px; border-top: 1px solid #f0f0f0; display: flex; justify-content: space-between; font-size: 12px; color: #aaa; }
+
+/* ANIMATIONS */
 .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s, transform 0.6s; }
 .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+/* MOBILE */
 @media (max-width: 768px) {
   nav { padding: 12px 20px; }
   .nav-links { display: none; }
-  .hero { padding: 48px 20px 40px; }
-  .hero h1 { font-size: 32px; }
+  .hero { padding: 40px 20px; }
+  .hero-inner { grid-template-columns: 1fr; }
+  .hero-mockup { display: none; }
+  .hero h1 { font-size: 30px; }
   .features { grid-template-columns: 1fr; padding: 0 20px; }
   .metiers-grid { grid-template-columns: repeat(2, 1fr); }
   .testimonials-grid { grid-template-columns: 1fr; }
@@ -330,6 +425,11 @@ footer { background: #fff; border-top: 1px solid #f0f0f0; padding: 40px; }
 </div>
 
 <div id="main-app">
+
+<div class="demo-banner" id="demo-banner">
+  Mode démo actif — <a onclick="document.getElementById('generateur').scrollIntoView({behavior:'smooth'})">Créez votre premier devis gratuitement</a> · <a onclick="document.getElementById('demo-banner').style.display='none'">✕</a>
+</div>
+
 <nav>
   <a class="logo" href="#"><div class="logo-icon">Q</div><div class="logo-text">Quotify</div></a>
   <div class="nav-links">
@@ -351,12 +451,12 @@ footer { background: #fff; border-top: 1px solid #f0f0f0; padding: 40px; }
   <div class="onboarding-inner">
     <div>
       <h3>👋 Bienvenue sur Quotify !</h3>
-      <p>Créez votre premier devis professionnel en 3 étapes simples</p>
+      <p>Créez votre premier devis professionnel en 3 étapes</p>
     </div>
     <div class="onboarding-steps">
-      <div class="onboarding-step" id="step-1">① Remplissez vos infos</div>
-      <div class="onboarding-step" id="step-2">② Ajoutez vos prestations</div>
-      <div class="onboarding-step" id="step-3">③ Générez votre devis</div>
+      <div class="onboarding-step" id="step-1">① Vos infos entreprise</div>
+      <div class="onboarding-step" id="step-2">② Vos prestations</div>
+      <div class="onboarding-step" id="step-3">③ Générer le devis</div>
     </div>
     <button class="onboarding-close" onclick="closeOnboarding()">Masquer ×</button>
   </div>
@@ -388,42 +488,146 @@ footer { background: #fff; border-top: 1px solid #f0f0f0; padding: 40px; }
   </div>
 </div>
 
+<!-- HERO Direction B -->
 <div class="hero">
-  <div class="pill">✦ Propulsé par l'IA</div>
-  <h1>Générez vos devis<br><span>comme un pro</span></h1>
-  <p>L'outil préféré des artisans français pour créer des devis professionnels en quelques secondes.</p>
-  <div class="social-proof">
-    <div class="proof-item"><div class="proof-num" id="counter-devis">500+</div><div class="proof-label">Devis générés</div></div>
-    <div class="proof-item"><div class="proof-num">4.9/5</div><div class="proof-label">Satisfaction</div></div>
-    <div class="proof-item"><div class="proof-num" id="counter-heures">2500+</div><div class="proof-label">Heures économisées</div></div>
-  </div>
-  <button class="hero-btn" onclick="document.getElementById('generateur').scrollIntoView({behavior:'smooth'})">Commencer maintenant →</button>
-  <div class="trust-badges">
-    <div class="badge">✅ Devis 100% légaux</div>
-    <div class="badge">🔒 Données sécurisées</div>
-    <div class="badge">🇫🇷 Conforme loi française</div>
-    <div class="badge">↩️ Sans engagement</div>
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-badge">Fait pour les artisans français</div>
+      <h1>Créez vos devis<br><em>comme un pro</em></h1>
+      <p class="hero-p">Remplissez le formulaire, votre devis professionnel est prêt en 30 secondes. Légal, complet, envoyé directement à votre client.</p>
+      <div class="hero-ctas">
+        <button class="hero-cta-primary" onclick="document.getElementById('generateur').scrollIntoView({behavior:'smooth'})">Créer mon devis gratuit →</button>
+        <button class="hero-cta-secondary" onclick="afficherExemple();document.getElementById('exemple').scrollIntoView({behavior:'smooth'})">Voir un exemple</button>
+      </div>
+      <div class="hero-stats">
+        <div><div class="hero-stat-num" id="counter-devis">500+</div><div class="hero-stat-label">Devis générés</div></div>
+        <div><div class="hero-stat-num">4.9/5</div><div class="hero-stat-label">Satisfaction</div></div>
+        <div><div class="hero-stat-num" id="counter-heures">2 500+</div><div class="hero-stat-label">Heures économisées</div></div>
+      </div>
+      <div class="trust-badges">
+        <div class="badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          100% légal
+        </div>
+        <div class="badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6C47FF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Données sécurisées
+        </div>
+        <div class="badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6C47FF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Loi française
+        </div>
+        <div class="badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6C47FF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Sans engagement
+        </div>
+      </div>
+    </div>
+
+    <!-- MOCKUP devis dans le hero -->
+    <div class="hero-mockup">
+      <div class="mockup-header">
+        <div>
+          <div class="mockup-company">Plomberie Dupont</div>
+          <div class="mockup-meta">Plombier · SIRET 123 456 789 00012</div>
+          <div class="mockup-meta">12 rue de la Paix, 75001 Paris</div>
+        </div>
+        <div style="text-align:right">
+          <div class="mockup-title">DEVIS</div>
+          <div class="mockup-ref">DEV-202605-001</div>
+          <div style="font-size:10px;color:#888;margin-top:2px;">16/05/2026 · Validité 30j</div>
+        </div>
+      </div>
+      <div class="mockup-client">
+        <div class="mockup-client-label">Client</div>
+        <div class="mockup-client-name">Jean Martin</div>
+        <div class="mockup-client-addr">5 avenue Victor Hugo, 69001 Lyon</div>
+      </div>
+      <table class="mockup-table">
+        <thead>
+          <tr>
+            <th>Désignation</th>
+            <th style="text-align:center">Qté</th>
+            <th style="text-align:right">Total HT</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Remplacement chauffe-eau</td><td style="text-align:center">1</td><td>850,00 €</td></tr>
+          <tr><td>Robinetterie cuisine</td><td style="text-align:center">2</td><td>216,00 €</td></tr>
+          <tr><td>Main d'œuvre (3h)</td><td style="text-align:center">3</td><td>225,00 €</td></tr>
+        </tbody>
+      </table>
+      <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">
+        <div style="width:200px;">
+          <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:11px;color:#666;border-bottom:1px solid #f0f0f0;"><span>Total HT</span><span>1 291,00 €</span></div>
+          <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:11px;color:#666;border-bottom:1px solid #f0f0f0;"><span>TVA 10%</span><span>129,10 €</span></div>
+        </div>
+      </div>
+      <div class="mockup-total"><span>Total TTC</span><span>1 420,10 €</span></div>
+    </div>
   </div>
 </div>
 
 <div class="features">
-  <div class="feat fade-in"><div class="feat-dot"></div><h3>Rapide</h3><p>Votre devis prêt en moins de 30 secondes chrono</p></div>
-  <div class="feat fade-in"><div class="feat-dot"></div><h3>Professionnel</h3><p>Mise en page soignée avec toutes les mentions légales</p></div>
-  <div class="feat fade-in"><div class="feat-dot"></div><h3>Complet</h3><p>TVA personnalisable, remises, logo, SIRET, adresses</p></div>
+  <div class="feat fade-in">
+    <div class="feat-icon">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    </div>
+    <h3>Rapide</h3>
+    <p>Votre devis prêt en moins de 30 secondes chrono</p>
+  </div>
+  <div class="feat fade-in">
+    <div class="feat-icon">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+    </div>
+    <h3>Professionnel</h3>
+    <p>Mise en page soignée avec toutes les mentions légales obligatoires</p>
+  </div>
+  <div class="feat fade-in">
+    <div class="feat-icon">
+      <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+    </div>
+    <h3>Complet</h3>
+    <p>TVA, remises, logo, SIRET, adresses, conversion facture</p>
+  </div>
 </div>
 
 <div class="pour-qui fade-in" id="pour-qui">
   <h2>Fait pour votre métier</h2>
   <div class="pour-qui-sub">Cliquez sur votre métier pour commencer directement</div>
   <div class="metiers-grid">
-    <div class="metier-card" onclick="selectMetier('Plombier')"><div class="metier-icon">🔧</div><div class="metier-name">Plombier</div></div>
-    <div class="metier-card" onclick="selectMetier('Électricien')"><div class="metier-icon">⚡</div><div class="metier-name">Électricien</div></div>
-    <div class="metier-card" onclick="selectMetier('Maçon')"><div class="metier-icon">🧱</div><div class="metier-name">Maçon</div></div>
-    <div class="metier-card" onclick="selectMetier('Peintre')"><div class="metier-icon">🎨</div><div class="metier-name">Peintre</div></div>
-    <div class="metier-card" onclick="selectMetier('Carreleur')"><div class="metier-icon">🏠</div><div class="metier-name">Carreleur</div></div>
-    <div class="metier-card" onclick="selectMetier('Menuisier')"><div class="metier-icon">🪚</div><div class="metier-name">Menuisier</div></div>
-    <div class="metier-card" onclick="selectMetier('Chauffagiste')"><div class="metier-icon">🌡️</div><div class="metier-name">Chauffagiste</div></div>
-    <div class="metier-card" onclick="selectMetier('Jardinier')"><div class="metier-icon">🌿</div><div class="metier-name">Jardinier</div></div>
+    <div class="metier-card" onclick="selectMetier('Plombier')">
+      <div class="metier-svg"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
+      <div class="metier-name">Plombier</div>
+    </div>
+    <div class="metier-card" onclick="selectMetier('Électricien')">
+      <div class="metier-svg"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+      <div class="metier-name">Électricien</div>
+    </div>
+    <div class="metier-card" onclick="selectMetier('Maçon')">
+      <div class="metier-svg"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></div>
+      <div class="metier-name">Maçon</div>
+    </div>
+    <div class="metier-card" onclick="selectMetier('Peintre')">
+      <div class="metier-svg"><svg viewBox="0 0 24 24"><path d="M2 13.5V20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6.5"/><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/></svg></div>
+      <div class="metier-name">Peintre</div>
+    </div>
+    <div class="metier-card" onclick="selectMetier('Carreleur')">
+      <div class="metier-svg"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="9" height="9" rx="1"/><rect x="13" y="2" width="9" height="9" rx="1"/><rect x="2" y="13" width="9" height="9" rx="1"/><rect x="13" y="13" width="9" height="9" rx="1"/></svg></div>
+      <div class="metier-name">Carreleur</div>
+    </div>
+    <div class="metier-card" onclick="selectMetier('Menuisier')">
+      <div class="metier-svg"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+      <div class="metier-name">Menuisier</div>
+    </div>
+    <div class="metier-card" onclick="selectMetier('Chauffagiste')">
+      <div class="metier-svg"><svg viewBox="0 0 24 24"><path d="M12 2c0 6-4 8-4 13a4 4 0 0 0 8 0c0-5-4-7-4-13z"/><path d="M12 12c0 3-2 4-2 6.5a2 2 0 0 0 4 0C14 16 12 15 12 12z"/></svg></div>
+      <div class="metier-name">Chauffagiste</div>
+    </div>
+    <div class="metier-card" onclick="selectMetier('Jardinier')">
+      <div class="metier-svg"><svg viewBox="0 0 24 24"><path d="M12 22V12"/><path d="M12 12C12 12 7 10 5 6c4 0 7 2 7 6z"/><path d="M12 12c0 0 5-2 7-6-4 0-7 2-7 6z"/><path d="M12 12C12 12 7 7 7 3c3 1 5 4 5 9z"/></svg></div>
+      <div class="metier-name">Jardinier</div>
+    </div>
   </div>
 </div>
 
@@ -469,77 +673,42 @@ footer { background: #fff; border-top: 1px solid #f0f0f0; padding: 40px; }
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>Temps de création</td>
-        <td class="highlight">30 secondes</td>
-        <td>20-30 minutes</td>
-        <td>24-48h</td>
-      </tr>
-      <tr>
-        <td>Mise en page professionnelle</td>
-        <td class="highlight"><span class="check">✓</span> Automatique</td>
-        <td><span class="partial">~ Manuelle</span></td>
-        <td><span class="check">✓</span></td>
-      </tr>
-      <tr>
-        <td>Mentions légales obligatoires</td>
-        <td class="highlight"><span class="check">✓</span> Incluses</td>
-        <td><span class="cross">✗</span> À ajouter</td>
-        <td><span class="check">✓</span></td>
-      </tr>
-      <tr>
-        <td>TVA personnalisable</td>
-        <td class="highlight"><span class="check">✓</span></td>
-        <td><span class="partial">~ Manuel</span></td>
-        <td><span class="check">✓</span></td>
-      </tr>
-      <tr>
-        <td>Conversion devis → facture</td>
-        <td class="highlight"><span class="check">✓</span> 1 clic</td>
-        <td><span class="cross">✗</span></td>
-        <td><span class="check">✓</span></td>
-      </tr>
-      <tr>
-        <td>Disponible partout</td>
-        <td class="highlight"><span class="check">✓</span> En ligne</td>
-        <td><span class="partial">~ PC seulement</span></td>
-        <td><span class="cross">✗</span></td>
-      </tr>
-      <tr>
-        <td>Coût mensuel</td>
-        <td class="highlight" style="color:#22c55e;font-weight:800;">Gratuit → 79€</td>
-        <td>0€ (temps perdu)</td>
-        <td>150€+</td>
-      </tr>
+      <tr><td>Temps de création</td><td class="highlight">30 secondes</td><td>20-30 minutes</td><td>24-48h</td></tr>
+      <tr><td>Mise en page pro</td><td class="highlight"><span class="check">✓</span> Automatique</td><td><span class="partial">~ Manuelle</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td>Mentions légales</td><td class="highlight"><span class="check">✓</span> Incluses</td><td><span class="cross">✗</span> À ajouter</td><td><span class="check">✓</span></td></tr>
+      <tr><td>TVA personnalisable</td><td class="highlight"><span class="check">✓</span></td><td><span class="partial">~ Manuel</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td>Devis → Facture</td><td class="highlight"><span class="check">✓</span> 1 clic</td><td><span class="cross">✗</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td>Disponible partout</td><td class="highlight"><span class="check">✓</span> En ligne</td><td><span class="partial">~ PC seulement</span></td><td><span class="cross">✗</span></td></tr>
+      <tr><td>Coût mensuel</td><td class="highlight" style="color:#22c55e;font-weight:800;">Gratuit → 19€</td><td>0€ (temps perdu)</td><td>150€+</td></tr>
     </tbody>
   </table>
 </div>
 
 <div class="economies fade-in">
   <h2>Ce que Quotify vous fait économiser</h2>
-  <div class="economies-sub">Calculé sur la base de 20 devis par mois pour un artisan moyen</div>
+  <div class="economies-sub">Calculé sur la base de 20 devis par mois</div>
   <div class="economies-grid">
     <div class="economie-card">
-      <div class="economie-icon">⏱️</div>
+      <div class="economie-icon"><svg viewBox="0 0 24 24" width="24" height="24" stroke="#fff" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
       <div class="economie-chiffre">10h</div>
-      <div class="economie-label">économisées par mois<br>vs création manuelle</div>
+      <div class="economie-label">économisées par mois vs création manuelle</div>
     </div>
     <div class="economie-card">
-      <div class="economie-icon">💶</div>
+      <div class="economie-icon"><svg viewBox="0 0 24 24" width="24" height="24" stroke="#fff" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
       <div class="economie-chiffre">120€+</div>
-      <div class="economie-label">économisés vs un comptable<br>pour la même prestation</div>
+      <div class="economie-label">économisés vs un comptable pour la même prestation</div>
     </div>
     <div class="economie-card">
-      <div class="economie-icon">📈</div>
+      <div class="economie-icon"><svg viewBox="0 0 24 24" width="24" height="24" stroke="#fff" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
       <div class="economie-chiffre">+23%</div>
-      <div class="economie-label">de devis acceptés grâce<br>à une présentation pro</div>
+      <div class="economie-label">de devis acceptés grâce à une présentation pro</div>
     </div>
   </div>
   <div class="comparaison-prix">
     <div class="comparaison-prix-row"><span>Comptable pour 20 devis/mois</span><span class="comparaison-prix-val">150 €/mois</span></div>
     <div class="comparaison-prix-row"><span>Secrétaire administrative</span><span class="comparaison-prix-val">300 €/mois</span></div>
-    <div class="comparaison-prix-row"><span>Logiciel pro (Henrri, Sellsy...)</span><span class="comparaison-prix-val">49-99 €/mois</span></div>
-    <div class="comparaison-prix-row"><span>✅ Quotify Pro</span><span class="comparaison-prix-val win">79 €/mois</span></div>
+    <div class="comparaison-prix-row"><span>Logiciels pro concurrents</span><span class="comparaison-prix-val">49-99 €/mois</span></div>
+    <div class="comparaison-prix-row"><span>✅ Quotify Pro</span><span class="comparaison-prix-val win">19 €/mois</span></div>
   </div>
 </div>
 
@@ -547,22 +716,10 @@ footer { background: #fff; border-top: 1px solid #f0f0f0; padding: 40px; }
   <h2>L'impact Quotify en chiffres</h2>
   <div class="compteur-sub">Ce que notre communauté d'artisans a accompli</div>
   <div class="compteurs-grid">
-    <div class="compteur-card">
-      <div class="compteur-num" id="cpt-devis">500+</div>
-      <div class="compteur-label">Devis générés par nos artisans</div>
-    </div>
-    <div class="compteur-card">
-      <div class="compteur-num" id="cpt-heures">2 500+</div>
-      <div class="compteur-label">Heures de travail économisées</div>
-    </div>
-    <div class="compteur-card">
-      <div class="compteur-num" id="cpt-euros">125 000€+</div>
-      <div class="compteur-label">Économisés vs un comptable</div>
-    </div>
-    <div class="compteur-card">
-      <div class="compteur-num">4.9/5</div>
-      <div class="compteur-label">Note moyenne sur 127 avis</div>
-    </div>
+    <div class="compteur-card"><div class="compteur-num" id="cpt-devis">500+</div><div class="compteur-label">Devis générés</div></div>
+    <div class="compteur-card"><div class="compteur-num" id="cpt-heures">2 500+</div><div class="compteur-label">Heures économisées</div></div>
+    <div class="compteur-card"><div class="compteur-num" id="cpt-euros">125 000€+</div><div class="compteur-label">Économisés vs comptable</div></div>
+    <div class="compteur-card"><div class="compteur-num">4.9/5</div><div class="compteur-label">Note moyenne</div></div>
   </div>
 </div>
 
@@ -575,7 +732,7 @@ footer { background: #fff; border-top: 1px solid #f0f0f0; padding: 40px; }
       <div class="plan-price">0€</div>
       <div class="plan-period">/mois</div>
       <ul class="plan-features">
-        <li>✓ 5 devis/mois</li>
+        <li>✓ 3 devis/mois</li>
         <li>✓ PDF standard</li>
         <li>✓ TVA personnalisable</li>
         <li class="off">✗ Logo personnalisé</li>
@@ -584,11 +741,11 @@ footer { background: #fff; border-top: 1px solid #f0f0f0; padding: 40px; }
       <button class="plan-btn plan-btn-free" onclick="document.getElementById('generateur').scrollIntoView({behavior:'smooth'})">Commencer →</button>
     </div>
     <div class="plan-card">
-      <div class="plan-name">STARTER</div>
-      <div class="plan-price">29€</div>
+      <div class="plan-name">ESSENTIEL</div>
+      <div class="plan-price">19€</div>
       <div class="plan-period">/mois</div>
       <ul class="plan-features">
-        <li>✓ 30 devis/mois</li>
+        <li>✓ 20 devis/mois</li>
         <li>✓ PDF standard</li>
         <li>✓ TVA personnalisable</li>
         <li>✓ Conversion facture</li>
@@ -599,7 +756,7 @@ footer { background: #fff; border-top: 1px solid #f0f0f0; padding: 40px; }
     <div class="plan-card popular">
       <div class="plan-badge">⭐ POPULAIRE</div>
       <div class="plan-name">PRO</div>
-      <div class="plan-price">79€</div>
+      <div class="plan-price">39€</div>
       <div class="plan-period">/mois</div>
       <ul class="plan-features">
         <li>✓ Devis illimités</li>
@@ -612,7 +769,7 @@ footer { background: #fff; border-top: 1px solid #f0f0f0; padding: 40px; }
     </div>
     <div class="plan-card">
       <div class="plan-name">AGENCE</div>
-      <div class="plan-price">149€</div>
+      <div class="plan-price">79€</div>
       <div class="plan-period">/mois</div>
       <ul class="plan-features">
         <li>✓ Devis illimités</li>
@@ -631,31 +788,62 @@ footer { background: #fff; border-top: 1px solid #f0f0f0; padding: 40px; }
   <div class="section-sub">Remplissez le formulaire — votre devis est prêt en 30 secondes</div>
   <div class="card">
     <div class="saved-info-bar" id="saved-info-bar" onclick="loadSavedInfo()">✨ Vos informations sont sauvegardées — Cliquez pour les remplir automatiquement</div>
-    <div class="form-section-title">🏢 Votre entreprise</div>
-    <div class="row">
-      <div><label>Nom de l'entreprise *</label><input type="text" id="entreprise" placeholder="Ex: Plomberie Dupont"></div>
-      <div><label>Votre métier *</label><input type="text" id="metier" placeholder="Ex: Plombier"></div>
+
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="mode-rapide-btn" onclick="setMode('rapide')">⚡ Mode rapide</button>
+      <button class="mode-btn" id="mode-complet-btn" onclick="setMode('complet')">📋 Mode complet</button>
     </div>
-    <div class="row-3">
-      <div><label>Email</label><input type="email" id="email" placeholder="contact@entreprise.fr"></div>
-      <div><label>Téléphone</label><input type="text" id="tel" placeholder="06 12 34 56 78"></div>
-      <div><label>SIRET</label><input type="text" id="siret" placeholder="123 456 789 00012"></div>
+
+    <div id="mode-rapide-fields">
+      <div class="form-section-title">Infos essentielles</div>
+      <div class="row">
+        <div><label>Votre entreprise *</label><input type="text" id="r-entreprise" placeholder="Ex: Plomberie Dupont"></div>
+        <div><label>Nom du client *</label><input type="text" id="r-client" placeholder="Ex: Jean Martin"></div>
+      </div>
+      <div class="row">
+        <div><label>Votre métier</label><input type="text" id="r-metier" placeholder="Ex: Plombier"></div>
+        <div><label>Email du client</label><input type="email" id="r-client-email" placeholder="client@email.fr"></div>
+      </div>
     </div>
-    <div><label>Adresse de l'entreprise</label><input type="text" id="adresse-entreprise" placeholder="Ex: 12 rue de la Paix, 75001 Paris"></div>
-    <label>Logo de votre entreprise</label>
-    <div class="logo-upload" onclick="document.getElementById('logo-input').click()">
-      <div id="logo-placeholder">📷 Cliquez pour ajouter votre logo (PNG, JPG)</div>
-      <img id="logo-preview" class="logo-preview">
+
+    <div id="mode-complet-fields" style="display:none">
+      <div class="form-section-title">🏢 Votre entreprise</div>
+      <div class="row">
+        <div><label>Nom de l'entreprise *</label><input type="text" id="entreprise" placeholder="Ex: Plomberie Dupont"></div>
+        <div><label>Votre métier *</label><input type="text" id="metier" placeholder="Ex: Plombier"></div>
+      </div>
+      <div class="row-3">
+        <div><label>Email</label><input type="email" id="email" placeholder="contact@entreprise.fr"></div>
+        <div><label>Téléphone</label><input type="text" id="tel" placeholder="06 12 34 56 78"></div>
+        <div><label>SIRET</label><input type="text" id="siret" placeholder="123 456 789 00012"></div>
+      </div>
+      <div><label>Adresse de l'entreprise</label><input type="text" id="adresse-entreprise" placeholder="Ex: 12 rue de la Paix, 75001 Paris"></div>
+      <label>Logo de votre entreprise</label>
+      <div class="logo-upload" onclick="document.getElementById('logo-input').click()">
+        <div id="logo-placeholder">📷 Cliquez pour ajouter votre logo (PNG, JPG)</div>
+        <img id="logo-preview" class="logo-preview">
+      </div>
+      <input type="file" id="logo-input" accept="image/*" style="display:none" onchange="handleLogoUpload(event)">
+      <div class="form-section-title" style="margin-top:24px;">👤 Votre client</div>
+      <div class="row">
+        <div><label>Nom du client *</label><input type="text" id="client" placeholder="Ex: Jean Martin"></div>
+        <div><label>Email du client</label><input type="email" id="client-email" placeholder="client@email.fr"></div>
+      </div>
+      <div><label>Adresse du client</label><input type="text" id="adresse-client" placeholder="Ex: 5 avenue Victor Hugo, 69001 Lyon"></div>
     </div>
-    <input type="file" id="logo-input" accept="image/*" style="display:none" onchange="handleLogoUpload(event)">
-    <div class="form-section-title" style="margin-top:24px;">👤 Votre client</div>
-    <div class="row">
-      <div><label>Nom du client *</label><input type="text" id="client" placeholder="Ex: Jean Martin"></div>
-      <div><label>Email du client</label><input type="email" id="client-email" placeholder="client@email.fr"></div>
-    </div>
-    <div><label>Adresse du client</label><input type="text" id="adresse-client" placeholder="Ex: 5 avenue Victor Hugo, 69001 Lyon"></div>
+
     <div class="form-section-title" style="margin-top:24px;">📋 Prestations</div>
-    <div style="display:grid;grid-template-columns:3fr 1fr 1fr 1fr auto;gap:8px;margin-bottom:6px;">
+
+    <div id="modeles-section">
+      <div style="font-size:12px;color:#888;margin-bottom:6px;">Modèles sauvegardés :</div>
+      <div class="modeles-grid" id="modeles-grid">
+        <div class="modele-tag" onclick="ajouterModele('Déplacement', 1, 45)">+ Déplacement (45€)</div>
+        <div class="modele-tag" onclick="ajouterModele('Main d\'œuvre/h', 1, 55)">+ Main d'œuvre (55€/h)</div>
+        <div class="modele-tag" onclick="ajouterModele('Fournitures', 1, 0)">+ Fournitures</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:3fr 1fr 1fr 1fr auto;gap:8px;margin-bottom:6px;margin-top:8px;">
       <span style="font-size:12px;color:#999;font-weight:600;">Description</span>
       <span style="font-size:12px;color:#999;font-weight:600;">Qté</span>
       <span style="font-size:12px;color:#999;font-weight:600;">Prix HT (€)</span>
@@ -672,6 +860,8 @@ footer { background: #fff; border-top: 1px solid #f0f0f0; padding: 40px; }
       </div>
     </div>
     <button class="add-prestation" onclick="addPrestation()">+ Ajouter une prestation</button>
+    <button class="save-modele-btn" onclick="sauvegarderModele()" style="margin-left:8px;">💾 Sauvegarder comme modèle</button>
+
     <div class="form-section-title" style="margin-top:24px;">💰 Conditions financières</div>
     <div class="row">
       <div>
@@ -686,13 +876,15 @@ footer { background: #fff; border-top: 1px solid #f0f0f0; padding: 40px; }
       </div>
       <div><label>Conditions de paiement</label><input type="text" id="conditions" placeholder="Ex: 30% acompte, solde à réception"></div>
     </div>
+
     <div class="devis-ref" id="devis-ref"></div>
     <div class="quota-warning" id="quota-warning">Vous avez atteint votre limite. <a href="#tarifs" style="color:#dc2626;font-weight:700;">Upgradez →</a></div>
     <button class="generate-btn" id="generate-btn" onclick="genererDevis()">Générer mon devis →</button>
+
     <div id="result">
       <iframe id="preview"></iframe>
       <div class="action-btns">
-        <button class="download-btn" onclick="telecharger()">⬇ Télécharger</button>
+        <button class="download-btn" onclick="telechargerPDF()">⬇ Télécharger PDF</button>
         <button class="email-btn" onclick="envoyerEmail()">✉ Envoyer</button>
         <button class="facture-btn" onclick="convertirFacture()">🧾 En facture</button>
       </div>
@@ -768,33 +960,19 @@ footer { background: #fff; border-top: 1px solid #f0f0f0; padding: 40px; }
 
 <div class="legal-section" id="legal-mentions">
   <h2>Mentions légales</h2>
-  <h3>Éditeur du site</h3>
-  <p>Quotify — Contact : contact@quotify.fr</p>
-  <h3>Hébergement</h3>
-  <p>GitHub Pages (GitHub, Inc., 88 Colin P Kelly Jr St, San Francisco, CA 94107, USA) et Supabase (hébergement EU-West).</p>
-  <h3>Propriété intellectuelle</h3>
-  <p>L'ensemble du contenu est protégé par le droit d'auteur. Toute reproduction est interdite sans autorisation.</p>
-  <h3>Données personnelles (RGPD)</h3>
-  <p>Les données collectées (email, informations d'entreprise) sont utilisées uniquement pour le fonctionnement du service. Vous disposez d'un droit d'accès, de rectification et de suppression. Contact : contact@quotify.fr</p>
-  <h3>Cookies</h3>
-  <p>Ce site utilise localStorage pour sauvegarder vos préférences. Plausible Analytics est utilisé pour les statistiques anonymes, sans cookie de tracking.</p>
+  <h3>Éditeur du site</h3><p>Quotify — Contact : contact@quotify.fr</p>
+  <h3>Hébergement</h3><p>GitHub Pages et Supabase (hébergement EU-West).</p>
+  <h3>Données personnelles (RGPD)</h3><p>Les données collectées sont utilisées uniquement pour le fonctionnement du service. Contact : contact@quotify.fr</p>
+  <h3>Cookies</h3><p>Ce site utilise localStorage pour vos préférences. Plausible Analytics est utilisé pour les statistiques anonymes, sans cookie.</p>
   <button onclick="hideLegal()" style="background:#6C47FF;color:#fff;border:none;padding:10px 24px;border-radius:8px;cursor:pointer;font-weight:700;margin-top:16px;">Fermer</button>
 </div>
 
 <div class="legal-section" id="legal-cgv">
   <h2>Conditions Générales de Vente</h2>
-  <h3>Objet</h3>
-  <p>Les présentes CGV régissent l'utilisation du service Quotify, générateur de devis en ligne pour artisans.</p>
-  <h3>Accès au service</h3>
-  <p>Le plan gratuit permet de générer 5 devis par mois. Les plans payants offrent des fonctionnalités supplémentaires selon le niveau souscrit.</p>
-  <h3>Prix et paiement</h3>
-  <p>Les abonnements sont facturés mensuellement. Les prix sont indiqués TTC. Le paiement est sécurisé via Stripe.</p>
-  <h3>Résiliation</h3>
-  <p>Vous pouvez résilier votre abonnement à tout moment. La résiliation prend effet à la fin de la période en cours.</p>
-  <h3>Responsabilité</h3>
-  <p>Quotify met à disposition un outil d'aide à la création de devis. L'utilisateur est responsable du contenu des devis générés.</p>
-  <h3>Droit applicable</h3>
-  <p>Les présentes CGV sont soumises au droit français. Tout litige relève de la compétence des tribunaux français.</p>
+  <h3>Objet</h3><p>Les présentes CGV régissent l'utilisation du service Quotify, générateur de devis en ligne pour artisans.</p>
+  <h3>Prix et paiement</h3><p>Les abonnements sont facturés mensuellement. Paiement sécurisé via Stripe.</p>
+  <h3>Résiliation</h3><p>Annulable à tout moment. La résiliation prend effet à la fin de la période en cours.</p>
+  <h3>Droit applicable</h3><p>Droit français. Tout litige relève de la compétence des tribunaux français.</p>
   <button onclick="hideLegal()" style="background:#6C47FF;color:#fff;border:none;padding:10px 24px;border-radius:8px;cursor:pointer;font-weight:700;margin-top:16px;">Fermer</button>
 </div>
 
@@ -845,7 +1023,7 @@ const SUPABASE_KEY = 'sb_publishable_elTwVnS4vtl31G5-6kSgYA_wMwevMww';
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const PLANS = { free: 5, starter: 30, pro: Infinity, agence: Infinity };
+const PLANS = { free: 3, essentiel: 20, pro: Infinity, agence: Infinity };
 let currentUser = null;
 let currentPlan = 'free';
 let monthlyCount = 0;
@@ -853,6 +1031,8 @@ let savedDevis = [];
 let logoBase64 = null;
 let devisCounter = 0;
 let isNewUser = false;
+let currentMode = 'rapide';
+let modelesPersonnels = JSON.parse(localStorage.getItem('quotify_modeles') || '[]');
 
 async function checkSession() {
   const { data: { session } } = await sb.auth.getSession();
@@ -872,9 +1052,64 @@ async function showApp(user, newUser = false) {
     document.getElementById('onboarding').style.display = 'block';
   }
   checkSavedInfo();
+  renderModeles();
   await loadUserData();
   initAnimations();
   animateCounters();
+}
+
+function setMode(mode) {
+  currentMode = mode;
+  document.getElementById('mode-rapide-fields').style.display = mode === 'rapide' ? 'block' : 'none';
+  document.getElementById('mode-complet-fields').style.display = mode === 'complet' ? 'block' : 'none';
+  document.getElementById('mode-rapide-btn').classList.toggle('active', mode === 'rapide');
+  document.getElementById('mode-complet-btn').classList.toggle('active', mode === 'complet');
+}
+
+function renderModeles() {
+  const grid = document.getElementById('modeles-grid');
+  const defauts = [
+    {desc:'Déplacement', qte:1, prix:45},
+    {desc:"Main d'œuvre/h", qte:1, prix:55},
+    {desc:'Fournitures', qte:1, prix:0}
+  ];
+  const tous = [...defauts, ...modelesPersonnels];
+  grid.innerHTML = tous.map(m =>
+    `<div class="modele-tag" onclick="ajouterModele('${m.desc}', ${m.qte}, ${m.prix})">+ ${m.desc}${m.prix > 0 ? ' ('+m.prix+'€)' : ''}</div>`
+  ).join('');
+}
+
+function ajouterModele(desc, qte, prix) {
+  const list = document.getElementById('prestations-list');
+  const rows = list.querySelectorAll('.prestation-row');
+  const lastRow = rows[rows.length - 1];
+  const inputs = lastRow.querySelectorAll('input');
+  if (!inputs[0].value && !inputs[2].value) {
+    inputs[0].value = desc;
+    inputs[1].value = qte;
+    inputs[2].value = prix;
+  } else {
+    addPrestation();
+    const newRows = document.getElementById('prestations-list').querySelectorAll('.prestation-row');
+    const newInputs = newRows[newRows.length - 1].querySelectorAll('input');
+    newInputs[0].value = desc;
+    newInputs[1].value = qte;
+    newInputs[2].value = prix;
+  }
+}
+
+function sauvegarderModele() {
+  const rows = document.querySelectorAll('.prestation-row');
+  const derniere = rows[rows.length - 1];
+  const inputs = derniere.querySelectorAll('input');
+  const desc = inputs[0].value;
+  const qte = parseFloat(inputs[1].value) || 1;
+  const prix = parseFloat(inputs[2].value) || 0;
+  if (!desc) { alert('Remplissez d\'abord une prestation à sauvegarder.'); return; }
+  modelesPersonnels.push({ desc, qte, prix });
+  localStorage.setItem('quotify_modeles', JSON.stringify(modelesPersonnels));
+  renderModeles();
+  alert(`✅ "${desc}" sauvegardé comme modèle !`);
 }
 
 function closeOnboarding() {
@@ -891,17 +1126,22 @@ function loadSavedInfo() {
   const saved = localStorage.getItem('quotify_info');
   if (!saved) return;
   const info = JSON.parse(saved);
-  document.getElementById('entreprise').value = info.entreprise || '';
-  document.getElementById('metier').value = info.metier || '';
-  document.getElementById('email').value = info.email || '';
-  document.getElementById('tel').value = info.tel || '';
-  document.getElementById('siret').value = info.siret || '';
-  document.getElementById('adresse-entreprise').value = info.adresse || '';
-  if (info.logo) {
-    logoBase64 = info.logo;
-    document.getElementById('logo-preview').src = info.logo;
-    document.getElementById('logo-preview').style.display = 'block';
-    document.getElementById('logo-placeholder').style.display = 'none';
+  if (currentMode === 'rapide') {
+    document.getElementById('r-entreprise').value = info.entreprise || '';
+    document.getElementById('r-metier').value = info.metier || '';
+  } else {
+    document.getElementById('entreprise').value = info.entreprise || '';
+    document.getElementById('metier').value = info.metier || '';
+    document.getElementById('email').value = info.email || '';
+    document.getElementById('tel').value = info.tel || '';
+    document.getElementById('siret').value = info.siret || '';
+    document.getElementById('adresse-entreprise').value = info.adresse || '';
+    if (info.logo) {
+      logoBase64 = info.logo;
+      document.getElementById('logo-preview').src = info.logo;
+      document.getElementById('logo-preview').style.display = 'block';
+      document.getElementById('logo-placeholder').style.display = 'none';
+    }
   }
   document.getElementById('saved-info-bar').textContent = '✅ Informations chargées !';
   setTimeout(() => {
@@ -909,14 +1149,11 @@ function loadSavedInfo() {
   }, 2000);
 }
 
-function saveInfo() {
+function saveInfo(d) {
   const info = {
-    entreprise: document.getElementById('entreprise').value,
-    metier: document.getElementById('metier').value,
-    email: document.getElementById('email').value,
-    tel: document.getElementById('tel').value,
-    siret: document.getElementById('siret').value,
-    adresse: document.getElementById('adresse-entreprise').value,
+    entreprise: d.entreprise, metier: d.metier,
+    email: d.email || '', tel: d.tel || '',
+    siret: d.siret || '', adresse: d.adresseEntreprise || '',
     logo: logoBase64
   };
   if (info.entreprise) {
@@ -946,32 +1183,30 @@ function generateDevisRef() {
   return `DEV-${year}${month}-${String(devisCounter).padStart(3, '0')}`;
 }
 
-function animateCounter(el, target, suffix = '') {
-  let current = 0;
-  const increment = Math.ceil(target / 50);
-  const timer = setInterval(() => {
-    current += increment;
-    if (current >= target) { current = target; clearInterval(timer); }
-    el.textContent = current.toLocaleString('fr-FR') + suffix;
-  }, 30);
-}
-
 function animateCounters() {
   setTimeout(() => {
-    const cptDevis = document.getElementById('cpt-devis');
-    const cptHeures = document.getElementById('cpt-heures');
-    const cptEuros = document.getElementById('cpt-euros');
-    if (cptDevis) animateCounter(cptDevis, 500, '+');
-    if (cptHeures) animateCounter(cptHeures, 2500, '+');
-    if (cptEuros) {
-      let current = 0;
-      const timer = setInterval(() => {
-        current += 2500;
-        if (current >= 125000) { current = 125000; clearInterval(timer); }
-        cptEuros.textContent = current.toLocaleString('fr-FR') + '€+';
+    const animEl = (el, target, suffix) => {
+      if (!el) return;
+      let cur = 0;
+      const inc = Math.ceil(target / 50);
+      const t = setInterval(() => {
+        cur += inc;
+        if (cur >= target) { cur = target; clearInterval(t); }
+        el.textContent = cur.toLocaleString('fr-FR') + suffix;
+      }, 30);
+    };
+    animEl(document.getElementById('cpt-devis'), 500, '+');
+    animEl(document.getElementById('cpt-heures'), 2500, '+');
+    const cptE = document.getElementById('cpt-euros');
+    if (cptE) {
+      let cur = 0;
+      const t = setInterval(() => {
+        cur += 2500;
+        if (cur >= 125000) { cur = 125000; clearInterval(t); }
+        cptE.textContent = cur.toLocaleString('fr-FR') + '€+';
       }, 30);
     }
-  }, 1000);
+  }, 800);
 }
 
 async function loadUserData() {
@@ -991,8 +1226,7 @@ async function loadUserData() {
     document.getElementById('dash-limit').textContent = `sur ${limitLabel} disponibles`;
     document.getElementById('dash-total').textContent = savedDevis.length;
     document.getElementById('user-plan').textContent = currentPlan.charAt(0).toUpperCase() + currentPlan.slice(1);
-    const tempsEco = Math.round(savedDevis.length * 0.33);
-    document.getElementById('dash-temps').textContent = tempsEco + 'h';
+    document.getElementById('dash-temps').textContent = Math.round(savedDevis.length * 0.33) + 'h';
     const pct = limit === Infinity ? 0 : Math.min(100, (monthlyCount / limit) * 100);
     const fill = document.getElementById('quota-fill');
     fill.style.width = pct + '%';
@@ -1032,7 +1266,7 @@ async function loadDevisCount() {
     const { count } = await sb.from('devis').select('*', { count: 'exact', head: true });
     if (count && count > 0) {
       document.getElementById('counter-devis').textContent = count + '+';
-      document.getElementById('counter-heures').textContent = Math.round(count * 5) + '+';
+      document.getElementById('counter-heures').textContent = Math.round(count * 5).toLocaleString('fr-FR') + '+';
       document.getElementById('cpt-devis') && (document.getElementById('cpt-devis').textContent = count + '+');
       document.getElementById('cpt-heures') && (document.getElementById('cpt-heures').textContent = Math.round(count * 5).toLocaleString('fr-FR') + '+');
       document.getElementById('cpt-euros') && (document.getElementById('cpt-euros').textContent = (count * 250).toLocaleString('fr-FR') + '€+');
@@ -1056,9 +1290,7 @@ function showMsg(text, type) {
   el.style.display = 'block';
 }
 
-function hideMsg() {
-  document.getElementById('auth-msg').style.display = 'none';
-}
+function hideMsg() { document.getElementById('auth-msg').style.display = 'none'; }
 
 async function login() {
   const email = document.getElementById('login-email').value;
@@ -1090,19 +1322,22 @@ async function logout() {
 
 function selectMetier(metier) {
   document.getElementById('generateur').scrollIntoView({ behavior: 'smooth' });
-  setTimeout(() => { document.getElementById('metier').value = metier; document.getElementById('metier').focus(); }, 600);
+  setTimeout(() => {
+    if (currentMode === 'rapide') {
+      document.getElementById('r-metier').value = metier;
+      document.getElementById('r-metier').focus();
+    } else {
+      document.getElementById('metier').value = metier;
+      document.getElementById('metier').focus();
+    }
+  }, 600);
 }
 
 function addPrestation() {
   const list = document.getElementById('prestations-list');
   const row = document.createElement('div');
   row.className = 'prestation-row';
-  row.innerHTML = `
-    <input type="text" placeholder="Description">
-    <input type="number" placeholder="1" value="1" min="1">
-    <input type="number" placeholder="0">
-    <input type="number" placeholder="0" min="0" max="100" value="0">
-    <button class="remove-btn" onclick="removePrestation(this)">✕</button>`;
+  row.innerHTML = `<input type="text" placeholder="Description"><input type="number" placeholder="1" value="1" min="1"><input type="number" placeholder="0"><input type="number" placeholder="0" min="0" max="100" value="0"><button class="remove-btn" onclick="removePrestation(this)">✕</button>`;
   list.appendChild(row);
 }
 
@@ -1164,6 +1399,21 @@ function getFormData() {
     const prix = parseFloat(inputs[2].value) || 0, remise = parseFloat(inputs[3].value) || 0;
     if (desc && prix) prestations.push({ desc, qte, prix, remise });
   });
+  if (currentMode === 'rapide') {
+    return {
+      entreprise: document.getElementById('r-entreprise').value,
+      metier: document.getElementById('r-metier').value,
+      email: '', tel: '', siret: '',
+      adresseEntreprise: '',
+      client: document.getElementById('r-client').value,
+      adresseClient: '',
+      conditions: document.getElementById('conditions').value,
+      tvaTaux: parseFloat(document.getElementById('tva-taux').value),
+      logo: logoBase64,
+      prestations,
+      clientEmail: document.getElementById('r-client-email').value
+    };
+  }
   return {
     entreprise: document.getElementById('entreprise').value,
     metier: document.getElementById('metier').value,
@@ -1176,7 +1426,8 @@ function getFormData() {
     conditions: document.getElementById('conditions').value,
     tvaTaux: parseFloat(document.getElementById('tva-taux').value),
     logo: logoBase64,
-    prestations
+    prestations,
+    clientEmail: document.getElementById('client-email').value
   };
 }
 
@@ -1211,36 +1462,21 @@ function buildHTML(data, type, ref) {
 </head><body>
 <div class="header">
   <div>${logoHTML}<div style="font-size:12px;color:#888;margin-top:4px;">${data.metier}</div>${siretHTML}${adresseEntHTML}</div>
-  <div class="contact">${data.email ? data.email + '<br>' : ''}${data.tel || ''}</div>
+  <div class="contact">${data.email ? data.email+'<br>' : ''}${data.tel || ''}</div>
 </div>
 <div class="title-row">
   <div><div class="doc-title">${titre}</div><div class="doc-ref">${refLabel}</div></div>
-  <div class="dates">Date d'émission : <strong>${today}</strong><br>Validité : <strong>30 jours</strong></div>
+  <div class="dates">Date : <strong>${today}</strong><br>Validité : <strong>30 jours</strong></div>
 </div>
 <div class="client-block">
   <div class="client-label">Client</div>
   <div class="client-name">${data.client}</div>
   ${adresseClientHTML}
 </div>
-<table>
-  <thead><tr><th>Désignation</th><th style="text-align:center">Qté</th><th style="text-align:right">P.U. HT</th><th style="text-align:right">Total HT</th></tr></thead>
-  <tbody>${lignes}</tbody>
-</table>
-<div class="totals">
-  <div class="totals-box">
-    <div class="total-line"><span>Total HT</span><span>${totalHT.toFixed(2)} €</span></div>
-    ${tvaHTML}
-    ${ttcHTML}
-  </div>
-</div>
-<div class="conditions">
-  <div class="conditions-title">Conditions</div>
-  <div class="conditions-text">${data.conditions || ''}</div>
-</div>
-<div class="signature">
-  <div class="sig-box"><div class="sig-label">Signature du prestataire</div></div>
-  <div class="sig-box"><div class="sig-label">Bon pour accord — Signature du client</div></div>
-</div>
+<table><thead><tr><th>Désignation</th><th style="text-align:center">Qté</th><th style="text-align:right">P.U. HT</th><th style="text-align:right">Total HT</th></tr></thead><tbody>${lignes}</tbody></table>
+<div class="totals"><div class="totals-box"><div class="total-line"><span>Total HT</span><span>${totalHT.toFixed(2)} €</span></div>${tvaHTML}${ttcHTML}</div></div>
+<div class="conditions"><div class="conditions-title">Conditions</div><div class="conditions-text">${data.conditions || ''}</div></div>
+<div class="signature"><div class="sig-box"><div class="sig-label">Signature du prestataire</div></div><div class="sig-box"><div class="sig-label">Bon pour accord — Signature du client</div></div></div>
 <div class="validity">Ce document est valable 30 jours à compter de sa date d'émission.</div>
 </body></html>`;
 }
@@ -1258,7 +1494,7 @@ async function genererDevis() {
   const ref = generateDevisRef();
   document.getElementById('devis-ref').textContent = `📋 Référence : ${ref}`;
   document.getElementById('devis-ref').style.display = 'block';
-  saveInfo();
+  saveInfo(d);
   const html = buildHTML(d, 'devis', ref);
   const blob = new Blob([html], { type: 'text/html' });
   document.getElementById('preview').src = URL.createObjectURL(blob);
@@ -1267,11 +1503,9 @@ async function genererDevis() {
   window._devisData = d;
   window._htmlDoc = html;
   window._devisRef = ref;
-  window._clientEmail = document.getElementById('client-email').value;
+  window._clientEmail = d.clientEmail || '';
   window._docType = 'devis';
-  if (isNewUser) {
-    ['step-1','step-2','step-3'].forEach(id => document.getElementById(id).classList.add('done'));
-  }
+  if (isNewUser) ['step-1','step-2','step-3'].forEach(id => document.getElementById(id).classList.add('done'));
   try {
     const montant = d.prestations.reduce((s, p) => s + p.prix * (1-(p.remise||0)/100) * p.qte, 0);
     await sb.from('devis').insert({ user_id: currentUser.id, client: d.client, montant, ref, created_at: new Date().toISOString() });
@@ -1290,12 +1524,24 @@ function convertirFacture() {
   alert('✅ Converti en facture !');
 }
 
-function telecharger() {
-  const blob = new Blob([window._htmlDoc], { type: 'text/html' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `${window._docType}-${window._devisRef || 'quotify'}.html`;
-  a.click();
+function telechargerPDF() {
+  if (!window._htmlDoc) return;
+  const element = document.getElementById('preview').contentDocument.body;
+  if (element && typeof html2pdf !== 'undefined') {
+    html2pdf().set({
+      margin: 10,
+      filename: `${window._docType || 'devis'}-${window._devisRef || 'quotify'}.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    }).from(element).save();
+  } else {
+    const blob = new Blob([window._htmlDoc], { type: 'text/html' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `${window._docType || 'devis'}-${window._devisRef || 'quotify'}.html`;
+    a.click();
+  }
 }
 
 function envoyerEmail() {
@@ -1317,7 +1563,7 @@ function afficherExemple() {
     prestations: [
       {desc:'Remplacement chauffe-eau', qte:1, prix:850, remise:0},
       {desc:'Robinetterie cuisine', qte:2, prix:120, remise:10},
-      {desc:'Main d\'œuvre', qte:3, prix:75, remise:0}
+      {desc:"Main d'œuvre", qte:3, prix:75, remise:0}
     ]
   };
   const html = buildHTML(data, 'devis', 'DEV-202605-001');
