@@ -1827,29 +1827,13 @@ function convertirFacture() {
 
 function telechargerPDF() {
   if (!window._htmlDoc) return;
-  try {
-    const iframe = document.getElementById('preview');
-    const element = iframe.contentDocument?.body;
-    if (element && typeof html2pdf!=='undefined') {
-      html2pdf().set({
-        margin: 10,
-        filename: `${window._docType}-${window._devisRef}.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-      }).from(element).save();
-    } else {
-      const blob = new Blob([window._htmlDoc], { type: 'text/html' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = `${window._docType}-${window._devisRef}.html`;
-      a.click();
-    }
-  } catch(e) {
-    const blob = new Blob([window._htmlDoc], { type: 'text/html' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = `${window._docType}-${window._devisRef}.html`;
+  const iframe = document.getElementById('preview');
+  const iframeWindow = iframe.contentWindow;
+  if (iframeWindow) {
+    iframeWindow.focus();
+    iframeWindow.print();
+  }
+}
     a.click();
   }
 }
