@@ -437,6 +437,16 @@ textarea { height: 80px; resize: vertical; }
 .footer-bottom { max-width: 960px; margin: 0 auto; padding-top: 20px; border-top: 1px solid var(--border-light); display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); align-items: center; }
 .footer-trust { display: flex; gap: 16px; }
 .footer-trust-item { font-size: 11px; color: var(--text-muted); }
+
+.signature-wrap { margin-top: 20px; background: var(--primary-light); border: 1px solid var(--primary-border); border-radius: var(--radius-md); padding: 16px; display: none; }
+.signature-title { font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
+.signature-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; }
+.signature-canvas { width: 100%; height: 120px; border: 1.5px solid var(--border); border-radius: var(--radius-md); background: #fff; cursor: crosshair; touch-action: none; display: block; }
+.signature-actions { display: flex; gap: 8px; margin-top: 8px; }
+.btn-sign-clear { background: none; border: 1.5px solid var(--border); color: var(--text-muted); padding: 7px 14px; border-radius: var(--radius-sm); font-size: 12px; cursor: pointer; font-family: inherit; }
+.btn-sign-save { background: var(--primary); color: #fff; border: none; padding: 7px 16px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit; }
+.signature-saved { font-size: 12px; color: var(--success); font-weight: 600; margin-top: 6px; display: none; }
+
 .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
 .fade-in.visible { opacity: 1; transform: translateY(0); }
 .confetti { position: fixed; pointer-events: none; z-index: 9999; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; display: none; }
@@ -909,6 +919,16 @@ textarea { height: 80px; resize: vertical; }
           <button class="btn-dl" onclick="telechargerPDF()">⬇ PDF</button>
           <button class="btn-mail" onclick="envoyerEmail()">✉ Envoyer</button>
           <button class="btn-fact" onclick="convertirFacture()">🧾 Facture</button>
+        </div>
+        <div class="signature-wrap" id="signature-wrap">
+          <div class="signature-title">✍️ Signez votre devis</div>
+          <div class="signature-sub">Dessinez votre signature avec votre doigt ou la souris</div>
+          <canvas class="signature-canvas" id="signature-canvas"></canvas>
+          <div class="signature-actions">
+            <button class="btn-sign-clear" onclick="clearSignature()">Effacer</button>
+            <button class="btn-sign-save" onclick="saveSignatureArtisan()">Valider ma signature →</button>
+          </div>
+          <div class="signature-saved" id="signature-saved">✅ Signature enregistrée !</div>
         </div>
         <div class="tracking-section" id="tracking-section">
           <div class="tracking-title">👀 Suivez l'ouverture de votre devis</div>
@@ -1760,6 +1780,8 @@ async function genererDevis() {
   const blob = new Blob([html], { type: 'text/html' });
   document.getElementById('preview').src = URL.createObjectURL(blob);
   document.getElementById('result-area').style.display = 'block';
+  document.getElementById('signature-wrap').style.display = 'block';
+  setTimeout(() => initSignatureCanvas(), 100);
   window._devisData = d;
   window._htmlDoc = html;
   window._devisRef = ref;
@@ -1857,6 +1879,49 @@ function afficherExemple() {
   const preview = document.getElementById('exemple-preview');
   preview.src = URL.createObjectURL(blob);
   preview.style.display = 'block';
+}
+
+
+// ===== SIGNATURE =====
+let signatureDrawing = false;
+let signatureCanvas, signatureCtx;
+
+function initSignatureCanvas() {
+  signatureCanvas = document.getElementById('signature-canvas');
+  if (!signatureCanvas) return;
+  signatureCtx = signatureCanvas.getContext('2d');
+  signatureCanvas.width = signatureCanvas.offsetWidth;
+  signatureCanvas.height = 120;
+  signatureCtx.strokeStyle = '#111';
+  signatureCtx.lineWidth = 2;
+  signatureCtx.lineCap = 'round';
+
+  signatureCanvas.addEventListener('mousedown', (e) => { signatureDrawing = true; signatureCtx.beginPath(); signatureCtx.moveTo(e.offsetX, e.offsetY); });
+  signatureCanvas.addEventListener('mousemove', (e) => { if (!signatureDrawing) return; signatureCtx.lineTo(e.offsetX, e.offsetY); signatureCtx.stroke(); });
+  signatureCanvas.addEventListener('mouseup', () => signatureDrawing = false);
+  signatureCanvas.addEventListener('mouseleave', () => signatureDrawing = false);
+
+  signatureCanvas.addEventListener('touchstart', (e) => { e.preventDefault(); signatureDrawing = true; const r = signatureCanvas.getBoundingClientRect(); const t = e.touches[0]; signatureCtx.beginPath(); signatureCtx.moveTo(t.clientX - r.left, t.clientY - r.top); });
+  signatureCanvas.addEventListener('touchmove', (e) => { e.preventDefault(); if (!signatureDrawing) return; const r = signatureCanvas.getBoundingClientRect(); const t = e.touches[0]; signatureCtx.lineTo(t.clientX - r.left, t.clientY - r.top); signatureCtx.stroke(); });
+  signatureCanvas.addEventListener('touchend', () => signatureDrawing = false);
+}
+
+function clearSignature() {
+  if (!signatureCtx) return;
+  signatureCtx.clearRect(0, 0, signatureCanvas.width, signatureCanvas.height);
+  document.getElementById('signature-saved').style.display = 'none';
+}
+
+async function saveSignatureArtisan() {
+  if (!signatureCanvas) return;
+  const data = signatureCanvas.toDataURL('image/png');
+  document.getElementById('signature-saved').style.display = 'block';
+  window._signatureArtisan = data;
+  if (!isDemoMode && currentUser && window._devisRef) {
+    try {
+      await sb.from('devis').update({ signature_artisan: data }).eq('ref', window._devisRef).eq('user_id', currentUser.id);
+    } catch(e) { console.log('Signature save:', e.message); }
+  }
 }
 
 // ===== UI HELPERS =====
