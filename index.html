@@ -441,6 +441,13 @@ textarea { height: 80px; resize: vertical; }
 .confetti { position: fixed; pointer-events: none; z-index: 9999; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; display: none; }
 .confetti-piece { position: absolute; width: 8px; height: 8px; border-radius: 2px; animation: confetti-fall 3s linear forwards; }
 @keyframes confetti-fall { 0% { transform: translateY(-10px) rotate(0deg); opacity: 1; } 100% { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
+.signup-popup { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 300; align-items: center; justify-content: center; }
+.signup-popup.open { display: flex; }
+.signup-popup-card { background: #fff; border-radius: var(--radius-lg); padding: 40px; max-width: 440px; width: 90%; text-align: center; animation: pop-in 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.signup-popup-icon { font-size: 48px; margin-bottom: 16px; }
+.signup-popup-title { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+.signup-popup-sub { font-size: 14px; color: var(--text-secondary); margin-bottom: 24px; line-height: 1.6; }
+.signup-popup-close { background: none; border: none; color: var(--text-muted); font-size: 13px; cursor: pointer; margin-top: 12px; font-family: inherit; }
 @media (max-width: 768px) {
   .nav { padding: 0 16px; } .nav-links { display: none; }
   #auth-screen { flex-direction: column; } .auth-left { display: none; } .auth-right { padding: 32px 20px; }
@@ -471,6 +478,15 @@ textarea { height: 80px; resize: vertical; }
       <button class="btn-mail" onclick="closeSuccess();envoyerEmail()">✉ Envoyer</button>
     </div>
     <button onclick="closeSuccess()" style="background:none;border:none;color:var(--text-muted);font-size:13px;cursor:pointer;margin-top:16px;font-family:inherit;">Continuer →</button>
+  </div>
+</div>
+<div class="signup-popup" id="signup-popup">
+  <div class="signup-popup-card">
+    <div class="signup-popup-icon">🎉</div>
+    <div class="signup-popup-title">Votre devis est prêt !</div>
+    <div class="signup-popup-sub">Créez un compte gratuit pour sauvegarder vos devis et envoyer directement à vos clients.</div>
+    <button class="auth-submit-btn" onclick="closeSignupPopup();switchTab('signup');document.getElementById('auth-screen').style.display='flex';document.getElementById('main-app').style.display='none';">Créer mon compte gratuit →</button><br>
+    <button class="signup-popup-close" onclick="closeSignupPopup()">Continuer sans compte</button>
   </div>
 </div>
 <div class="blog-modal" id="blog-modal">
@@ -1446,6 +1462,14 @@ async function signup() {
   const { data, error } = await sb.auth.signUp({ email, password });
   if (error) { showAuthMsg(error.message,'error'); return; }
   showAuthMsg('🎉 Compte créé ! Bienvenue sur Quotify.','success');
+  try {
+    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+      to_email: email,
+      devis_ref: 'Bienvenue sur Quotify',
+      client_name: document.getElementById('signup-company').value || 'artisan',
+      montant: '3 devis offerts ce mois — commencez maintenant !'
+    });
+  } catch(e) {}
   setTimeout(() => showApp(data.user, true), 1200);
 }
 
@@ -1507,11 +1531,17 @@ async function loadDevisCount() {
   try {
     const { count } = await sb.from('devis').select('*', { count: 'exact', head: true });
     if (count && count > 0) {
-      ['counter-devis','cpt-devis'].forEach(id => { const el=document.getElementById(id); if(el) el.textContent=count+'+'; });
-      const h = Math.round(count*5).toLocaleString('fr-FR')+'+';
-      ['counter-heures','cpt-heures'].forEach(id => { const el=document.getElementById(id); if(el) el.textContent=h; });
+      const devisCount = count;
+      const heuresCount = Math.round(count * 5);
+      const eurosCount = count * 250;
+      ['counter-devis','cpt-devis'].forEach(id => { const el=document.getElementById(id); if(el) el.textContent=devisCount+'+'; });
+      ['counter-heures','cpt-heures'].forEach(id => { const el=document.getElementById(id); if(el) el.textContent=heuresCount.toLocaleString('fr-FR')+'+'; });
       const ce = document.getElementById('cpt-euros');
-      if (ce) ce.textContent = (count*250).toLocaleString('fr-FR')+'€+';
+      if (ce) ce.textContent = eurosCount.toLocaleString('fr-FR')+'€+';
+      const authStats = document.querySelectorAll('.auth-stat-num');
+      if (authStats[0]) authStats[0].textContent = devisCount+'+';
+      const aboutStats = document.querySelectorAll('.about-stat-num');
+      if (aboutStats[0]) aboutStats[0].textContent = devisCount+'+';
     }
   } catch(e) {}
 }
@@ -1722,6 +1752,9 @@ async function genererDevis() {
     trackingSection.style.display = 'block';
   }
   showSuccess(ref);
+  if (isDemoMode) {
+    setTimeout(() => { closeSuccess(); showSignupPopup(); }, 3000);
+  }
   if (!isDemoMode && currentUser) {
     try {
       const montant = d.prestations.reduce((s,p) => s+p.prix*(1-(p.remise||0)/100)*p.qte, 0);
@@ -1848,6 +1881,8 @@ function showLegal(type) {
   if (el) { el.style.display='block'; el.scrollIntoView({ behavior:'smooth' }); }
 }
 
+function showSignupPopup() { document.getElementById('signup-popup').classList.add('open'); }
+function closeSignupPopup() { document.getElementById('signup-popup').classList.remove('open'); }
 function hideLegal() {
   document.getElementById('legal-mentions').style.display = 'none';
   document.getElementById('legal-cgv').style.display = 'none';
