@@ -1289,6 +1289,7 @@ async function showApp(user, newUser = false) {
   document.getElementById('referral-link').value = `https://reyouzz39.github.io/devis-artisan/?ref=${user.id.slice(0,8)}`;
   if (newUser || !localStorage.getItem('quotify_onboarding_done')) {
     document.getElementById('onboarding-bar').style.display = 'block';
+    initOnboardingTimer();
   }
   checkSavedInfo();
   renderModeles();
@@ -1352,6 +1353,14 @@ async function recordDevisOpen(trackId) {
 function closeOnboarding() {
   document.getElementById('onboarding-bar').style.display = 'none';
   localStorage.setItem('quotify_onboarding_done', '1');
+}
+// Auto-fermeture onboarding après 60 secondes seulement
+function initOnboardingTimer() {
+  if (document.getElementById('onboarding-bar').style.display !== 'none') {
+    setTimeout(() => {
+      if (!localStorage.getItem('quotify_onboarding_done')) closeOnboarding();
+    }, 60000);
+  }
 }
 
 function updateOnboarding(step) {
@@ -1507,9 +1516,9 @@ async function signup() {
   try {
     await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
       to_email: email,
-      devis_ref: 'Bienvenue sur Quotify',
+      devis_ref: '🎉 Bienvenue sur Quotify — Votre compte est activé',
       client_name: document.getElementById('signup-company').value || 'artisan',
-      montant: '3 devis offerts ce mois — commencez maintenant !'
+      montant: '✅ 5 devis gratuits ce mois · ⚡ Générez votre premier devis en 2 minutes · 👀 Activez le suivi d'ouverture pour savoir quand votre client lit votre devis'
     });
   } catch(e) {}
   setTimeout(() => showApp(data.user, true), 1200);
@@ -1795,7 +1804,7 @@ async function genererDevis() {
   }
   showSuccess(ref);
   if (isDemoMode) {
-    setTimeout(() => { closeSuccess(); showSignupPopup(); }, 3000);
+    setTimeout(() => { closeSuccess(); showSignupPopup(); }, 8000);
   }
   if (!isDemoMode && currentUser) {
     try {
