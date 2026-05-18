@@ -1827,12 +1827,23 @@ function convertirFacture() {
 
 function telechargerPDF() {
   if (!window._htmlDoc) return;
-  const iframe = document.getElementById('preview');
-  const iframeWindow = iframe.contentWindow;
-  if (iframeWindow) {
-    iframeWindow.focus();
-    iframeWindow.print();
-  }
+  const printCSS = `<style>
+    @media print {
+      body { margin: 0; padding: 0; }
+      @page { margin: 10mm; size: A4; }
+    }
+  </style>`;
+  const htmlWithPrint = window._htmlDoc.replace('</head>', printCSS + '</head>');
+  const printWindow = window.open('', '_blank', 'width=900,height=700');
+  printWindow.document.write(htmlWithPrint);
+  printWindow.document.close();
+  printWindow.onload = function() {
+    setTimeout(() => {
+      printWindow.focus();
+      printWindow.print();
+    }, 500);
+  };
+}
 }
     a.click();
   }
