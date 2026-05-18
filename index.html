@@ -19,8 +19,7 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%236C47FF'/><text x='16' y='22' text-anchor='middle' font-family='Arial' font-weight='800' font-size='18' fill='white'>Q</text></svg>">
 <script defer data-domain="reyouzz39.github.io" src="https://plausible.io/js/script.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
 :root {
@@ -1827,13 +1826,29 @@ function convertirFacture() {
 
 function telechargerPDF() {
   if (!window._htmlDoc) return;
-  const iframe = document.getElementById('preview');
-  const iframeWindow = iframe.contentWindow;
-  if (iframeWindow) {
-    iframeWindow.focus();
-    iframeWindow.print();
-  }
-}
+  try {
+    const iframe = document.getElementById('preview');
+    const element = iframe.contentDocument?.body;
+    if (element && typeof html2pdf!=='undefined') {
+      html2pdf().set({
+        margin: 10,
+        filename: `${window._docType}-${window._devisRef}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      }).from(element).save();
+    } else {
+      const blob = new Blob([window._htmlDoc], { type: 'text/html' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `${window._docType}-${window._devisRef}.html`;
+      a.click();
+    }
+  } catch(e) {
+    const blob = new Blob([window._htmlDoc], { type: 'text/html' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `${window._docType}-${window._devisRef}.html`;
     a.click();
   }
 }
@@ -1904,15 +1919,6 @@ async function saveSignatureArtisan() {
   const data = signatureCanvas.toDataURL('image/png');
   document.getElementById('signature-saved').style.display = 'block';
   window._signatureArtisan = data;
-  // Intégrer la signature dans le HTML du devis
-  if (window._htmlDoc) {
-    window._htmlDoc = window._htmlDoc.replace(
-      '<div class="sig-label">Signature du prestataire</div>',
-      `<div class="sig-label">Signature du prestataire</div><img src="${data}" style="max-height:60px;max-width:180px;margin-top:6px;">`
-    );
-    const blob = new Blob([window._htmlDoc], { type: 'text/html' });
-    document.getElementById('preview').src = URL.createObjectURL(blob);
-  }
   if (!isDemoMode && currentUser && window._devisRef) {
     try {
       await sb.from('devis').update({ signature_artisan: data }).eq('ref', window._devisRef).eq('user_id', currentUser.id);
