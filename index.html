@@ -111,7 +111,7 @@ body { overflow-x: hidden;  font-family: -apple-system, BlinkMacSystemFont, 'Seg
 .onboarding-step.current { background: rgba(255,255,255,0.3); }
 .onboarding-dismiss { background: none; border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 5px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; font-family: inherit; }
 .dashboard { background: var(--primary-light); border-bottom: 1px solid var(--primary-border); padding: 18px 40px; }
-.dashboard-inner { max-width: 960px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.dashboard-inner { max-width: 960px; margin: 0 auto; display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
 .dash-card { background: #fff; border-radius: var(--radius-md); padding: 14px 16px; border: 1px solid var(--primary-border); }
 .dash-label { font-size: 11px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 4px; }
 .dash-value { font-size: 20px; font-weight: 800; color: var(--text); line-height: 1; }
@@ -604,10 +604,12 @@ textarea { height: 80px; resize: vertical; }
 
 <div class="dashboard" id="dashboard">
   <div class="dashboard-inner">
-    <div class="dash-card"><div class="dash-label">Plan actuel</div><div class="dash-value" id="dash-plan">Gratuit</div><div class="dash-sub">Votre abonnement</div></div>
-    <div class="dash-card"><div class="dash-label">Devis ce mois</div><div class="dash-value" id="dash-count">0</div><div class="dash-sub" id="dash-limit">sur 5 disponibles</div><div class="quota-bar"><div class="quota-fill" id="quota-fill" style="width:0%"></div></div></div>
-    <div class="dash-card"><div class="dash-label">Total générés</div><div class="dash-value" id="dash-total">0</div><div class="dash-sub">depuis le début</div></div>
-    <div class="dash-card"><div class="dash-label">Temps économisé</div><div class="dash-value" id="dash-temps">0h</div><div class="dash-sub">vs méthode manuelle</div></div>
+    <div class="dash-card"><div class="dash-label">Plan actuel</div><div class="dash-value" id="dash-plan">Gratuit</div><div class="dash-sub" id="dash-limit">sur 5 disponibles</div><div class="quota-bar"><div class="quota-fill" id="quota-fill" style="width:0%"></div></div></div>
+    <div class="dash-card"><div class="dash-label">Devis ce mois</div><div class="dash-value" id="dash-count">0</div><div class="dash-sub">generés ce mois</div></div>
+    <div class="dash-card"><div class="dash-label">CA du mois</div><div class="dash-value" id="dash-ca">0€</div><div class="dash-sub">via Quotify</div></div>
+    <div class="dash-card"><div class="dash-label">Taux d'ouverture</div><div class="dash-value" id="dash-taux">—</div><div class="dash-sub">devis ouverts</div></div>
+    <div class="dash-card"><div class="dash-label">En attente</div><div class="dash-value" id="dash-attente">0</div><div class="dash-sub">sans réponse</div></div>
+    <div class="dash-card"><div class="dash-label">Meilleur client</div><div class="dash-value" id="dash-top-client" style="font-size:14px;">—</div><div class="dash-sub" id="dash-top-montant">par CA</div></div>
   </div>
 </div>
 
@@ -1542,9 +1544,37 @@ async function loadUserData() {
     document.getElementById('dash-plan').textContent = currentPlan.charAt(0).toUpperCase()+currentPlan.slice(1);
     document.getElementById('dash-count').textContent = monthlyCount;
     document.getElementById('dash-limit').textContent = `sur ${limit===Infinity?'∞':limit} disponibles`;
-    document.getElementById('dash-total').textContent = savedDevis.length;
     document.getElementById('user-plan').textContent = currentPlan.charAt(0).toUpperCase()+currentPlan.slice(1);
-    document.getElementById('dash-temps').textContent = Math.round(savedDevis.length*0.33)+'h';
+
+    // CA du mois
+    const caMonth = thisMonth.reduce((s,d) => s+(d.montant||0), 0);
+    document.getElementById('dash-ca').textContent = caMonth.toLocaleString('fr-FR')+'€';
+
+    // Taux ouverture
+    const ouverts = savedDevis.filter(d => d.opened).length;
+    const taux = savedDevis.length > 0 ? Math.round((ouverts/savedDevis.length)*100) : 0;
+    document.getElementById('dash-taux').textContent = taux+'%';
+
+    // En attente (générés ce mois, non ouverts, > 2 jours)
+    const now2 = new Date();
+    const attente = thisMonth.filter(d => {
+      if (d.opened) return false;
+      const age = (now2 - new Date(d.created_at)) / (1000*60*60*24);
+      return age > 2;
+    }).length;
+    document.getElementById('dash-attente').textContent = attente;
+
+    // Meilleur client
+    const clientMap = {};
+    savedDevis.forEach(d => {
+      if (!d.client) return;
+      clientMap[d.client] = (clientMap[d.client]||0) + (d.montant||0);
+    });
+    const topClient = Object.entries(clientMap).sort((a,b) => b[1]-a[1])[0];
+    if (topClient) {
+      document.getElementById('dash-top-client').textContent = topClient[0];
+      document.getElementById('dash-top-montant').textContent = topClient[1].toLocaleString('fr-FR')+'€ CA total';
+    }
     const fill = document.getElementById('quota-fill');
     fill.style.width = pct+'%';
     fill.className = 'quota-fill'+(pct>=90?' danger':pct>=70?' warning':'');
