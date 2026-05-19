@@ -231,7 +231,7 @@ body { overflow-x: hidden;  font-family: -apple-system, BlinkMacSystemFont, 'Seg
 .suivi-notif-sub { font-size: 12px; color: rgba(255,255,255,0.7); }
 .suivi-notif-time { font-size: 11px; color: rgba(255,255,255,0.5); margin-left: auto; flex-shrink: 0; }
 .comp-table { width: 100%; border-collapse: collapse; border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--primary-border); background: #fff; }
-.comp-table th { padding: 14px 18px; font-size: 13px; font-weight: 700; text-align: center; background: var(--bg); color: var(--text-secondary); }
+.comp-table th { padding: 14px 18px; font-size: 13px; font-weight: 700; text-align: center; background: var(--bg); color: var(--text-secondary); white-space: nowrap; }
 .comp-table th:first-child { text-align: left; }
 .comp-table th.hl { background: var(--primary); color: #fff; }
 .comp-table td { padding: 13px 18px; font-size: 13px; border-top: 1px solid var(--border-light); text-align: center; color: var(--text-secondary); }
@@ -470,8 +470,9 @@ textarea { height: 80px; resize: vertical; }
 
     .metiers-seo-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
     .cpt-grid { grid-template-columns: 1fr !important; }
-        table { font-size: 12px; }
-        table th, table td { padding: 6px 4px; word-break: break-word; }
+        .comp-table { font-size: 12px; table-layout: auto; }
+        .comp-table th, .comp-table td { padding: 8px 10px; white-space: nowrap; }
+        .comp-table th:first-child, .comp-table td:first-child { white-space: normal; max-width: 110px; }
     .comparison-table { font-size: 13px; }
     .comparison-table th, .comparison-table td { padding: 8px 6px; min-width: 80px; }
     @media (min-width: 640px) { .metiers-seo-grid { grid-template-columns: repeat(4, 1fr); } }
