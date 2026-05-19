@@ -1185,6 +1185,475 @@ textarea { height: 80px; resize: vertical; }
 </div>
 
 </div>
+
+<!-- ESPACE CLIENT -->
+<div id="espace-client" style="display:none;min-height:100vh;background:#f8f7ff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;">
+  <div style="background:#fff;border-bottom:1px solid #ece9ff;padding:16px 24px;display:flex;align-items:center;gap:12px;">
+    <div style="width:32px;height:32px;background:#6C47FF;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px;">Q</div>
+    <div style="font-size:16px;font-weight:800;color:#6C47FF;">Quotify</div>
+    <div id="ec-statut-badge" style="margin-left:auto;font-size:12px;font-weight:700;padding:4px 12px;border-radius:20px;background:#fff3cd;color:#856404;">En attente</div>
+  </div>
+  <div style="max-width:700px;margin:0 auto;padding:32px 20px;">
+    <div id="ec-loading" style="text-align:center;padding:60px 0;color:#888;">Chargement de votre devis...</div>
+    <div id="ec-content" style="display:none;">
+      <div style="background:#fff;border-radius:16px;padding:28px;border:1px solid #ece9ff;margin-bottom:20px;">
+        <div style="font-size:13px;color:#888;margin-bottom:4px;">Devis de</div>
+        <div id="ec-artisan" style="font-size:20px;font-weight:800;color:#111;margin-bottom:4px;"></div>
+        <div id="ec-ref" style="font-size:13px;color:#6C47FF;font-weight:600;"></div>
+      </div>
+      <div style="background:#fff;border-radius:16px;border:1px solid #ece9ff;overflow:hidden;margin-bottom:20px;">
+        <iframe id="ec-iframe" style="width:100%;height:600px;border:none;"></iframe>
+      </div>
+      <div id="ec-actions" style="display:flex;flex-direction:column;gap:12px;">
+        <button id="ec-btn-accept" onclick="accepterDevis()" style="width:100%;background:#6C47FF;color:#fff;border:none;padding:16px;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;">
+          ✅ Accepter ce devis
+        </button>
+        <button onclick="refuserDevis()" style="width:100%;background:none;color:#888;border:1px solid #ddd;padding:14px;border-radius:12px;font-size:14px;cursor:pointer;font-family:inherit;">
+          Refuser le devis
+        </button>
+      </div>
+      <div id="ec-signature-zone" style="display:none;margin-top:20px;background:#fff;border-radius:16px;padding:24px;border:1px solid #ece9ff;">
+        <div style="font-size:15px;font-weight:700;margin-bottom:8px;">✍️ Signez ici</div>
+        <div style="font-size:13px;color:#888;margin-bottom:12px;">Dessinez votre signature dans la zone ci-dessous</div>
+        <canvas id="sig-canvas" width="600" height="150" style="border:2px solid #ece9ff;border-radius:8px;width:100%;touch-action:none;cursor:crosshair;"></canvas>
+        <div style="display:flex;gap:10px;margin-top:12px;">
+          <button onclick="clearSignature()" style="flex:1;background:none;border:1px solid #ddd;padding:10px;border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit;">Effacer</button>
+          <button onclick="validerSignature()" style="flex:2;background:#22c55e;color:#fff;border:none;padding:10px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;">Confirmer la signature →</button>
+        </div>
+      </div>
+      <div id="ec-accepted" style="display:none;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:16px;padding:28px;text-align:center;margin-top:20px;">
+        <div style="font-size:48px;margin-bottom:12px;">🎉</div>
+        <div style="font-size:20px;font-weight:800;color:#15803d;margin-bottom:8px;">Devis accepté !</div>
+        <div style="font-size:14px;color:#166534;">L'artisan a été notifié. Il vous contactera prochainement.</div>
+      </div>
+      <div id="ec-refused" style="display:none;background:#fef2f2;border:1px solid #fecaca;border-radius:16px;padding:28px;text-align:center;margin-top:20px;">
+        <div style="font-size:48px;margin-bottom:12px;">❌</div>
+        <div style="font-size:20px;font-weight:800;color:#dc2626;margin-bottom:8px;">Devis refusé</div>
+        <div style="font-size:14px;color:#991b1b;">L'artisan a été notifié de votre décision.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</html>`;
+}
+
+async function genererDevis() {
+  if (!isDemoMode) {
+    const limit = PLANS[currentPlan];
+    if (limit!==Infinity && monthlyCount>=limit) {
+      document.getElementById('quota-alert').style.display = 'block';
+      document.getElementById('tarifs').scrollIntoView({ behavior: 'smooth' });
+      return;
+    }
+  }
+  const d = getFormData();
+  if (!d.entreprise||!d.client) { alert("Remplissez le nom de l'entreprise et du client."); return; }
+  if (d.prestations.length===0) { alert("Ajoutez au moins une prestation avec un prix."); return; }
+  const ref = generateRef();
+  const trackingId = generateTrackingId();
+  currentTrackingId = trackingId;
+  const refDisplay = document.getElementById('ref-display');
+  const refText = document.getElementById('ref-text');
+  if (refDisplay&&refText) { refText.textContent=`Référence : ${ref}`; refDisplay.style.display='flex'; }
+  saveInfo(d);
+  updateOnboarding(3);
+  const html = buildHTML(d, 'devis', ref, trackingId);
+  const blob = new Blob([html], { type: 'text/html' });
+  document.getElementById('preview').src = URL.createObjectURL(blob);
+  document.getElementById('result-area').style.display = 'block';
+  window._devisData = d;
+  window._htmlDoc = html;
+  window._devisRef = ref;
+  window._clientEmail = d.clientEmail||'';
+  window._docType = 'devis';
+  window._trackingId = trackingId;
+  const trackingSection = document.getElementById('tracking-section');
+  const trackingInput = document.getElementById('tracking-link-input');
+  if (trackingSection&&trackingInput) {
+    trackingInput.value = `https://reyouzz39.github.io/devis-artisan/?track=${trackingId}`;
+    trackingSection.style.display = 'block';
+  }
+  showSuccess(ref);
+  if (isDemoMode) {
+    setTimeout(() => { closeSuccess(); showSignupPopup(); }, 8000);
+  }
+  if (!isDemoMode && currentUser) {
+    try {
+      const montant = d.prestations.reduce((s,p) => s+p.prix*(1-(p.remise||0)/100)*p.qte, 0);
+      await sb.from('devis').insert({
+        user_id: currentUser.id, client: d.client,
+        montant, ref, track_id: trackingId,
+        created_at: new Date().toISOString()
+      });
+      monthlyCount++;
+      await loadUserData();
+    } catch(e) { console.log('Save:', e.message); }
+  }
+}
+
+function convertirFacture() {
+  if (!window._devisData) { alert("Générez d'abord un devis."); return; }
+  const html = buildHTML(window._devisData, 'facture', window._devisRef, null);
+  const blob = new Blob([html], { type: 'text/html' });
+  document.getElementById('preview').src = URL.createObjectURL(blob);
+  window._htmlDoc = html;
+  window._docType = 'facture';
+  alert('✅ Converti en facture !');
+}
+
+function telechargerPDF() {
+  if (!window._htmlDoc) return;
+  try {
+    const iframe = document.getElementById('preview');
+    const element = iframe.contentDocument?.body;
+    if (element && typeof html2pdf!=='undefined') {
+      html2pdf().set({
+        margin: 10,
+        filename: `${window._docType}-${window._devisRef}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      }).from(element).save();
+    } else {
+      const blob = new Blob([window._htmlDoc], { type: 'text/html' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `${window._docType}-${window._devisRef}.html`;
+      a.click();
+    }
+  } catch(e) {
+    const blob = new Blob([window._htmlDoc], { type: 'text/html' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `${window._docType}-${window._devisRef}.html`;
+    a.click();
+  }
+}
+
+function envoyerEmail() {
+  const email = window._clientEmail;
+  if (!email) { alert("Ajoutez l'email du client dans le formulaire."); return; }
+  const subject = encodeURIComponent(window._docType==='facture'?'Votre facture':`Votre devis ${window._devisRef}`);
+  const trackUrl = window._trackingId?`\n\nConsultez votre devis : https://reyouzz39.github.io/devis-artisan/?track=${window._trackingId}`:'';
+  const body = encodeURIComponent(`Bonjour,\n\nVeuillez trouver ci-joint votre ${window._docType} (réf. ${window._devisRef}).${trackUrl}\n\nCordialement.`);
+  window.open(`mailto:${email}?subject=${subject}&body=${body}`);
+}
+
+function afficherExemple() {
+  const data = {
+    entreprise:'Plomberie Dupont', metier:'Plombier',
+    email:'dupont@plomberie.fr', tel:'06 12 34 56 78',
+    siret:'123 456 789 00012', adresseEntreprise:'12 rue de la Paix, 75001 Paris',
+    client:'Jean Martin', adresseClient:'5 avenue Victor Hugo, 69001 Lyon',
+    clientEmail:'', conditions:'30% acompte à la commande, solde à la fin des travaux',
+    tvaTaux:10, logo:null,
+    prestations:[
+      {desc:'Remplacement chauffe-eau Ariston 150L',qte:1,prix:850,remise:0},
+      {desc:'Robinetterie cuisine',qte:2,prix:120,remise:10},
+      {desc:"Main d'œuvre",qte:3,prix:75,remise:0}
+    ]
+  };
+  const html = buildHTML(data,'devis','DEV-202605-001',null);
+  const blob = new Blob([html], { type:'text/html' });
+  const preview = document.getElementById('exemple-preview');
+  preview.src = URL.createObjectURL(blob);
+  preview.style.display = 'block';
+}
+
+
+// ===== RELANCES AUTOMATIQUES =====
+async function checkRelances() {
+  if (!currentUser) return;
+  try {
+    const { data: devis } = await sb.from('devis')
+      .select('*')
+      .eq('user_id', currentUser.id)
+      .is('signed_at', null)
+      .order('created_at', { ascending: false })
+      .limit(20);
+
+    if (!devis || devis.length === 0) return;
+
+    const now = new Date();
+    const relances = [];
+    const dismissed = JSON.parse(localStorage.getItem('quotify_relances_dismissed') || '[]');
+
+    devis.forEach(d => {
+      if (dismissed.includes(d.id)) return;
+      const daysSince = Math.floor((now - new Date(d.created_at)) / 86400000);
+      const montant = parseFloat(d.montant || 0).toLocaleString('fr-FR');
+
+      // Client a ouvert mais pas signé — priorité maximale
+      if (d.opened && !d.signed_at && daysSince >= 1) {
+        relances.push({
+          id: d.id, type: 'hot', priority: 1,
+          title: '🔥 Client intéressé — Relancez maintenant !',
+          badge: 'HOT',
+          body: `<strong>${d.client || 'Votre client'}</strong> a ouvert votre devis <strong>${d.ref}</strong> (${montant}€) mais n'a pas encore signé. C'est le bon moment pour appeler.`,
+          devis: d, daysSince
+        });
+      }
+      // Devis en attente depuis 7+ jours
+      else if (daysSince >= 7 && !d.opened) {
+        relances.push({
+          id: d.id, type: 'urgent', priority: 2,
+          title: '⚠️ Devis sans réponse depuis ' + daysSince + 'j',
+          badge: 'URGENT',
+          body: `<strong>${d.client || 'Votre client'}</strong> n'a pas ouvert votre devis <strong>${d.ref}</strong> (${montant}€). Renvoyez le lien ou appelez directement.`,
+          devis: d, daysSince
+        });
+      }
+      // Devis en attente depuis 3-6 jours
+      else if (daysSince >= 3 && daysSince < 7) {
+        relances.push({
+          id: d.id, type: 'warning', priority: 3,
+          title: '📩 Relance suggérée — J+' + daysSince,
+          badge: 'À RELANCER',
+          body: `Votre devis pour <strong>${d.client || 'votre client'}</strong> — <strong>${d.ref}</strong> (${montant}€) attend une réponse depuis ${daysSince} jours.`,
+          devis: d, daysSince
+        });
+      }
+    });
+
+    // Trier par priorité et afficher max 3
+    relances.sort((a,b) => a.priority - b.priority);
+    const toShow = relances.slice(0, 3);
+
+    const wrap = document.getElementById('relance-wrap');
+    if (!wrap || toShow.length === 0) return;
+
+    wrap.innerHTML = toShow.map(r => `
+      <div class="relance-card ${r.type}" id="relance-${r.id}">
+        <div class="relance-card-header">
+          <div class="relance-card-title">${r.title}</div>
+          <button class="relance-card-close" onclick="dismissRelance('${r.id}')">×</button>
+        </div>
+        <span class="relance-badge ${r.type}">${r.badge}</span>
+        <div class="relance-card-body">${r.body}</div>
+        <div class="relance-card-actions">
+          <button class="relance-btn-primary" onclick="relancerClient('${r.devis.ref}', '${r.devis.client || ''}', '${r.devis.track_id || ''}', '${r.id}')">
+            Relancer le client →
+          </button>
+          <button class="relance-btn-secondary" onclick="dismissRelance('${r.id}')">
+            Ignorer
+          </button>
+        </div>
+      </div>
+    `).join('');
+
+  } catch(e) {
+    console.log('Relances error:', e.message);
+    if (window.Sentry) Sentry.captureException(e);
+  }
+}
+
+function dismissRelance(id) {
+  const el = document.getElementById('relance-' + id);
+  if (el) el.style.animation = 'slide-in-right 0.2s ease reverse';
+  setTimeout(() => { if (el) el.remove(); }, 200);
+  const dismissed = JSON.parse(localStorage.getItem('quotify_relances_dismissed') || '[]');
+  if (!dismissed.includes(id)) dismissed.push(id);
+  localStorage.setItem('quotify_relances_dismissed', JSON.stringify(dismissed));
+}
+
+function relancerClient(ref, client, trackId, relanceId) {
+  const trackUrl = trackId ? `https://reyouzz39.github.io/devis-artisan/?track=${trackId}` : '';
+  const subject = encodeURIComponent(`Rappel — Votre devis ${ref}`);
+  const body = encodeURIComponent(
+    `Bonjour ${client},\n\nJe me permets de revenir vers vous concernant le devis ${ref} que je vous ai transmis.\n\n` +
+    `N'hésitez pas à me contacter pour toute question.\n\n` +
+    (trackUrl ? `Consultez votre devis ici : ${trackUrl}\n\n` : '') +
+    `Cordialement.`
+  );
+  window.open(`mailto:?subject=${subject}&body=${body}`);
+  dismissRelance(relanceId);
+}
+
+
+// ===== ESPACE CLIENT =====
+let ecDevisData = null;
+let sigCanvas = null, sigCtx = null, sigDrawing = false;
+
+async function checkEspaceClient() {
+  const url = new URL(window.location.href);
+  const trackId = url.searchParams.get('track');
+  if (!trackId) return false;
+
+  // Masquer l'app normale, afficher l'espace client
+  const authEl = document.getElementById('auth-screen');
+  const appEl = document.getElementById('main-app');
+  const ecEl = document.getElementById('espace-client');
+  if (authEl) authEl.style.display = 'none';
+  if (appEl) appEl.style.display = 'none';
+  if (ecEl) ecEl.style.display = 'block';
+
+  try {
+    const { data: devis, error } = await sb.from('devis')
+      .select('*')
+      .eq('track_id', trackId)
+      .single();
+
+    if (error || !devis) {
+      document.getElementById('ec-loading').textContent = 'Devis introuvable.';
+      return true;
+    }
+
+    ecDevisData = devis;
+
+    // Marquer comme ouvert
+    if (!devis.opened) {
+      await sb.from('devis').update({ opened: true, opened_at: new Date().toISOString() }).eq('track_id', trackId);
+      // Notifier l'artisan
+      if (devis.user_id) {
+        try {
+          await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+            to_email: devis.artisan_email || '',
+            devis_ref: devis.ref || trackId,
+            client_name: devis.client || 'Votre client',
+            montant: devis.montant ? parseFloat(devis.montant).toFixed(2) + ' €' : '—'
+          });
+        } catch(e) {}
+      }
+    }
+
+    // Afficher le contenu
+    document.getElementById('ec-loading').style.display = 'none';
+    document.getElementById('ec-content').style.display = 'block';
+    document.getElementById('ec-artisan').textContent = devis.entreprise || 'Votre artisan';
+    document.getElementById('ec-ref').textContent = devis.ref || '';
+
+    // Statut badge
+    const badge = document.getElementById('ec-statut-badge');
+    if (devis.statut === 'accepte') {
+      badge.textContent = '✅ Accepté'; badge.style.background = '#f0fdf4'; badge.style.color = '#15803d';
+      document.getElementById('ec-actions').style.display = 'none';
+      document.getElementById('ec-accepted').style.display = 'block';
+    } else if (devis.statut === 'refuse') {
+      badge.textContent = '❌ Refusé'; badge.style.background = '#fef2f2'; badge.style.color = '#dc2626';
+      document.getElementById('ec-actions').style.display = 'none';
+      document.getElementById('ec-refused').style.display = 'block';
+    }
+
+    // Afficher le PDF dans l'iframe
+    if (devis.html_content) {
+      const blob = new Blob([devis.html_content], { type: 'text/html' });
+      document.getElementById('ec-iframe').src = URL.createObjectURL(blob);
+    }
+
+  } catch(e) {
+    document.getElementById('ec-loading').textContent = 'Erreur de chargement.';
+    console.log('EC error:', e.message);
+  }
+  return true;
+}
+
+function accepterDevis() {
+  document.getElementById('ec-actions').style.display = 'none';
+  document.getElementById('ec-signature-zone').style.display = 'block';
+  // Init canvas signature
+  sigCanvas = document.getElementById('sig-canvas');
+  sigCtx = sigCanvas.getContext('2d');
+  sigCtx.strokeStyle = '#111';
+  sigCtx.lineWidth = 2;
+  sigCtx.lineCap = 'round';
+  // Events souris
+  sigCanvas.addEventListener('mousedown', e => { sigDrawing=true; sigCtx.beginPath(); sigCtx.moveTo(e.offsetX, e.offsetY); });
+  sigCanvas.addEventListener('mousemove', e => { if(!sigDrawing) return; sigCtx.lineTo(e.offsetX, e.offsetY); sigCtx.stroke(); });
+  sigCanvas.addEventListener('mouseup', () => sigDrawing=false);
+  // Events tactile
+  sigCanvas.addEventListener('touchstart', e => { e.preventDefault(); sigDrawing=true; const t=e.touches[0]; const r=sigCanvas.getBoundingClientRect(); sigCtx.beginPath(); sigCtx.moveTo(t.clientX-r.left, t.clientY-r.top); });
+  sigCanvas.addEventListener('touchmove', e => { e.preventDefault(); if(!sigDrawing) return; const t=e.touches[0]; const r=sigCanvas.getBoundingClientRect(); sigCtx.lineTo(t.clientX-r.left, t.clientY-r.top); sigCtx.stroke(); });
+  sigCanvas.addEventListener('touchend', () => sigDrawing=false);
+}
+
+function clearSignature() {
+  if (sigCtx) sigCtx.clearRect(0, 0, sigCanvas.width, sigCanvas.height);
+}
+
+async function validerSignature() {
+  if (!ecDevisData) return;
+  const sigData = sigCanvas.toDataURL();
+  try {
+    await sb.from('devis').update({
+      statut: 'accepte',
+      signed_at: new Date().toISOString(),
+      signature_client: sigData
+    }).eq('id', ecDevisData.id);
+
+    document.getElementById('ec-signature-zone').style.display = 'none';
+    document.getElementById('ec-accepted').style.display = 'block';
+    const badge = document.getElementById('ec-statut-badge');
+    badge.textContent = '✅ Accepté'; badge.style.background = '#f0fdf4'; badge.style.color = '#15803d';
+  } catch(e) { alert('Erreur lors de la signature.'); }
+}
+
+async function refuserDevis() {
+  if (!ecDevisData) return;
+  if (!confirm('Confirmez-vous le refus de ce devis ?')) return;
+  try {
+    await sb.from('devis').update({ statut: 'refuse' }).eq('id', ecDevisData.id);
+    document.getElementById('ec-actions').style.display = 'none';
+    document.getElementById('ec-refused').style.display = 'block';
+    const badge = document.getElementById('ec-statut-badge');
+    badge.textContent = '❌ Refusé'; badge.style.background = '#fef2f2'; badge.style.color = '#dc2626';
+  } catch(e) { alert('Erreur.'); }
+}
+
+// ===== UI HELPERS =====
+function toggleFaq(el) {
+  el.nextElementSibling.classList.toggle('open');
+  el.querySelector('.faq-arrow').classList.toggle('open');
+}
+
+function toggleSupport() {
+  const m = document.getElementById('support-modal');
+  m.style.display = m.style.display==='block'?'none':'block';
+}
+
+function copyTrackingLink() {
+  const input = document.getElementById('tracking-link-input');
+  if (!input||!input.value) return;
+  navigator.clipboard.writeText(input.value).then(() => {
+    const btn = document.querySelector('.btn-copy-link');
+    btn.textContent = '✅ Copié !';
+    setTimeout(() => { btn.textContent='Copier le lien'; }, 2000);
+  });
+}
+
+function copyReferral() {
+  navigator.clipboard.writeText(document.getElementById('referral-link').value).then(() => {
+    const btn = document.querySelector('.ref-copy');
+    btn.textContent = '✅ Copié !';
+    setTimeout(() => { btn.textContent='Copier 📋'; }, 2000);
+  });
+}
+
+async function newsletterSignup() {
+  const email = document.getElementById('newsletter-email').value;
+  if (!email) return;
+  try {
+    await sb.from('newsletter').insert({ email, created_at: new Date().toISOString() });
+  } catch(e) { console.log('Newsletter:', e.message); }
+  document.getElementById('newsletter-msg').style.display = 'block';
+  document.getElementById('newsletter-email').value = '';
+}
+
+function showLegal(type) {
+  document.getElementById('legal-mentions').style.display = 'none';
+  document.getElementById('legal-cgv').style.display = 'none';
+  const el = document.getElementById(`legal-${type}`);
+  if (el) { el.style.display='block'; el.scrollIntoView({ behavior:'smooth' }); }
+}
+
+function showSignupPopup() { document.getElementById('signup-popup').classList.add('open'); }
+function closeSignupPopup() { document.getElementById('signup-popup').classList.remove('open'); }
+function hideLegal() {
+  document.getElementById('legal-mentions').style.display = 'none';
+  document.getElementById('legal-cgv').style.display = 'none';
+}
+</script>
+<div class="relance-wrap" id="relance-wrap"></div>
+
 <script>
 // ===== CONFIG =====
 const SUPABASE_URL = 'https://cwtprcbdcjbjqcixevlk.supabase.co';
@@ -1862,473 +2331,5 @@ function buildHTML(data, type, ref, trackingId) {
 ${quotifyMention}
 
 
-<!-- ESPACE CLIENT -->
-<div id="espace-client" style="display:none;min-height:100vh;background:#f8f7ff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;">
-  <div style="background:#fff;border-bottom:1px solid #ece9ff;padding:16px 24px;display:flex;align-items:center;gap:12px;">
-    <div style="width:32px;height:32px;background:#6C47FF;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px;">Q</div>
-    <div style="font-size:16px;font-weight:800;color:#6C47FF;">Quotify</div>
-    <div id="ec-statut-badge" style="margin-left:auto;font-size:12px;font-weight:700;padding:4px 12px;border-radius:20px;background:#fff3cd;color:#856404;">En attente</div>
-  </div>
-  <div style="max-width:700px;margin:0 auto;padding:32px 20px;">
-    <div id="ec-loading" style="text-align:center;padding:60px 0;color:#888;">Chargement de votre devis...</div>
-    <div id="ec-content" style="display:none;">
-      <div style="background:#fff;border-radius:16px;padding:28px;border:1px solid #ece9ff;margin-bottom:20px;">
-        <div style="font-size:13px;color:#888;margin-bottom:4px;">Devis de</div>
-        <div id="ec-artisan" style="font-size:20px;font-weight:800;color:#111;margin-bottom:4px;"></div>
-        <div id="ec-ref" style="font-size:13px;color:#6C47FF;font-weight:600;"></div>
-      </div>
-      <div style="background:#fff;border-radius:16px;border:1px solid #ece9ff;overflow:hidden;margin-bottom:20px;">
-        <iframe id="ec-iframe" style="width:100%;height:600px;border:none;"></iframe>
-      </div>
-      <div id="ec-actions" style="display:flex;flex-direction:column;gap:12px;">
-        <button id="ec-btn-accept" onclick="accepterDevis()" style="width:100%;background:#6C47FF;color:#fff;border:none;padding:16px;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;">
-          ✅ Accepter ce devis
-        </button>
-        <button onclick="refuserDevis()" style="width:100%;background:none;color:#888;border:1px solid #ddd;padding:14px;border-radius:12px;font-size:14px;cursor:pointer;font-family:inherit;">
-          Refuser le devis
-        </button>
-      </div>
-      <div id="ec-signature-zone" style="display:none;margin-top:20px;background:#fff;border-radius:16px;padding:24px;border:1px solid #ece9ff;">
-        <div style="font-size:15px;font-weight:700;margin-bottom:8px;">✍️ Signez ici</div>
-        <div style="font-size:13px;color:#888;margin-bottom:12px;">Dessinez votre signature dans la zone ci-dessous</div>
-        <canvas id="sig-canvas" width="600" height="150" style="border:2px solid #ece9ff;border-radius:8px;width:100%;touch-action:none;cursor:crosshair;"></canvas>
-        <div style="display:flex;gap:10px;margin-top:12px;">
-          <button onclick="clearSignature()" style="flex:1;background:none;border:1px solid #ddd;padding:10px;border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit;">Effacer</button>
-          <button onclick="validerSignature()" style="flex:2;background:#22c55e;color:#fff;border:none;padding:10px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;">Confirmer la signature →</button>
-        </div>
-      </div>
-      <div id="ec-accepted" style="display:none;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:16px;padding:28px;text-align:center;margin-top:20px;">
-        <div style="font-size:48px;margin-bottom:12px;">🎉</div>
-        <div style="font-size:20px;font-weight:800;color:#15803d;margin-bottom:8px;">Devis accepté !</div>
-        <div style="font-size:14px;color:#166534;">L'artisan a été notifié. Il vous contactera prochainement.</div>
-      </div>
-      <div id="ec-refused" style="display:none;background:#fef2f2;border:1px solid #fecaca;border-radius:16px;padding:28px;text-align:center;margin-top:20px;">
-        <div style="font-size:48px;margin-bottom:12px;">❌</div>
-        <div style="font-size:20px;font-weight:800;color:#dc2626;margin-bottom:8px;">Devis refusé</div>
-        <div style="font-size:14px;color:#991b1b;">L'artisan a été notifié de votre décision.</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-</body></html>`;
-}
-
-async function genererDevis() {
-  if (!isDemoMode) {
-    const limit = PLANS[currentPlan];
-    if (limit!==Infinity && monthlyCount>=limit) {
-      document.getElementById('quota-alert').style.display = 'block';
-      document.getElementById('tarifs').scrollIntoView({ behavior: 'smooth' });
-      return;
-    }
-  }
-  const d = getFormData();
-  if (!d.entreprise||!d.client) { alert("Remplissez le nom de l'entreprise et du client."); return; }
-  if (d.prestations.length===0) { alert("Ajoutez au moins une prestation avec un prix."); return; }
-  const ref = generateRef();
-  const trackingId = generateTrackingId();
-  currentTrackingId = trackingId;
-  const refDisplay = document.getElementById('ref-display');
-  const refText = document.getElementById('ref-text');
-  if (refDisplay&&refText) { refText.textContent=`Référence : ${ref}`; refDisplay.style.display='flex'; }
-  saveInfo(d);
-  updateOnboarding(3);
-  const html = buildHTML(d, 'devis', ref, trackingId);
-  const blob = new Blob([html], { type: 'text/html' });
-  document.getElementById('preview').src = URL.createObjectURL(blob);
-  document.getElementById('result-area').style.display = 'block';
-  window._devisData = d;
-  window._htmlDoc = html;
-  window._devisRef = ref;
-  window._clientEmail = d.clientEmail||'';
-  window._docType = 'devis';
-  window._trackingId = trackingId;
-  const trackingSection = document.getElementById('tracking-section');
-  const trackingInput = document.getElementById('tracking-link-input');
-  if (trackingSection&&trackingInput) {
-    trackingInput.value = `https://reyouzz39.github.io/devis-artisan/?track=${trackingId}`;
-    trackingSection.style.display = 'block';
-  }
-  showSuccess(ref);
-  if (isDemoMode) {
-    setTimeout(() => { closeSuccess(); showSignupPopup(); }, 8000);
-  }
-  if (!isDemoMode && currentUser) {
-    try {
-      const montant = d.prestations.reduce((s,p) => s+p.prix*(1-(p.remise||0)/100)*p.qte, 0);
-      await sb.from('devis').insert({
-        user_id: currentUser.id, client: d.client,
-        montant, ref, track_id: trackingId,
-        created_at: new Date().toISOString()
-      });
-      monthlyCount++;
-      await loadUserData();
-    } catch(e) { console.log('Save:', e.message); }
-  }
-}
-
-function convertirFacture() {
-  if (!window._devisData) { alert("Générez d'abord un devis."); return; }
-  const html = buildHTML(window._devisData, 'facture', window._devisRef, null);
-  const blob = new Blob([html], { type: 'text/html' });
-  document.getElementById('preview').src = URL.createObjectURL(blob);
-  window._htmlDoc = html;
-  window._docType = 'facture';
-  alert('✅ Converti en facture !');
-}
-
-function telechargerPDF() {
-  if (!window._htmlDoc) return;
-  try {
-    const iframe = document.getElementById('preview');
-    const element = iframe.contentDocument?.body;
-    if (element && typeof html2pdf!=='undefined') {
-      html2pdf().set({
-        margin: 10,
-        filename: `${window._docType}-${window._devisRef}.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-      }).from(element).save();
-    } else {
-      const blob = new Blob([window._htmlDoc], { type: 'text/html' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = `${window._docType}-${window._devisRef}.html`;
-      a.click();
-    }
-  } catch(e) {
-    const blob = new Blob([window._htmlDoc], { type: 'text/html' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = `${window._docType}-${window._devisRef}.html`;
-    a.click();
-  }
-}
-
-function envoyerEmail() {
-  const email = window._clientEmail;
-  if (!email) { alert("Ajoutez l'email du client dans le formulaire."); return; }
-  const subject = encodeURIComponent(window._docType==='facture'?'Votre facture':`Votre devis ${window._devisRef}`);
-  const trackUrl = window._trackingId?`\n\nConsultez votre devis : https://reyouzz39.github.io/devis-artisan/?track=${window._trackingId}`:'';
-  const body = encodeURIComponent(`Bonjour,\n\nVeuillez trouver ci-joint votre ${window._docType} (réf. ${window._devisRef}).${trackUrl}\n\nCordialement.`);
-  window.open(`mailto:${email}?subject=${subject}&body=${body}`);
-}
-
-function afficherExemple() {
-  const data = {
-    entreprise:'Plomberie Dupont', metier:'Plombier',
-    email:'dupont@plomberie.fr', tel:'06 12 34 56 78',
-    siret:'123 456 789 00012', adresseEntreprise:'12 rue de la Paix, 75001 Paris',
-    client:'Jean Martin', adresseClient:'5 avenue Victor Hugo, 69001 Lyon',
-    clientEmail:'', conditions:'30% acompte à la commande, solde à la fin des travaux',
-    tvaTaux:10, logo:null,
-    prestations:[
-      {desc:'Remplacement chauffe-eau Ariston 150L',qte:1,prix:850,remise:0},
-      {desc:'Robinetterie cuisine',qte:2,prix:120,remise:10},
-      {desc:"Main d'œuvre",qte:3,prix:75,remise:0}
-    ]
-  };
-  const html = buildHTML(data,'devis','DEV-202605-001',null);
-  const blob = new Blob([html], { type:'text/html' });
-  const preview = document.getElementById('exemple-preview');
-  preview.src = URL.createObjectURL(blob);
-  preview.style.display = 'block';
-}
-
-
-// ===== RELANCES AUTOMATIQUES =====
-async function checkRelances() {
-  if (!currentUser) return;
-  try {
-    const { data: devis } = await sb.from('devis')
-      .select('*')
-      .eq('user_id', currentUser.id)
-      .is('signed_at', null)
-      .order('created_at', { ascending: false })
-      .limit(20);
-
-    if (!devis || devis.length === 0) return;
-
-    const now = new Date();
-    const relances = [];
-    const dismissed = JSON.parse(localStorage.getItem('quotify_relances_dismissed') || '[]');
-
-    devis.forEach(d => {
-      if (dismissed.includes(d.id)) return;
-      const daysSince = Math.floor((now - new Date(d.created_at)) / 86400000);
-      const montant = parseFloat(d.montant || 0).toLocaleString('fr-FR');
-
-      // Client a ouvert mais pas signé — priorité maximale
-      if (d.opened && !d.signed_at && daysSince >= 1) {
-        relances.push({
-          id: d.id, type: 'hot', priority: 1,
-          title: '🔥 Client intéressé — Relancez maintenant !',
-          badge: 'HOT',
-          body: `<strong>${d.client || 'Votre client'}</strong> a ouvert votre devis <strong>${d.ref}</strong> (${montant}€) mais n'a pas encore signé. C'est le bon moment pour appeler.`,
-          devis: d, daysSince
-        });
-      }
-      // Devis en attente depuis 7+ jours
-      else if (daysSince >= 7 && !d.opened) {
-        relances.push({
-          id: d.id, type: 'urgent', priority: 2,
-          title: '⚠️ Devis sans réponse depuis ' + daysSince + 'j',
-          badge: 'URGENT',
-          body: `<strong>${d.client || 'Votre client'}</strong> n'a pas ouvert votre devis <strong>${d.ref}</strong> (${montant}€). Renvoyez le lien ou appelez directement.`,
-          devis: d, daysSince
-        });
-      }
-      // Devis en attente depuis 3-6 jours
-      else if (daysSince >= 3 && daysSince < 7) {
-        relances.push({
-          id: d.id, type: 'warning', priority: 3,
-          title: '📩 Relance suggérée — J+' + daysSince,
-          badge: 'À RELANCER',
-          body: `Votre devis pour <strong>${d.client || 'votre client'}</strong> — <strong>${d.ref}</strong> (${montant}€) attend une réponse depuis ${daysSince} jours.`,
-          devis: d, daysSince
-        });
-      }
-    });
-
-    // Trier par priorité et afficher max 3
-    relances.sort((a,b) => a.priority - b.priority);
-    const toShow = relances.slice(0, 3);
-
-    const wrap = document.getElementById('relance-wrap');
-    if (!wrap || toShow.length === 0) return;
-
-    wrap.innerHTML = toShow.map(r => `
-      <div class="relance-card ${r.type}" id="relance-${r.id}">
-        <div class="relance-card-header">
-          <div class="relance-card-title">${r.title}</div>
-          <button class="relance-card-close" onclick="dismissRelance('${r.id}')">×</button>
-        </div>
-        <span class="relance-badge ${r.type}">${r.badge}</span>
-        <div class="relance-card-body">${r.body}</div>
-        <div class="relance-card-actions">
-          <button class="relance-btn-primary" onclick="relancerClient('${r.devis.ref}', '${r.devis.client || ''}', '${r.devis.track_id || ''}', '${r.id}')">
-            Relancer le client →
-          </button>
-          <button class="relance-btn-secondary" onclick="dismissRelance('${r.id}')">
-            Ignorer
-          </button>
-        </div>
-      </div>
-    `).join('');
-
-  } catch(e) {
-    console.log('Relances error:', e.message);
-    if (window.Sentry) Sentry.captureException(e);
-  }
-}
-
-function dismissRelance(id) {
-  const el = document.getElementById('relance-' + id);
-  if (el) el.style.animation = 'slide-in-right 0.2s ease reverse';
-  setTimeout(() => { if (el) el.remove(); }, 200);
-  const dismissed = JSON.parse(localStorage.getItem('quotify_relances_dismissed') || '[]');
-  if (!dismissed.includes(id)) dismissed.push(id);
-  localStorage.setItem('quotify_relances_dismissed', JSON.stringify(dismissed));
-}
-
-function relancerClient(ref, client, trackId, relanceId) {
-  const trackUrl = trackId ? `https://reyouzz39.github.io/devis-artisan/?track=${trackId}` : '';
-  const subject = encodeURIComponent(`Rappel — Votre devis ${ref}`);
-  const body = encodeURIComponent(
-    `Bonjour ${client},\n\nJe me permets de revenir vers vous concernant le devis ${ref} que je vous ai transmis.\n\n` +
-    `N'hésitez pas à me contacter pour toute question.\n\n` +
-    (trackUrl ? `Consultez votre devis ici : ${trackUrl}\n\n` : '') +
-    `Cordialement.`
-  );
-  window.open(`mailto:?subject=${subject}&body=${body}`);
-  dismissRelance(relanceId);
-}
-
-
-// ===== ESPACE CLIENT =====
-let ecDevisData = null;
-let sigCanvas = null, sigCtx = null, sigDrawing = false;
-
-async function checkEspaceClient() {
-  const url = new URL(window.location.href);
-  const trackId = url.searchParams.get('track');
-  if (!trackId) return false;
-
-  // Masquer l'app normale, afficher l'espace client
-  const authEl = document.getElementById('auth-screen');
-  const appEl = document.getElementById('main-app');
-  const ecEl = document.getElementById('espace-client');
-  if (authEl) authEl.style.display = 'none';
-  if (appEl) appEl.style.display = 'none';
-  if (ecEl) ecEl.style.display = 'block';
-
-  try {
-    const { data: devis, error } = await sb.from('devis')
-      .select('*')
-      .eq('track_id', trackId)
-      .single();
-
-    if (error || !devis) {
-      document.getElementById('ec-loading').textContent = 'Devis introuvable.';
-      return true;
-    }
-
-    ecDevisData = devis;
-
-    // Marquer comme ouvert
-    if (!devis.opened) {
-      await sb.from('devis').update({ opened: true, opened_at: new Date().toISOString() }).eq('track_id', trackId);
-      // Notifier l'artisan
-      if (devis.user_id) {
-        try {
-          await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-            to_email: devis.artisan_email || '',
-            devis_ref: devis.ref || trackId,
-            client_name: devis.client || 'Votre client',
-            montant: devis.montant ? parseFloat(devis.montant).toFixed(2) + ' €' : '—'
-          });
-        } catch(e) {}
-      }
-    }
-
-    // Afficher le contenu
-    document.getElementById('ec-loading').style.display = 'none';
-    document.getElementById('ec-content').style.display = 'block';
-    document.getElementById('ec-artisan').textContent = devis.entreprise || 'Votre artisan';
-    document.getElementById('ec-ref').textContent = devis.ref || '';
-
-    // Statut badge
-    const badge = document.getElementById('ec-statut-badge');
-    if (devis.statut === 'accepte') {
-      badge.textContent = '✅ Accepté'; badge.style.background = '#f0fdf4'; badge.style.color = '#15803d';
-      document.getElementById('ec-actions').style.display = 'none';
-      document.getElementById('ec-accepted').style.display = 'block';
-    } else if (devis.statut === 'refuse') {
-      badge.textContent = '❌ Refusé'; badge.style.background = '#fef2f2'; badge.style.color = '#dc2626';
-      document.getElementById('ec-actions').style.display = 'none';
-      document.getElementById('ec-refused').style.display = 'block';
-    }
-
-    // Afficher le PDF dans l'iframe
-    if (devis.html_content) {
-      const blob = new Blob([devis.html_content], { type: 'text/html' });
-      document.getElementById('ec-iframe').src = URL.createObjectURL(blob);
-    }
-
-  } catch(e) {
-    document.getElementById('ec-loading').textContent = 'Erreur de chargement.';
-    console.log('EC error:', e.message);
-  }
-  return true;
-}
-
-function accepterDevis() {
-  document.getElementById('ec-actions').style.display = 'none';
-  document.getElementById('ec-signature-zone').style.display = 'block';
-  // Init canvas signature
-  sigCanvas = document.getElementById('sig-canvas');
-  sigCtx = sigCanvas.getContext('2d');
-  sigCtx.strokeStyle = '#111';
-  sigCtx.lineWidth = 2;
-  sigCtx.lineCap = 'round';
-  // Events souris
-  sigCanvas.addEventListener('mousedown', e => { sigDrawing=true; sigCtx.beginPath(); sigCtx.moveTo(e.offsetX, e.offsetY); });
-  sigCanvas.addEventListener('mousemove', e => { if(!sigDrawing) return; sigCtx.lineTo(e.offsetX, e.offsetY); sigCtx.stroke(); });
-  sigCanvas.addEventListener('mouseup', () => sigDrawing=false);
-  // Events tactile
-  sigCanvas.addEventListener('touchstart', e => { e.preventDefault(); sigDrawing=true; const t=e.touches[0]; const r=sigCanvas.getBoundingClientRect(); sigCtx.beginPath(); sigCtx.moveTo(t.clientX-r.left, t.clientY-r.top); });
-  sigCanvas.addEventListener('touchmove', e => { e.preventDefault(); if(!sigDrawing) return; const t=e.touches[0]; const r=sigCanvas.getBoundingClientRect(); sigCtx.lineTo(t.clientX-r.left, t.clientY-r.top); sigCtx.stroke(); });
-  sigCanvas.addEventListener('touchend', () => sigDrawing=false);
-}
-
-function clearSignature() {
-  if (sigCtx) sigCtx.clearRect(0, 0, sigCanvas.width, sigCanvas.height);
-}
-
-async function validerSignature() {
-  if (!ecDevisData) return;
-  const sigData = sigCanvas.toDataURL();
-  try {
-    await sb.from('devis').update({
-      statut: 'accepte',
-      signed_at: new Date().toISOString(),
-      signature_client: sigData
-    }).eq('id', ecDevisData.id);
-
-    document.getElementById('ec-signature-zone').style.display = 'none';
-    document.getElementById('ec-accepted').style.display = 'block';
-    const badge = document.getElementById('ec-statut-badge');
-    badge.textContent = '✅ Accepté'; badge.style.background = '#f0fdf4'; badge.style.color = '#15803d';
-  } catch(e) { alert('Erreur lors de la signature.'); }
-}
-
-async function refuserDevis() {
-  if (!ecDevisData) return;
-  if (!confirm('Confirmez-vous le refus de ce devis ?')) return;
-  try {
-    await sb.from('devis').update({ statut: 'refuse' }).eq('id', ecDevisData.id);
-    document.getElementById('ec-actions').style.display = 'none';
-    document.getElementById('ec-refused').style.display = 'block';
-    const badge = document.getElementById('ec-statut-badge');
-    badge.textContent = '❌ Refusé'; badge.style.background = '#fef2f2'; badge.style.color = '#dc2626';
-  } catch(e) { alert('Erreur.'); }
-}
-
-// ===== UI HELPERS =====
-function toggleFaq(el) {
-  el.nextElementSibling.classList.toggle('open');
-  el.querySelector('.faq-arrow').classList.toggle('open');
-}
-
-function toggleSupport() {
-  const m = document.getElementById('support-modal');
-  m.style.display = m.style.display==='block'?'none':'block';
-}
-
-function copyTrackingLink() {
-  const input = document.getElementById('tracking-link-input');
-  if (!input||!input.value) return;
-  navigator.clipboard.writeText(input.value).then(() => {
-    const btn = document.querySelector('.btn-copy-link');
-    btn.textContent = '✅ Copié !';
-    setTimeout(() => { btn.textContent='Copier le lien'; }, 2000);
-  });
-}
-
-function copyReferral() {
-  navigator.clipboard.writeText(document.getElementById('referral-link').value).then(() => {
-    const btn = document.querySelector('.ref-copy');
-    btn.textContent = '✅ Copié !';
-    setTimeout(() => { btn.textContent='Copier 📋'; }, 2000);
-  });
-}
-
-async function newsletterSignup() {
-  const email = document.getElementById('newsletter-email').value;
-  if (!email) return;
-  try {
-    await sb.from('newsletter').insert({ email, created_at: new Date().toISOString() });
-  } catch(e) { console.log('Newsletter:', e.message); }
-  document.getElementById('newsletter-msg').style.display = 'block';
-  document.getElementById('newsletter-email').value = '';
-}
-
-function showLegal(type) {
-  document.getElementById('legal-mentions').style.display = 'none';
-  document.getElementById('legal-cgv').style.display = 'none';
-  const el = document.getElementById(`legal-${type}`);
-  if (el) { el.style.display='block'; el.scrollIntoView({ behavior:'smooth' }); }
-}
-
-function showSignupPopup() { document.getElementById('signup-popup').classList.add('open'); }
-function closeSignupPopup() { document.getElementById('signup-popup').classList.remove('open'); }
-function hideLegal() {
-  document.getElementById('legal-mentions').style.display = 'none';
-  document.getElementById('legal-cgv').style.display = 'none';
-}
-</script>
-<div class="relance-wrap" id="relance-wrap"></div>
 </body>
 </html>
