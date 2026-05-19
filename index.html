@@ -46,7 +46,7 @@
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+body { overflow-x: hidden;  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
 .nav { display: flex; justify-content: space-between; align-items: center; padding: 0 40px; height: 64px; background: rgba(255,255,255,0.95); border-bottom: 1px solid var(--border-light); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(8px); }
 .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
 .nav-logo-icon { width: 34px; height: 34px; background: var(--primary); border-radius: 9px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 16px; }
@@ -297,7 +297,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial
 .blog-card { background: #fff; border: 1px solid var(--primary-border); border-radius: var(--radius-lg); overflow: hidden; transition: all 0.2s; cursor: pointer; }
 .blog-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--primary); }
 .blog-card-header { background: var(--primary-light); padding: 24px; display: flex; align-items: center; justify-content: center; font-size: 40px; }
-.blog-card-body { padding: 20px; }
+.blog-card-body { overflow-x: hidden;  padding: 20px; }
 .blog-tag { display: inline-block; background: var(--primary-light); color: var(--primary); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; margin-bottom: 10px; }
 .blog-title { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 8px; line-height: 1.4; }
 .blog-excerpt { font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 14px; }
@@ -458,14 +458,19 @@ textarea { height: 80px; resize: vertical; }
   .footer-inner { grid-template-columns: 1fr 1fr; gap: 20px; } .result-actions { grid-template-columns: 1fr; }
   .dashboard-inner { grid-template-columns: 1fr 1fr; } .g2, .g3 { grid-template-columns: 1fr; }
   .eco-grid { grid-template-columns: 1fr; } .cpt-grid { grid-template-columns: 1fr 1fr; }
-  .prow { grid-template-columns: 2fr 1fr 1fr auto; } .prow-header { grid-template-columns: 2fr 1fr 1fr auto; }
+  .prow { grid-template-columns: 1fr; } .prow-header { display: none; }
+        .prow-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid #f0f0f0; }
+        .prow-item::before { content: attr(data-label); font-size: 11px; color: #888; margin-right: 8px; }
   .onboarding-steps { display: none; } .section-wrap { padding: 56px 20px; }
   .trust-bar { padding: 10px 20px; } .trust-bar-inner { gap: 16px; }
   .footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
   .roi-results { grid-template-columns: 1fr; } .blog-grid { grid-template-columns: 1fr; }
   .blog-article { padding: 24px; } .garantie-banner { flex-direction: column; text-align: center; }
 }
-</style>
+
+    .metiers-seo-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    @media (min-width: 640px) { .metiers-seo-grid { grid-template-columns: repeat(4, 1fr); } }
+  </style>
 </head>
 <body>
 <div class="confetti" id="confetti"></div>
@@ -738,7 +743,7 @@ textarea { height: 80px; resize: vertical; }
 <!-- COMPARATIF -->
 <section class="section-wrap bg-gray fade-in">
   <div class="section-header"><div class="section-tag">Comparatif</div><h2 class="section-title">Pourquoi choisir Quotify</h2><p class="section-sub">La solution la plus complète au meilleur prix.</p></div>
-  <div style="max-width:960px;margin:0 auto;overflow-x:auto;">
+  <div style="max-width:960px;margin:0 auto;overflow-x:auto;-webkit-overflow-scrolling:touch;background:linear-gradient(to right,white 30%,rgba(255,255,255,0)) left center,linear-gradient(to left,white 30%,rgba(255,255,255,0)) right center,radial-gradient(farthest-side at 0 50%,rgba(0,0,0,.1),transparent) left center,radial-gradient(farthest-side at 100% 50%,rgba(0,0,0,.1),transparent) right center;background-repeat:no-repeat;background-size:40px 100%,40px 100%,14px 100%,14px 100%;background-attachment:local,local,scroll,scroll;">
     <table class="comp-table">
       <thead><tr><th>Fonctionnalité</th><th class="hl">Quotify</th><th>Word / Excel</th><th>Comptable</th></tr></thead>
       <tbody>
@@ -1030,7 +1035,7 @@ textarea { height: 80px; resize: vertical; }
   <div style="max-width:960px;margin:0 auto;">
     <h2 style="font-size:22px;font-weight:800;margin-bottom:8px;color:#111;">Logiciel de devis gratuit par metier</h2>
     <p style="font-size:14px;color:#888;margin-bottom:28px;">Quotify s'adapte a tous les corps de metier du batiment et des services.</p>
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;">
+    <div class="metiers-seo-grid">
       <div style="padding:20px;background:#fff;border-radius:12px;border:1px solid #ece9ff;"><div style="font-weight:700;font-size:14px;margin-bottom:6px;">&#128296; Devis Plombier</div><div style="font-size:12px;color:#888;line-height:1.5;">TVA 10%, mentions legales SIRET, devis en 2 minutes depuis le chantier.</div></div>
       <div style="padding:20px;background:#fff;border-radius:12px;border:1px solid #ece9ff;"><div style="font-weight:700;font-size:14px;margin-bottom:6px;">&#9889; Devis Electricien</div><div style="font-size:12px;color:#888;line-height:1.5;">Conforme NF C 15-100, certificat Consuel, TVA 10% renovation.</div></div>
       <div style="padding:20px;background:#fff;border-radius:12px;border:1px solid #ece9ff;"><div style="font-weight:700;font-size:14px;margin-bottom:6px;">&#129521; Devis Macon</div><div style="font-size:12px;color:#888;line-height:1.5;">Gros oeuvre, renovation, TVA 10%, acompte et conditions de paiement.</div></div>
