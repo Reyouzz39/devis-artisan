@@ -470,6 +470,8 @@ textarea { height: 80px; resize: vertical; }
 
     .metiers-seo-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
     .cpt-grid { grid-template-columns: 1fr !important; }
+        table { font-size: 12px; }
+        table th, table td { padding: 6px 4px; word-break: break-word; }
     .comparison-table { font-size: 13px; }
     .comparison-table th, .comparison-table td { padding: 8px 6px; min-width: 80px; }
     @media (min-width: 640px) { .metiers-seo-grid { grid-template-columns: repeat(4, 1fr); } }
@@ -639,7 +641,7 @@ textarea { height: 80px; resize: vertical; }
         <div style="text-align:right"><div class="mdoc-type">DEVIS</div><div class="mdoc-ref">DEV-202605-001</div><div style="font-size:9px;color:#aaa;margin-top:1px;">16/05/2026 · Validité 30j</div></div>
       </div>
       <div class="mclient"><div class="mclient-label">Client</div><div class="mclient-name">Jean Martin</div><div class="mclient-addr">5 avenue Victor Hugo, 69001 Lyon</div></div>
-      <table style="min-width:500px;width:100%;" class="mtable">
+      <table style="width:100%;table-layout:fixed;" class="mtable">
         <thead><tr><th>Désignation</th><th style="text-align:center">Qté</th><th style="text-align:right">Total HT</th></tr></thead>
         <tbody>
           <tr><td>Remplacement chauffe-eau</td><td style="text-align:center">1</td><td>850,00 €</td></tr>
