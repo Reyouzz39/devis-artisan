@@ -2157,9 +2157,12 @@ async function checkEspaceClient() {
   if (!trackId) return false;
 
   // Masquer l'app normale, afficher l'espace client
-  document.getElementById('auth-screen').style.display = 'none';
-  document.getElementById('main-app').style.display = 'none';
-  document.getElementById('espace-client').style.display = 'block';
+  const authEl = document.getElementById('auth-screen');
+  const appEl = document.getElementById('main-app');
+  const ecEl = document.getElementById('espace-client');
+  if (authEl) authEl.style.display = 'none';
+  if (appEl) appEl.style.display = 'none';
+  if (ecEl) ecEl.style.display = 'block';
 
   try {
     const { data: devis, error } = await sb.from('devis')
