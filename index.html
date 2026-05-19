@@ -1342,6 +1342,8 @@ function closeBlogArticle() {
 
 // ===== SESSION =====
 async function checkSession() {
+  const isClient = await checkEspaceClient();
+  if (isClient) return;
   const { data: { session } } = await sb.auth.getSession();
   if (session) showApp(session.user, false);
   checkTrackingParams();
@@ -1859,6 +1861,56 @@ function buildHTML(data, type, ref, trackingId) {
 <div class="signature"><div class="sig-box"><div class="sig-label">Signature du prestataire</div></div><div class="sig-box"><div class="sig-label">Bon pour accord — Signature du client</div></div></div>
 ${quotifyMention}
 
+
+<!-- ESPACE CLIENT -->
+<div id="espace-client" style="display:none;min-height:100vh;background:#f8f7ff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;">
+  <div style="background:#fff;border-bottom:1px solid #ece9ff;padding:16px 24px;display:flex;align-items:center;gap:12px;">
+    <div style="width:32px;height:32px;background:#6C47FF;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px;">Q</div>
+    <div style="font-size:16px;font-weight:800;color:#6C47FF;">Quotify</div>
+    <div id="ec-statut-badge" style="margin-left:auto;font-size:12px;font-weight:700;padding:4px 12px;border-radius:20px;background:#fff3cd;color:#856404;">En attente</div>
+  </div>
+  <div style="max-width:700px;margin:0 auto;padding:32px 20px;">
+    <div id="ec-loading" style="text-align:center;padding:60px 0;color:#888;">Chargement de votre devis...</div>
+    <div id="ec-content" style="display:none;">
+      <div style="background:#fff;border-radius:16px;padding:28px;border:1px solid #ece9ff;margin-bottom:20px;">
+        <div style="font-size:13px;color:#888;margin-bottom:4px;">Devis de</div>
+        <div id="ec-artisan" style="font-size:20px;font-weight:800;color:#111;margin-bottom:4px;"></div>
+        <div id="ec-ref" style="font-size:13px;color:#6C47FF;font-weight:600;"></div>
+      </div>
+      <div style="background:#fff;border-radius:16px;border:1px solid #ece9ff;overflow:hidden;margin-bottom:20px;">
+        <iframe id="ec-iframe" style="width:100%;height:600px;border:none;"></iframe>
+      </div>
+      <div id="ec-actions" style="display:flex;flex-direction:column;gap:12px;">
+        <button id="ec-btn-accept" onclick="accepterDevis()" style="width:100%;background:#6C47FF;color:#fff;border:none;padding:16px;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;">
+          ✅ Accepter ce devis
+        </button>
+        <button onclick="refuserDevis()" style="width:100%;background:none;color:#888;border:1px solid #ddd;padding:14px;border-radius:12px;font-size:14px;cursor:pointer;font-family:inherit;">
+          Refuser le devis
+        </button>
+      </div>
+      <div id="ec-signature-zone" style="display:none;margin-top:20px;background:#fff;border-radius:16px;padding:24px;border:1px solid #ece9ff;">
+        <div style="font-size:15px;font-weight:700;margin-bottom:8px;">✍️ Signez ici</div>
+        <div style="font-size:13px;color:#888;margin-bottom:12px;">Dessinez votre signature dans la zone ci-dessous</div>
+        <canvas id="sig-canvas" width="600" height="150" style="border:2px solid #ece9ff;border-radius:8px;width:100%;touch-action:none;cursor:crosshair;"></canvas>
+        <div style="display:flex;gap:10px;margin-top:12px;">
+          <button onclick="clearSignature()" style="flex:1;background:none;border:1px solid #ddd;padding:10px;border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit;">Effacer</button>
+          <button onclick="validerSignature()" style="flex:2;background:#22c55e;color:#fff;border:none;padding:10px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;">Confirmer la signature →</button>
+        </div>
+      </div>
+      <div id="ec-accepted" style="display:none;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:16px;padding:28px;text-align:center;margin-top:20px;">
+        <div style="font-size:48px;margin-bottom:12px;">🎉</div>
+        <div style="font-size:20px;font-weight:800;color:#15803d;margin-bottom:8px;">Devis accepté !</div>
+        <div style="font-size:14px;color:#166534;">L'artisan a été notifié. Il vous contactera prochainement.</div>
+      </div>
+      <div id="ec-refused" style="display:none;background:#fef2f2;border:1px solid #fecaca;border-radius:16px;padding:28px;text-align:center;margin-top:20px;">
+        <div style="font-size:48px;margin-bottom:12px;">❌</div>
+        <div style="font-size:20px;font-weight:800;color:#dc2626;margin-bottom:8px;">Devis refusé</div>
+        <div style="font-size:14px;color:#991b1b;">L'artisan a été notifié de votre décision.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 </body></html>`;
 }
 
@@ -2092,6 +2144,133 @@ function relancerClient(ref, client, trackId, relanceId) {
   );
   window.open(`mailto:?subject=${subject}&body=${body}`);
   dismissRelance(relanceId);
+}
+
+
+// ===== ESPACE CLIENT =====
+let ecDevisData = null;
+let sigCanvas = null, sigCtx = null, sigDrawing = false;
+
+async function checkEspaceClient() {
+  const url = new URL(window.location.href);
+  const trackId = url.searchParams.get('track');
+  if (!trackId) return false;
+
+  // Masquer l'app normale, afficher l'espace client
+  document.getElementById('auth-screen').style.display = 'none';
+  document.getElementById('main-app').style.display = 'none';
+  document.getElementById('espace-client').style.display = 'block';
+
+  try {
+    const { data: devis, error } = await sb.from('devis')
+      .select('*')
+      .eq('track_id', trackId)
+      .single();
+
+    if (error || !devis) {
+      document.getElementById('ec-loading').textContent = 'Devis introuvable.';
+      return true;
+    }
+
+    ecDevisData = devis;
+
+    // Marquer comme ouvert
+    if (!devis.opened) {
+      await sb.from('devis').update({ opened: true, opened_at: new Date().toISOString() }).eq('track_id', trackId);
+      // Notifier l'artisan
+      if (devis.user_id) {
+        try {
+          await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+            to_email: devis.artisan_email || '',
+            devis_ref: devis.ref || trackId,
+            client_name: devis.client || 'Votre client',
+            montant: devis.montant ? parseFloat(devis.montant).toFixed(2) + ' €' : '—'
+          });
+        } catch(e) {}
+      }
+    }
+
+    // Afficher le contenu
+    document.getElementById('ec-loading').style.display = 'none';
+    document.getElementById('ec-content').style.display = 'block';
+    document.getElementById('ec-artisan').textContent = devis.entreprise || 'Votre artisan';
+    document.getElementById('ec-ref').textContent = devis.ref || '';
+
+    // Statut badge
+    const badge = document.getElementById('ec-statut-badge');
+    if (devis.statut === 'accepte') {
+      badge.textContent = '✅ Accepté'; badge.style.background = '#f0fdf4'; badge.style.color = '#15803d';
+      document.getElementById('ec-actions').style.display = 'none';
+      document.getElementById('ec-accepted').style.display = 'block';
+    } else if (devis.statut === 'refuse') {
+      badge.textContent = '❌ Refusé'; badge.style.background = '#fef2f2'; badge.style.color = '#dc2626';
+      document.getElementById('ec-actions').style.display = 'none';
+      document.getElementById('ec-refused').style.display = 'block';
+    }
+
+    // Afficher le PDF dans l'iframe
+    if (devis.html_content) {
+      const blob = new Blob([devis.html_content], { type: 'text/html' });
+      document.getElementById('ec-iframe').src = URL.createObjectURL(blob);
+    }
+
+  } catch(e) {
+    document.getElementById('ec-loading').textContent = 'Erreur de chargement.';
+    console.log('EC error:', e.message);
+  }
+  return true;
+}
+
+function accepterDevis() {
+  document.getElementById('ec-actions').style.display = 'none';
+  document.getElementById('ec-signature-zone').style.display = 'block';
+  // Init canvas signature
+  sigCanvas = document.getElementById('sig-canvas');
+  sigCtx = sigCanvas.getContext('2d');
+  sigCtx.strokeStyle = '#111';
+  sigCtx.lineWidth = 2;
+  sigCtx.lineCap = 'round';
+  // Events souris
+  sigCanvas.addEventListener('mousedown', e => { sigDrawing=true; sigCtx.beginPath(); sigCtx.moveTo(e.offsetX, e.offsetY); });
+  sigCanvas.addEventListener('mousemove', e => { if(!sigDrawing) return; sigCtx.lineTo(e.offsetX, e.offsetY); sigCtx.stroke(); });
+  sigCanvas.addEventListener('mouseup', () => sigDrawing=false);
+  // Events tactile
+  sigCanvas.addEventListener('touchstart', e => { e.preventDefault(); sigDrawing=true; const t=e.touches[0]; const r=sigCanvas.getBoundingClientRect(); sigCtx.beginPath(); sigCtx.moveTo(t.clientX-r.left, t.clientY-r.top); });
+  sigCanvas.addEventListener('touchmove', e => { e.preventDefault(); if(!sigDrawing) return; const t=e.touches[0]; const r=sigCanvas.getBoundingClientRect(); sigCtx.lineTo(t.clientX-r.left, t.clientY-r.top); sigCtx.stroke(); });
+  sigCanvas.addEventListener('touchend', () => sigDrawing=false);
+}
+
+function clearSignature() {
+  if (sigCtx) sigCtx.clearRect(0, 0, sigCanvas.width, sigCanvas.height);
+}
+
+async function validerSignature() {
+  if (!ecDevisData) return;
+  const sigData = sigCanvas.toDataURL();
+  try {
+    await sb.from('devis').update({
+      statut: 'accepte',
+      signed_at: new Date().toISOString(),
+      signature_client: sigData
+    }).eq('id', ecDevisData.id);
+
+    document.getElementById('ec-signature-zone').style.display = 'none';
+    document.getElementById('ec-accepted').style.display = 'block';
+    const badge = document.getElementById('ec-statut-badge');
+    badge.textContent = '✅ Accepté'; badge.style.background = '#f0fdf4'; badge.style.color = '#15803d';
+  } catch(e) { alert('Erreur lors de la signature.'); }
+}
+
+async function refuserDevis() {
+  if (!ecDevisData) return;
+  if (!confirm('Confirmez-vous le refus de ce devis ?')) return;
+  try {
+    await sb.from('devis').update({ statut: 'refuse' }).eq('id', ecDevisData.id);
+    document.getElementById('ec-actions').style.display = 'none';
+    document.getElementById('ec-refused').style.display = 'block';
+    const badge = document.getElementById('ec-statut-badge');
+    badge.textContent = '❌ Refusé'; badge.style.background = '#fef2f2'; badge.style.color = '#dc2626';
+  } catch(e) { alert('Erreur.'); }
 }
 
 // ===== UI HELPERS =====
