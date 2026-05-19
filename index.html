@@ -458,12 +458,13 @@ textarea { height: 80px; resize: vertical; }
   .footer-inner { grid-template-columns: 1fr 1fr; gap: 20px; } .result-actions { grid-template-columns: 1fr; }
   .dashboard-inner { grid-template-columns: 1fr 1fr; } .g2, .g3 { grid-template-columns: 1fr; }
   .eco-grid { grid-template-columns: 1fr; } .cpt-grid { grid-template-columns: 1fr 1fr; }
-  .prow { grid-template-columns: 1fr 1fr; gap: 8px; background: #fff; border: 1.5px solid var(--primary-border); border-radius: 12px; padding: 12px; margin-bottom: 12px; position: relative; }
-        .prow input:nth-child(1) { grid-column: 1 / -1; }
-        .prow input:nth-child(1)::before { content: "Description"; }
-        .prow .btn-remove { position: absolute; top: 8px; right: 8px; width: 28px; height: 28px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+  .prow { display: flex; flex-wrap: wrap; gap: 8px; background: #fff; border: 1.5px solid var(--primary-border); border-radius: 12px; padding: 12px; margin-bottom: 12px; position: relative; }
+        .prow-field-full { width: 100%; }
+        .prow-field { flex: 1; min-width: 80px; }
+        .prow-label { display: block; font-size: 11px; font-weight: 600; color: var(--text-muted); margin-bottom: 4px; margin-top: 0; }
+        .prow input { margin-top: 0; }
+        .prow .btn-remove { position: absolute; top: 10px; right: 10px; width: 28px; height: 28px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
         .prow-header { display: none; }
-        .prow input[type="number"] { text-align: center; }
   .onboarding-steps { display: none; } .section-wrap { padding: 56px 20px; }
   .trust-bar { padding: 10px 20px; } .trust-bar-inner { gap: 16px; }
   .footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
@@ -901,7 +902,13 @@ textarea { height: 80px; resize: vertical; }
       <div class="modeles-wrap"><div class="modeles-label">Modèles rapides :</div><div class="modeles-tags" id="modeles-tags"></div></div>
       <div class="prow-header"><span>Description</span><span>Qté</span><span>Prix HT €</span><span>Remise %</span><span></span></div>
       <div id="prestations-list">
-        <div class="prow"><input type="text" placeholder="Ex: Remplacement chauffe-eau"><input type="number" placeholder="1" value="1" min="1"><input type="number" placeholder="850"><input type="number" placeholder="0" min="0" max="100" value="0"><button class="btn-remove" onclick="removePrestation(this)">✕</button></div>
+        <div class="prow">
+          <div class="prow-field-full"><label class="prow-label">Description</label><input type="text" placeholder="Ex: Remplacement chauffe-eau"></div>
+          <div class="prow-field"><label class="prow-label">Qté</label><input type="number" placeholder="1" value="1" min="1"></div>
+          <div class="prow-field"><label class="prow-label">Prix HT €</label><input type="number" placeholder="850"></div>
+          <div class="prow-field"><label class="prow-label">Remise %</label><input type="number" placeholder="0" min="0" max="100" value="0"></div>
+          <button class="btn-remove" onclick="removePrestation(this)">✕</button>
+        </div>
       </div>
       <div style="display:flex;gap:8px;margin-top:6px;">
         <button class="btn-add-prest" onclick="addPrestation()" style="flex:1;">+ Ajouter une prestation</button>
@@ -1663,7 +1670,12 @@ function addPrestation() {
   const list = document.getElementById('prestations-list');
   const row = document.createElement('div');
   row.className = 'prow';
-  row.innerHTML = `<input type="text" placeholder="Description"><input type="number" placeholder="1" value="1" min="1"><input type="number" placeholder="0"><input type="number" placeholder="0" min="0" max="100" value="0"><button class="btn-remove" onclick="removePrestation(this)">✕</button>`;
+  row.innerHTML = `
+  <div class="prow-field-full"><label class="prow-label">Description</label><input type="text" placeholder="Description"></div>
+  <div class="prow-field"><label class="prow-label">Qté</label><input type="number" placeholder="1" value="1" min="1"></div>
+  <div class="prow-field"><label class="prow-label">Prix HT €</label><input type="number" placeholder="0"></div>
+  <div class="prow-field"><label class="prow-label">Remise %</label><input type="number" placeholder="0" min="0" max="100" value="0"></div>
+  <button class="btn-remove" onclick="removePrestation(this)">✕</button>`;
   list.appendChild(row);
   updateOnboarding(2);
 }
