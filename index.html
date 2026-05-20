@@ -437,6 +437,22 @@ textarea { height: 80px; resize: vertical; }
 .footer-bottom { max-width: 960px; margin: 0 auto; padding-top: 20px; border-top: 1px solid var(--border-light); display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); align-items: center; }
 .footer-trust { display: flex; gap: 16px; }
 .footer-trust-item { font-size: 11px; color: var(--text-muted); }
+.relance-wrap { position: fixed; bottom: 24px; right: 24px; z-index: 200; display: flex; flex-direction: column; gap: 10px; max-width: 340px; }
+.relance-card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px 18px; box-shadow: 0 8px 32px rgba(0,0,0,0.12); display: flex; flex-direction: column; gap: 10px; }
+.relance-card.urgent { border-left: 4px solid var(--danger); }
+.relance-card.warning { border-left: 4px solid var(--warning); }
+.relance-card.hot { border-left: 4px solid var(--success); }
+.relance-card-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.relance-card-title { font-size: 13px; font-weight: 700; color: var(--text); flex: 1; }
+.relance-card-close { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 16px; padding: 0; line-height: 1; }
+.relance-card-body { font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
+.relance-card-actions { display: flex; gap: 8px; }
+.relance-btn-primary { flex: 1; background: var(--primary); color: #fff; border: none; padding: 8px 12px; border-radius: var(--radius-md); font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit; }
+.relance-btn-secondary { background: none; color: var(--text-muted); border: 1px solid var(--border); padding: 8px 12px; border-radius: var(--radius-md); font-size: 12px; cursor: pointer; font-family: inherit; }
+.relance-badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 20px; margin-bottom: 4px; }
+.relance-badge.urgent { background: #fef2f2; color: var(--danger); }
+.relance-badge.warning { background: #fffbeb; color: var(--warning); }
+.relance-badge.hot { background: #f0fdf4; color: var(--success); }
 .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
 .fade-in.visible { opacity: 1; transform: translateY(0); }
 .confetti { position: fixed; pointer-events: none; z-index: 9999; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; display: none; }
@@ -1791,6 +1807,7 @@ function buildHTML(data, type, ref, trackingId) {
 <div class="conditions"><div class="cond-title">Conditions de règlement</div><div class="cond-text">${data.conditions||'À définir avec le client.'}</div></div>
 <div class="signature"><div class="sig-box"><div class="sig-label">Signature du prestataire</div></div><div class="sig-box"><div class="sig-label">Bon pour accord — Signature du client</div></div></div>
 ${quotifyMention}
+<div class="relance-wrap" id="relance-wrap"></div>
 </body></html>`;
 }
 
@@ -1844,6 +1861,7 @@ async function genererDevis() {
       });
       monthlyCount++;
       await loadUserData();
+      setTimeout(() => checkRelances(), 2000);
     } catch(e) { console.log('Save:', e.message); }
   }
 }
@@ -1916,7 +1934,59 @@ function afficherExemple() {
   preview.src = URL.createObjectURL(blob);
   preview.style.display = 'block';
 }
+// ===== RELANCES AUTOMATIQUES =====
+async function checkRelances() {
+  if (!currentUser) return;
+  try {
+    const { data: devis } = await sb.from('devis').select('*').eq('user_id', currentUser.id).is('signed_at', null).order('created_at', { ascending: false }).limit(20);
+    if (!devis || devis.length === 0) return;
+    const now = new Date();
+    const relances = [];
+    const dismissed = JSON.parse(localStorage.getItem('quotify_relances_dismissed') || '[]');
+    devis.forEach(d => {
+      if (dismissed.includes(d.id)) return;
+      const daysSince = Math.floor((now - new Date(d.created_at)) / 86400000);
+      const montant = parseFloat(d.montant || 0).toLocaleString('fr-FR');
+      if (d.opened && !d.signed_at && daysSince >= 1) {
+        relances.push({ id: d.id, type: 'hot', priority: 1, title: 'Client interessé — Relancez !', badge: 'HOT', body: (d.client || 'Votre client') + ' a ouvert votre devis ' + (d.ref || '') + ' (' + montant + 'EUR) mais pas encore signé.', devis: d });
+      } else if (daysSince >= 7 && !d.opened) {
+        relances.push({ id: d.id, type: 'urgent', priority: 2, title: 'Devis sans réponse depuis ' + daysSince + 'j', badge: 'URGENT', body: (d.client || 'Votre client') + ' — ' + (d.ref || '') + ' (' + montant + 'EUR) sans réponse.', devis: d });
+      } else if (daysSince >= 3 && daysSince < 7) {
+        relances.push({ id: d.id, type: 'warning', priority: 3, title: 'Relance suggérée J+' + daysSince, badge: 'A RELANCER', body: 'Devis ' + (d.ref || '') + ' pour ' + (d.client || 'votre client') + ' (' + montant + 'EUR) attend depuis ' + daysSince + ' jours.', devis: d });
+      }
+    });
+    relances.sort((a,b) => a.priority - b.priority);
+    const wrap = document.getElementById('relance-wrap');
+    if (!wrap || relances.length === 0) return;
+    wrap.innerHTML = relances.slice(0,3).map(r =>
+      '<div class="relance-card ' + r.type + '" id="relance-' + r.id + '">' +
+      '<div class="relance-card-header"><div class="relance-card-title">' + r.title + '</div>' +
+      '<button class="relance-card-close" onclick="dismissRelance(\'' + r.id + '\')">x</button></div>' +
+      '<span class="relance-badge ' + r.type + '">' + r.badge + '</span>' +
+      '<div class="relance-card-body">' + r.body + '</div>' +
+      '<div class="relance-card-actions">' +
+      '<button class="relance-btn-primary" onclick="relancerClient(\'' + r.devis.ref + '\',\'' + (r.devis.client||'') + '\',\'' + (r.devis.track_id||'') + '\',\'' + r.id + '\')">Relancer</button>' +
+      '<button class="relance-btn-secondary" onclick="dismissRelance(\'' + r.id + '\')">Ignorer</button>' +
+      '</div></div>'
+    ).join('');
+  } catch(e) { console.log('Relances:', e.message); }
+}
 
+function dismissRelance(id) {
+  const el = document.getElementById('relance-' + id);
+  if (el) el.remove();
+  const dismissed = JSON.parse(localStorage.getItem('quotify_relances_dismissed') || '[]');
+  if (!dismissed.includes(id)) dismissed.push(id);
+  localStorage.setItem('quotify_relances_dismissed', JSON.stringify(dismissed));
+}
+
+function relancerClient(ref, client, trackId, relanceId) {
+  const trackUrl = trackId ? 'https://reyouzz39.github.io/devis-artisan/?track=' + trackId : '';
+  const subject = encodeURIComponent('Rappel — Votre devis ' + ref);
+  const body = encodeURIComponent('Bonjour ' + client + ',\n\nJe reviens concernant le devis ' + ref + '.\n\n' + (trackUrl ? 'Consultez votre devis : ' + trackUrl + '\n\n' : '') + 'Cordialement.');
+  window.open('mailto:?subject=' + subject + '&body=' + body);
+  dismissRelance(relanceId);
+}
 // ===== UI HELPERS =====
 function toggleFaq(el) {
   el.nextElementSibling.classList.toggle('open');
