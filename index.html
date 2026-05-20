@@ -453,6 +453,61 @@ textarea { height: 80px; resize: vertical; }
 .relance-badge.urgent { background: #fef2f2; color: var(--danger); }
 .relance-badge.warning { background: #fffbeb; color: var(--warning); }
 .relance-badge.hot { background: #f0fdf4; color: var(--success); }
+
+#client-space {
+  display: none; min-height: 100vh;
+  background: var(--bg);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+}
+.client-nav {
+  background: #fff; border-bottom: 1px solid var(--border-light);
+  padding: 0 40px; height: 60px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.client-nav-logo {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 16px; font-weight: 800; color: var(--primary);
+}
+.client-nav-badge {
+  font-size: 11px; color: var(--text-muted);
+  background: var(--bg); border: 1px solid var(--border);
+  padding: 3px 10px; border-radius: 20px;
+}
+.client-body { max-width: 760px; margin: 0 auto; padding: 40px 24px; }
+.client-status-bar {
+  background: #fff; border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg); padding: 20px 24px;
+  margin-bottom: 24px; display: flex; align-items: center;
+  justify-content: space-between; gap: 16px;
+}
+.client-status-info h2 { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.client-status-info p { font-size: 13px; color: var(--text-muted); }
+.client-status-badge { font-size: 12px; font-weight: 700; padding: 6px 14px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; }
+.client-status-badge.pending { background: #fffbeb; color: var(--warning); border: 1px solid #fde68a; }
+.client-status-badge.signed { background: #f0fdf4; color: var(--success); border: 1px solid #bbf7d0; }
+.client-devis-preview { background: #fff; border: 1px solid var(--border-light); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 24px; }
+.client-devis-preview iframe { width: 100%; height: 600px; border: none; display: block; }
+.client-action-wrap { background: #fff; border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 28px; margin-bottom: 24px; }
+.client-action-title { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+.client-action-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.6; }
+.client-signature-area { border: 1.5px dashed var(--border); border-radius: var(--radius-md); padding: 16px; margin-bottom: 16px; }
+.client-signature-label { font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 10px; }
+.client-sig-canvas { width: 100%; height: 120px; border: 1.5px solid var(--border); border-radius: var(--radius-md); background: var(--bg); cursor: crosshair; touch-action: none; display: block; }
+.client-sig-actions { display: flex; gap: 8px; margin-top: 10px; }
+.client-sig-clear { background: none; border: 1px solid var(--border); color: var(--text-muted); padding: 6px 14px; border-radius: var(--radius-md); font-size: 12px; cursor: pointer; font-family: inherit; }
+.client-accept-btn { width: 100%; background: var(--success); color: #fff; border: none; padding: 14px; border-radius: var(--radius-md); font-size: 16px; font-weight: 700; cursor: pointer; font-family: inherit; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.client-accept-btn:hover { background: #16a34a; transform: translateY(-1px); }
+.client-accept-btn:disabled { background: var(--border); color: var(--text-muted); cursor: not-allowed; transform: none; }
+.client-refuse-btn { width: 100%; background: none; color: var(--text-muted); border: 1px solid var(--border); padding: 11px; border-radius: var(--radius-md); font-size: 13px; cursor: pointer; font-family: inherit; margin-top: 10px; transition: all 0.2s; }
+.client-refuse-btn:hover { border-color: var(--danger); color: var(--danger); }
+.client-signed-wrap { text-align: center; padding: 40px 20px; display: none; }
+.client-signed-icon { font-size: 56px; margin-bottom: 16px; }
+.client-signed-title { font-size: 22px; font-weight: 800; color: var(--success); margin-bottom: 8px; }
+.client-signed-sub { font-size: 15px; color: var(--text-muted); line-height: 1.7; }
+.client-contact-wrap { background: var(--primary-light); border: 1px solid var(--primary-border); border-radius: var(--radius-lg); padding: 20px 24px; text-align: center; }
+.client-contact-title { font-size: 14px; font-weight: 700; color: var(--primary); margin-bottom: 6px; }
+.client-contact-sub { font-size: 13px; color: var(--text-secondary); }
+
 .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
 .fade-in.visible { opacity: 1; transform: translateY(0); }
 .confetti { position: fixed; pointer-events: none; z-index: 9999; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; display: none; }
@@ -1335,7 +1390,7 @@ function demoMode() {
 function checkTrackingParams() {
   const url = new URL(window.location.href);
   const trackId = url.searchParams.get('track');
-  if (trackId) recordDevisOpen(trackId);
+  if (trackId) loadClientSpace(trackId);
 }
 
 async function recordDevisOpen(trackId) {
@@ -1808,6 +1863,50 @@ function buildHTML(data, type, ref, trackingId) {
 <div class="signature"><div class="sig-box"><div class="sig-label">Signature du prestataire</div></div><div class="sig-box"><div class="sig-label">Bon pour accord — Signature du client</div></div></div>
 ${quotifyMention}
 <div class="relance-wrap" id="relance-wrap"></div>
+<div id="client-space">
+  <nav class="client-nav">
+    <div class="client-nav-logo">
+      <div style="width:28px;height:28px;background:var(--primary);border-radius:7px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:13px;">Q</div>
+      Quotify
+    </div>
+    <div class="client-nav-badge">Espace client sécurisé</div>
+  </nav>
+  <div class="client-body">
+    <div class="client-status-bar" id="client-status-bar">
+      <div class="client-status-info">
+        <h2 id="client-devis-title">Chargement du devis...</h2>
+        <p id="client-devis-sub">Veuillez patienter</p>
+      </div>
+      <div class="client-status-badge pending" id="client-status-badge">En attente</div>
+    </div>
+    <div class="client-devis-preview">
+      <iframe id="client-preview-iframe" title="Votre devis"></iframe>
+    </div>
+    <div class="client-action-wrap" id="client-action-wrap">
+      <div class="client-action-title">✍️ Signer et accepter ce devis</div>
+      <div class="client-action-sub">En signant, vous acceptez les conditions de ce devis. Votre artisan sera notifié immédiatement.</div>
+      <div class="client-signature-area">
+        <div class="client-signature-label">Votre signature (dessinez ci-dessous)</div>
+        <canvas class="client-sig-canvas" id="client-sig-canvas"></canvas>
+        <div class="client-sig-actions">
+          <button class="client-sig-clear" onclick="clearClientSig()">Effacer</button>
+          <span style="font-size:12px;color:var(--text-muted);margin-left:auto;line-height:1.4;">Signez avec votre doigt ou votre souris</span>
+        </div>
+      </div>
+      <button class="client-accept-btn" id="client-accept-btn" onclick="accepterDevis()">✅ Accepter et signer le devis</button>
+      <button class="client-refuse-btn" onclick="refuserDevis()">Refuser ce devis</button>
+    </div>
+    <div class="client-signed-wrap" id="client-signed-wrap">
+      <div class="client-signed-icon">🎉</div>
+      <div class="client-signed-title">Devis accepté !</div>
+      <div class="client-signed-sub">Votre artisan a été notifié. Il vous contactera très prochainement pour planifier l'intervention.</div>
+    </div>
+    <div class="client-contact-wrap">
+      <div class="client-contact-title">💬 Une question sur ce devis ?</div>
+      <div class="client-contact-sub">Contactez directement votre artisan par email ou téléphone.</div>
+    </div>
+  </div>
+</div>
 </body></html>`;
 }
 
@@ -1857,6 +1956,9 @@ async function genererDevis() {
       await sb.from('devis').insert({
         user_id: currentUser.id, client: d.client,
         montant, ref, track_id: trackingId,
+        artisan_email: currentUser.email,
+        statut: 'genere',
+        html_content: html,
         created_at: new Date().toISOString()
       });
       monthlyCount++;
@@ -1987,6 +2089,119 @@ function relancerClient(ref, client, trackId, relanceId) {
   window.open('mailto:?subject=' + subject + '&body=' + body);
   dismissRelance(relanceId);
 }
+
+// ===== ESPACE CLIENT =====
+let clientSigDrawing = false;
+let clientSigCanvas, clientSigCtx;
+let clientDevisData = null;
+
+async function loadClientSpace(trackId) {
+  document.getElementById('auth-screen').style.display = 'none';
+  document.getElementById('main-app').style.display = 'none';
+  document.getElementById('client-space').style.display = 'block';
+  document.title = 'Votre devis — Quotify';
+  try {
+    const { data: devis } = await sb.from('devis').select('*').eq('track_id', trackId).single();
+    if (!devis) {
+      document.getElementById('client-devis-title').textContent = 'Devis introuvable';
+      document.getElementById('client-devis-sub').textContent = 'Ce lien est invalide ou expiré.';
+      document.getElementById('client-action-wrap').style.display = 'none';
+      return;
+    }
+    clientDevisData = devis;
+    if (!devis.opened) {
+      await sb.from('devis').update({ opened: true, opened_at: new Date().toISOString(), statut: 'ouvert' }).eq('track_id', trackId);
+      try {
+        await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+          to_email: devis.artisan_email || '',
+          devis_ref: devis.ref,
+          client_name: devis.client,
+          montant: parseFloat(devis.montant || 0).toLocaleString('fr-FR') + 'EUR - Votre client a ouvert le devis !'
+        });
+      } catch(e) {}
+    }
+    document.getElementById('client-devis-title').textContent = 'Devis ' + devis.ref + ' - ' + (devis.client || '');
+    document.getElementById('client-devis-sub').textContent = 'Montant : ' + parseFloat(devis.montant || 0).toLocaleString('fr-FR') + 'EUR TTC';
+    if (devis.signed_at || devis.statut === 'signe') {
+      document.getElementById('client-status-badge').textContent = 'Signe';
+      document.getElementById('client-status-badge').className = 'client-status-badge signed';
+      document.getElementById('client-action-wrap').style.display = 'none';
+      document.getElementById('client-signed-wrap').style.display = 'block';
+      return;
+    }
+    if (devis.html_content) {
+      const blob = new Blob([devis.html_content], { type: 'text/html' });
+      document.getElementById('client-preview-iframe').src = URL.createObjectURL(blob);
+    }
+    setTimeout(() => initClientSigCanvas(), 300);
+  } catch(e) {
+    console.log('Client space error:', e);
+    if (window.Sentry) Sentry.captureException(e);
+  }
+}
+
+function initClientSigCanvas() {
+  clientSigCanvas = document.getElementById('client-sig-canvas');
+  if (!clientSigCanvas) return;
+  clientSigCtx = clientSigCanvas.getContext('2d');
+  clientSigCanvas.width = clientSigCanvas.offsetWidth;
+  clientSigCanvas.height = 120;
+  clientSigCtx.strokeStyle = '#111';
+  clientSigCtx.lineWidth = 2;
+  clientSigCtx.lineCap = 'round';
+  clientSigCanvas.addEventListener('mousedown', (e) => { clientSigDrawing = true; clientSigCtx.beginPath(); clientSigCtx.moveTo(e.offsetX, e.offsetY); });
+  clientSigCanvas.addEventListener('mousemove', (e) => { if (!clientSigDrawing) return; clientSigCtx.lineTo(e.offsetX, e.offsetY); clientSigCtx.stroke(); });
+  clientSigCanvas.addEventListener('mouseup', () => clientSigDrawing = false);
+  clientSigCanvas.addEventListener('mouseleave', () => clientSigDrawing = false);
+  clientSigCanvas.addEventListener('touchstart', (e) => { e.preventDefault(); clientSigDrawing = true; const r = clientSigCanvas.getBoundingClientRect(); const t = e.touches[0]; clientSigCtx.beginPath(); clientSigCtx.moveTo(t.clientX - r.left, t.clientY - r.top); });
+  clientSigCanvas.addEventListener('touchmove', (e) => { e.preventDefault(); if (!clientSigDrawing) return; const r = clientSigCanvas.getBoundingClientRect(); const t = e.touches[0]; clientSigCtx.lineTo(t.clientX - r.left, t.clientY - r.top); clientSigCtx.stroke(); });
+  clientSigCanvas.addEventListener('touchend', () => clientSigDrawing = false);
+}
+
+function clearClientSig() {
+  if (clientSigCtx) clientSigCtx.clearRect(0, 0, clientSigCanvas.width, clientSigCanvas.height);
+}
+
+async function accepterDevis() {
+  if (!clientDevisData) return;
+  const btn = document.getElementById('client-accept-btn');
+  btn.disabled = true;
+  btn.textContent = 'Enregistrement...';
+  try {
+    const sigData = clientSigCanvas ? clientSigCanvas.toDataURL('image/png') : null;
+    await sb.from('devis').update({ signed_at: new Date().toISOString(), signature_client: sigData, statut: 'signe' }).eq('track_id', clientDevisData.track_id);
+    try {
+      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+        to_email: clientDevisData.artisan_email || '',
+        devis_ref: clientDevisData.ref,
+        client_name: clientDevisData.client,
+        montant: parseFloat(clientDevisData.montant || 0).toLocaleString('fr-FR') + 'EUR - Devis accepte et signe !'
+      });
+    } catch(e) {}
+    document.getElementById('client-status-badge').textContent = 'Signe';
+    document.getElementById('client-status-badge').className = 'client-status-badge signed';
+    document.getElementById('client-action-wrap').style.display = 'none';
+    document.getElementById('client-signed-wrap').style.display = 'block';
+    document.getElementById('client-signed-wrap').scrollIntoView({ behavior: 'smooth' });
+  } catch(e) {
+    btn.disabled = false;
+    btn.textContent = 'Accepter et signer le devis';
+    alert('Erreur lors de la signature. Veuillez reessayer.');
+    if (window.Sentry) Sentry.captureException(e);
+  }
+}
+
+async function refuserDevis() {
+  if (!clientDevisData) return;
+  if (!confirm('Etes-vous sur de vouloir refuser ce devis ?')) return;
+  try {
+    await sb.from('devis').update({ statut: 'refuse' }).eq('track_id', clientDevisData.track_id);
+    document.getElementById('client-status-badge').textContent = 'Refuse';
+    document.getElementById('client-status-badge').className = 'client-status-badge pending';
+    document.getElementById('client-action-wrap').innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted);">Vous avez refuse ce devis.</div>';
+  } catch(e) {}
+}
+
 // ===== UI HELPERS =====
 function toggleFaq(el) {
   el.nextElementSibling.classList.toggle('open');
@@ -2040,5 +2255,49 @@ function hideLegal() {
   document.getElementById('legal-cgv').style.display = 'none';
 }
 </script>
+<div id="client-space">
+  <nav class="client-nav">
+    <div class="client-nav-logo">
+      <div style="width:28px;height:28px;background:var(--primary);border-radius:7px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:13px;">Q</div>
+      Quotify
+    </div>
+    <div class="client-nav-badge">Espace client sécurisé</div>
+  </nav>
+  <div class="client-body">
+    <div class="client-status-bar" id="client-status-bar">
+      <div class="client-status-info">
+        <h2 id="client-devis-title">Chargement du devis...</h2>
+        <p id="client-devis-sub">Veuillez patienter</p>
+      </div>
+      <div class="client-status-badge pending" id="client-status-badge">En attente</div>
+    </div>
+    <div class="client-devis-preview">
+      <iframe id="client-preview-iframe" title="Votre devis"></iframe>
+    </div>
+    <div class="client-action-wrap" id="client-action-wrap">
+      <div class="client-action-title">✍️ Signer et accepter ce devis</div>
+      <div class="client-action-sub">En signant, vous acceptez les conditions de ce devis. Votre artisan sera notifié immédiatement.</div>
+      <div class="client-signature-area">
+        <div class="client-signature-label">Votre signature (dessinez ci-dessous)</div>
+        <canvas class="client-sig-canvas" id="client-sig-canvas"></canvas>
+        <div class="client-sig-actions">
+          <button class="client-sig-clear" onclick="clearClientSig()">Effacer</button>
+          <span style="font-size:12px;color:var(--text-muted);margin-left:auto;line-height:1.4;">Signez avec votre doigt ou votre souris</span>
+        </div>
+      </div>
+      <button class="client-accept-btn" id="client-accept-btn" onclick="accepterDevis()">✅ Accepter et signer le devis</button>
+      <button class="client-refuse-btn" onclick="refuserDevis()">Refuser ce devis</button>
+    </div>
+    <div class="client-signed-wrap" id="client-signed-wrap">
+      <div class="client-signed-icon">🎉</div>
+      <div class="client-signed-title">Devis accepté !</div>
+      <div class="client-signed-sub">Votre artisan a été notifié. Il vous contactera très prochainement pour planifier l'intervention.</div>
+    </div>
+    <div class="client-contact-wrap">
+      <div class="client-contact-title">💬 Une question sur ce devis ?</div>
+      <div class="client-contact-sub">Contactez directement votre artisan par email ou téléphone.</div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
