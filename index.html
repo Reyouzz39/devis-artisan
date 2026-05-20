@@ -1283,6 +1283,8 @@ async function genererDevis() {
       await sb.from('devis').insert({
         user_id: currentUser.id, client: d.client,
         montant, ref, track_id: trackingId,
+        entreprise: d.entreprise,
+        html_content: html,
         created_at: new Date().toISOString()
       });
       monthlyCount++;
